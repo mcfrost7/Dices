@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class GeneratingMap : MonoBehaviour
@@ -8,6 +9,9 @@ public class GeneratingMap : MonoBehaviour
     public GameObject battlePrefab; // Префаб для BattleTile
     public GameObject lootPrefab; // Префаб для LootTile
     public GameObject campfirePrefab; // Префаб для CampfireTile
+    public Canvas mapCanvas;
+    public Canvas battleCanvas;
+    public MapManager mapManager;
 
     void Start()
     {
@@ -45,8 +49,6 @@ public class GeneratingMap : MonoBehaviour
         CreateTiles();
     }
 
-
-
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) // Проверка нажатия левой кнопки мыши
@@ -58,50 +60,66 @@ public class GeneratingMap : MonoBehaviour
                 Tile tile = hit.collider.GetComponent<Tile>();
                 if (tile != null)
                 {
-                    tile.OnTileClicked();
+                    if (tile is BattleTile)
+                    {
+                        mapManager = FindAnyObjectByType<MapManager>();
+                        if (mapManager != null)
+                        {
+                            {
+                                mapManager.CameraAndMapSwitch();
+                            }
+                        }
+                        tile.GlobalCanvas = mapCanvas;
+                        tile.BattleCanvas = battleCanvas;
+                        tile.OnTileClicked();
+                    }
                 }
             }
         }
     }
 
-    void CreateTiles()
-    {
-        for (int y = 0; y < tiles.Count; y++)
+        void CreateTiles()
         {
-            List<Tile> row = tiles[y];
-            for (int x = 0; x < row.Count; x++)
+            GameObject map = GameObject.Find("Map"); // Находим уже существующий объект map
+
+            for (int y = 0; y < tiles.Count; y++)
             {
-                Tile tile = row[x];
-                Vector3 position = new Vector3(x * 2, y * 2 - 2, 1); // Координаты с учетом разницы 2
-                Quaternion rotation = Quaternion.Euler(0, 180, 0); // Поворот на 180 градусов по оси Y
-                GameObject instance = null;
+                List<Tile> row = tiles[y];
+                for (int x = 0; x < row.Count; x++)
+                {
+                    Tile tile = row[x];
+                    Vector3 position = new Vector3(x * 2, y * 2 - 2, 1); // Координаты с учетом разницы 2
+                    Quaternion rotation = Quaternion.Euler(0, 180, 0); // Поворот на 180 градусов по оси Y
+                    GameObject instance = null;
 
-                if (tile is BattleTile)
-                {
-                    instance = Instantiate(battlePrefab, position, rotation);
-                }
-                else if (tile is LootTile)
-                {
-                    instance = Instantiate(lootPrefab, position, rotation);
-                }
-                else if (tile is CampfireTile)
-                {
-                    instance = Instantiate(campfirePrefab, position, rotation);
-                }
-
-                if (instance != null)
-                {
-                    Tile instanceTile = instance.AddComponent(tile.GetType()) as Tile;
-                    if (instanceTile is LootTile lootTile)
+                    if (tile is BattleTile)
                     {
-                        lootTile.Initialize(tile.type, tile.tileName, tile.isWalkable, (tile as LootTile).lootType);
+                        instance = Instantiate(battlePrefab, position, rotation);
                     }
-                    else
+                    else if (tile is LootTile)
                     {
-                        instanceTile.Initialize(tile.type, tile.tileName, tile.isWalkable);
+                        instance = Instantiate(lootPrefab, position, rotation);
+                    }
+                    else if (tile is CampfireTile)
+                    {
+                        instance = Instantiate(campfirePrefab, position, rotation);
+                    }
+
+                    if (instance != null)
+                    {
+                        instance.transform.SetParent(map.transform); // Устанавливаем родителем map
+                        Tile instanceTile = instance.AddComponent(tile.GetType()) as Tile;
+                        if (instanceTile is LootTile lootTile)
+                        {
+                            lootTile.Initialize(tile.type, tile.tileName, tile.isWalkable, (tile as LootTile).lootType);
+                        }
+                        else
+                        {
+                            instanceTile.Initialize(tile.type, tile.tileName, tile.isWalkable);
+                        }
                     }
                 }
             }
         }
+
     }
-}

@@ -143,11 +143,11 @@ public class MapManager : MonoBehaviour
         if (tile != null)
         {
 
-            for (int i = 0; i < tiles.Length; i++)
+            foreach (Tile t in tiles)
             {
-                if (tiles[i] == tile)
+                if (t.tileName == tile.tileName && t.level == tile.level) // Проверка по имени и уровню
                 {
-                    tiles[i].isPassed = true;
+                    t.isPassed = true;
                     break;
                 }
             }

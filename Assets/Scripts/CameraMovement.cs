@@ -42,7 +42,7 @@ public class CameraMovement : MonoBehaviour
             float moveY = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
             // Новое положение камеры
-            Vector3 newPosition = transform.position + new Vector3(moveX, moveY, 0);
+            Vector3 newPosition = transform.position + new Vector3(-moveX, moveY, 0);
 
             // Ограничиваем положение камеры в пределах карты (minBounds, maxBounds)
             newPosition.x = Mathf.Clamp(newPosition.x, minBounds.x, maxBounds.x);

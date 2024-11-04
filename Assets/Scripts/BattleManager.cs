@@ -8,18 +8,17 @@ public class BattleManager : MonoBehaviour
     private bool timerRunning = false;
     public GameObject battleBack;
     public Camera Camera;
-    public Canvas battleCanvas;
+    public GameObject mapManager;
 
     void OnEnable()
-    {
+    {   
         StartTimer();
-        CameraAndMapSwitch(true);
-        Camera.transform.position = new Vector3 (0, 0, 10);
-        Camera.main.orthographicSize = 2f;
+        EnableBattleSystem(true);
+
     }
     void Update()
     {
-        if (timerRunning)
+        if (timerRunning == true)
         {
             timer -= Time.deltaTime; 
             if (timer <= 0)
@@ -36,19 +35,27 @@ public class BattleManager : MonoBehaviour
     }
     private void TimerFinished()
     {
-        CameraAndMapSwitch(false);
+        gameObject.SetActive(false);
     }
-    public void CameraAndMapSwitch(bool switcher)
+
+    private void OnDisable()
+    {
+        EnableBattleSystem(false);
+        GameManager.Instance.EnableManager(mapManager, true);
+
+    }
+
+    void EnableBattleSystem(bool enable)
     {
         CameraMovement cameraMovement = FindObjectOfType<CameraMovement>();
         if (cameraMovement != null)
         {
-            cameraMovement.SetCameraMovementEnabled(!switcher);
+            cameraMovement.SetCameraMovementEnabled(!enable);
 
         }
-        battleBack.SetActive(switcher);
-        gameObject.SetActive(switcher);
-        battleCanvas.gameObject.SetActive(switcher);
+        if (battleBack != null)
+            battleBack.SetActive(enable);
+
     }
 }
 

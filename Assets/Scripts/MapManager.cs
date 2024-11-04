@@ -2,65 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
+using static TileConfig;
+using Unity.VisualScripting;
 public class MapManager : MonoBehaviour
 {
-    public GameObject map;
+    public Canvas map;
     public Camera MapCamera;
-    public Canvas mapCanvas;
-    Tile[] tiles = new Tile[6];
-    public GameObject battlePrefab; // Префаб для BattleTile
-    public GameObject lootPrefab; // Префаб для LootTile
-    public GameObject campfirePrefab; // Префаб для CampfireTile
-
+    public GameObject mapCanvas;
+    private Tile[] tiles;
+    public Button button;
+    public Sprite[] sprites;
 
     void OnEnable()
     {
-        mapCanvas.gameObject.SetActive(true);
-        map.SetActive(true);
+        mapCanvas.SetActive(true);
+        map.gameObject.SetActive(true);
+        CreateTiles(GameManager.Instance.tempConfig);
+        DrawTiles();
     }
-
     void OnDisable()
     {
-        if (mapCanvas != null )
-            mapCanvas.gameObject.SetActive(false);
-        if(map != null )
-            map.SetActive(false);
+        mapCanvas.SetActive(false);
+       map.gameObject.SetActive(false);
     }
     void Start()
     {
-
-
-        BattleTile tile1 = new BattleTile();
-        tile1.Initialize(1, "Battle Tile 1", true, false);
-        tiles[0] = tile1;
-
-        BattleTile tile2 = new BattleTile();
-        tile2.Initialize(2, "Battle Tile 2", false, false);
-        tiles[1] = tile2;
-
-        LootTile tile3 = new LootTile();
-        tile3.Initialize(2, "Loot Tile 2", false, "Silver", false);
-        tiles[2] = tile3;
-
-        LootTile tile4 = new LootTile();
-        tile4.Initialize(3, "Loot Tile 3", false, "Bronze", false);
-        tiles[3] = tile4;
-
-        CampfireTile tile5 = new CampfireTile();
-        tile5.Initialize(3, "Campfire Tile 3", false, false);
-        tiles[4] = tile5;
-
-        BattleTile tile6 = new BattleTile();
-        tile6.Initialize(2, "Battle Tile 5", false, false);
-        tiles[5] = tile6;
-
+        CreateTiles(GameManager.Instance.tempConfig);
         DrawTiles();
+    }
+
+    private void CreateTiles(TileConfig config)
+    {
+        tiles = new Tile[config.tiles.Length];
+
+        for (int i = 0; i < config.tiles.Length; i++)
+        {
+            TileData tileData = config.tiles[i];
+            Tile newTile;
+
+            // Создайте тайл в зависимости от его типа
+            switch (tileData.tileType)
+            {
+                case TileConfig.TileType.BattleTile:
+                    newTile = gameObject.AddComponent<BattleTile>();
+                    break;
+                case TileConfig.TileType.LootTile:
+                    newTile = gameObject.AddComponent<LootTile>();
+                    ((LootTile)newTile).lootType = tileData.lootType; // Устанавливаем тип лута
+                    break;
+                case TileConfig.TileType.CampfireTile:
+                    newTile = gameObject.AddComponent<CampfireTile>();
+                    break;
+                default:
+                    Debug.LogWarning("Unknown tile type: " + tileData.tileType);
+                    continue;
+            }
+
+            newTile.Initialize(tileData.level, tileData.tileName, tileData.isWalkable, tileData.isPassed);
+            tiles[i] = newTile;
+        }
     }
     void DrawTiles()
     {
-        GameObject map = GameObject.Find("Map"); // Находим уже существующий объект map
         Tile[] sortedTiles = tiles.OrderBy(tile => tile.level).ToArray();
-
         // Определяем количество уровней
         int maxLevel = sortedTiles.Max(tile => tile.level);
 
@@ -73,115 +78,64 @@ public class MapManager : MonoBehaviour
         }
 
         int previousLevel = -1;
-        int y = -2;
-        int tilesPerRow = 0;
+        int y = -800; // Начальная координата Y для первого уровня
 
-        for (int x = 0; x < sortedTiles.Length; x++)
+        for (int i = 0; i < sortedTiles.Length; i++)
         {
-            Tile tile = sortedTiles[x];
+            Tile tile = sortedTiles[i];
 
+            // Если уровень тайла изменился, обновляем Y-координату
             if (tile.level != previousLevel)
             {
                 previousLevel = tile.level;
-                y++;
-                tilesPerRow = 0;
+                y += 400; // Увеличиваем Y для следующего уровня
             }
 
-            // Расчет координат с учетом количества объектов в ряду
-            int offsetX = rowCounts[tile.level - 1] - 1;
-            int posX = (tilesPerRow * 2) - offsetX;
+            // Количество тайлов в текущем уровне
+            int tilesInRow = rowCounts[tile.level - 1];
 
-            Vector3 position = new Vector3(posX, y * 2, 1);
-            Quaternion rotation = Quaternion.Euler(0, 0, 0); // Поворот на 180 градусов по оси Y
-            GameObject instance = null;
+            // Расчет X-позиции с учетом расстояния 200 между тайлами
+            float posX = (tilesInRow > 1) ? (i % tilesInRow) * 200 - (tilesInRow - 1) * 100 : 0;
 
+            Vector3 position = new Vector3(posX, y, 1); // Устанавливаем X и Y по уровням
+            Quaternion rotation = Quaternion.Euler(0, 0, 0); // Поворот на 0 градусов
+            var instance = Instantiate(button, position, rotation);
+            instance.transform.SetParent(map.transform, true);
+            if (tile.isWalkable == false)
+            {
+                instance.transform.localScale = new Vector3(0.5f, 0.5f, 1); // Уменьшаем кнопку в два раза
+            }
+            else
+            {
+                instance.transform.localScale = Vector3.one; // Оставляем стандартный размер
+            }
+            // Устанавливаем спрайты и обработчики событий для кнопок
             if (tile is BattleTile)
             {
-                instance = Instantiate(battlePrefab, position, rotation);
+                instance.image.sprite = sprites[0];
+                instance.onClick.AddListener(() =>
+                {
+                    GameManager.Instance.BattleTileClick(tile);
+                });
             }
             else if (tile is LootTile)
             {
-                instance = Instantiate(lootPrefab, position, rotation);
+                instance.image.sprite = sprites[2];
+                instance.onClick.AddListener(() =>
+                {
+                    GameManager.Instance.LootTileClick(tile);
+                });
             }
             else if (tile is CampfireTile)
             {
-                instance = Instantiate(campfirePrefab, position, rotation);
-            }
-
-            if (instance != null)
-            {
-                instance.transform.SetParent(map.transform); // Устанавливаем родителем map
-                Tile instanceTile = instance.AddComponent(tile.GetType()) as Tile;
-
-                if (tile.isWalkable)
+                instance.image.sprite = sprites[1];
+                instance.onClick.AddListener(() =>
                 {
-                    instance.transform.localScale = new Vector3(2f, 2f, 1f);
-                }
-                else
-                {
-                    instance.transform.localScale = new Vector3(1f, 1f, 1f);
-                }
-
-                if (instanceTile is LootTile lootTile)
-                {
-                    lootTile.Initialize(tile.level, tile.tileName, tile.isWalkable, (tile as LootTile).lootType, tile.isPassed);
-                }
-                else
-                {
-                    instanceTile.Initialize(tile.level, tile.tileName, tile.isWalkable, tile.isPassed);
-                }
-            }
-
-            tilesPerRow++;
-        }
-    }
-
-
-
-    public void UpdateTiles(Tile tile)
-    {
-        if (tile != null)
-        {
-
-            foreach (Tile t in tiles)
-            {
-                if (t.tileName == tile.tileName && t.level == tile.level) // Проверка по имени и уровню
-                {
-                    t.isPassed = true;
-                    break;
-                }
-            }
-            int tileLevel = tile.level;
-
-            if (tileLevel < tiles.Max(t => t.level)) // Проверяем, есть ли следующий уровень
-            {
-                // Ищем все тайлы следующего уровня
-                foreach (Tile nextTile in tiles)
-                {
-                    if (nextTile.level == tileLevel + 1)
-                    {
-                        // Меняем isWalkable на true
-                        nextTile.isWalkable = true;
-                    }
-                }
-            }
-        }
-        DestroyTiles();
-        DrawTiles();
-    }
-
-
-    public void DestroyTiles()
-    {
-        GameObject map = GameObject.Find("Map");
-        if (map != null)
-        {
-            // Уничтожаем все дочерние объекты map
-            foreach (Transform child in map.transform)
-            {
-                Destroy(child.gameObject);
+                    GameManager.Instance.CampfireTileClick(tile);
+                });
             }
         }
     }
+
 
 }

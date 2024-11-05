@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour
     public GameObject battleBack;
     public Camera Camera;
     public GameObject mapManager;
+    public GameObject Unit;
 
     void OnEnable()
     {   
@@ -41,8 +42,7 @@ public class BattleManager : MonoBehaviour
     private void OnDisable()
     {
         EnableBattleSystem(false);
-        GameManager.Instance.EnableManager(mapManager, true);
-
+        GameManager.Instance.GoFromBattleToTeam();
     }
 
     void EnableBattleSystem(bool enable)
@@ -55,6 +55,12 @@ public class BattleManager : MonoBehaviour
         }
         if (battleBack != null)
             battleBack.SetActive(enable);
+
+    }
+
+
+    void DrawUnits()
+    {
 
     }
 }

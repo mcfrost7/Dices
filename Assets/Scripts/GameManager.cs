@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,17 +9,24 @@ public class GameManager : MonoBehaviour
     public GameObject TeamManager;
     public Canvas Canvas;
     [SerializeField] private TileConfig tileConfig;
-    public TileConfig tempConfig;
+    public Player player = new();
+
+    private bool IsNewGame;
 
     private static GameManager instance;
 
-    public static GameManager Instance {  
-        get { if (instance == null) 
-            { 
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
                 instance = FindAnyObjectByType<GameManager>();
             }
-            return instance; } 
+            return instance;
+        }
     }
+
 
     public void EnableManager(GameObject manager, bool enable)
     {
@@ -33,7 +35,18 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        tempConfig = Instantiate(tileConfig);
+        if (player == null)
+        {
+            Debug.LogError("Player не назначен!");
+            return;
+        }
+
+        if (tileConfig == null)
+        {
+            Debug.LogError("tileConfig не назначен!");
+            return;
+        }
+        player.tileConfig = Instantiate(tileConfig);
     }
     private void OnEnable()
     {
@@ -84,7 +97,7 @@ public class GameManager : MonoBehaviour
         string clickedTileName = clickedTile.tileName;
 
         // Проходим по массиву тайлов в конфиге и обновляем их
-        foreach (var tileData in tempConfig.tiles)
+        foreach (var tileData in player.tileConfig.tiles)
         {
             // Если тайл совпадает с нажатым, обновляем isPassed
             if (tileData.level == currentLevel && tileData.tileName == clickedTileName)
@@ -102,7 +115,7 @@ public class GameManager : MonoBehaviour
     }
     public void SaveTileConfigToFile()
     {
-        string json = JsonUtility.ToJson(tempConfig, true); // Конвертируем конфиг в JSON
+        string json = JsonUtility.ToJson(player.tileConfig, true); // Конвертируем конфиг в JSON
         File.WriteAllText(Application.persistentDataPath + "/TileConfig.json", json); // Сохраняем JSON в файл
         Debug.Log("TileConfig сохранен в файл");
     }
@@ -114,7 +127,7 @@ public class GameManager : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path); // Читаем JSON из файла
-            JsonUtility.FromJsonOverwrite(json, tempConfig); // Обновляем TileConfig
+            JsonUtility.FromJsonOverwrite(json, player.tileConfig); // Обновляем TileConfig
             Debug.Log("TileConfig загружен из файла");
         }
         else
@@ -131,7 +144,24 @@ public class GameManager : MonoBehaviour
 
     public void GoFromMapToTeam()
     {
-        EnableManager(MapManager,false);
-        EnableManager(TeamManager,true);
+        EnableManager(MapManager, false);
+        EnableManager(TeamManager, true);
     }
+    public void GoFromBattleToTeam()
+    {
+        EnableManager(MapManager, true);
+        EnableManager(BattleManager, false);
+    }
+
+    public void SetGameStatus(bool status)
+    {
+        IsNewGame = status;
+    }
+    public bool GetGameStatus(){ return IsNewGame; }
+
+    public void SetActualData()
+    {
+
+    }
+
 }

@@ -10,6 +10,16 @@ public class MenuManager : MonoBehaviour
     {
         menuCanvas.gameObject.SetActive(false);
         GameManager gameManager = GameManager.GetComponent<GameManager>();
+        gameManager.SetGameStatus(true);
+        gameManager.EnableManager(GameManager, true);
+
+    }
+
+    public void ContinueGame()
+    {
+        menuCanvas.gameObject.SetActive(false);
+        GameManager gameManager = GameManager.GetComponent<GameManager>();
+        gameManager.SetGameStatus(false);
         gameManager.EnableManager(GameManager, true);
 
     }

@@ -18,17 +18,19 @@ public class MapManager : MonoBehaviour
     {
         mapCanvas.SetActive(true);
         map.gameObject.SetActive(true);
-        CreateTiles(GameManager.Instance.tempConfig);
+        CreateTiles(GameManager.Instance.player.tileConfig);
         DrawTiles();
     }
     void OnDisable()
     {
-        mapCanvas.SetActive(false);
-       map.gameObject.SetActive(false);
+        if (mapCanvas != null)
+            mapCanvas.SetActive(false);
+        if (map != null )
+            map.gameObject.SetActive(false);
     }
     void Start()
     {
-        CreateTiles(GameManager.Instance.tempConfig);
+        CreateTiles(GameManager.Instance.player.tileConfig);
         DrawTiles();
     }
 

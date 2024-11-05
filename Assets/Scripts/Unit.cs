@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Unit 
 {
     [SerializeField] private int health;
     [SerializeField] private int moral;
@@ -8,7 +8,6 @@ public class Unit : MonoBehaviour
     [SerializeField] private Dice dice;
     private Sprite sprite;
 
-    // Перегруженный конструктор
     public void Init(int health, int moral, int inventory, Dice dice, Sprite sprite)
     {
         this.health = health;
@@ -18,7 +17,6 @@ public class Unit : MonoBehaviour
         this.sprite = sprite;
     }
 
-    // Свойства для доступа к полям
     public int Health
     {
         get { return health; }

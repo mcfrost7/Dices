@@ -1,49 +1,48 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Unit 
 {
-    [SerializeField] private int health;
-    [SerializeField] private int moral;
-    [SerializeField] private int inventory;
-    [SerializeField] private Dice dice;
+    private int health;
+    private int currentHealth;
+    private int moral;
+    private int inventory;
+    private Sprite[] dice;
     private Sprite sprite;
+    private string type;
+    private string abilities;
 
-    public void Init(int health, int moral, int inventory, Dice dice, Sprite sprite)
+    public void Init(int health, int moral, Sprite[] dice, int inventory, string type, Sprite sprite)
     {
-        this.health = health;
-        this.moral = moral;
-        this.inventory = inventory;
-        this.dice = dice;
-        this.sprite = sprite;
+        this.Health = health;
+        this.CurrentHealth = health;
+        this.Moral = moral;
+        this.Inventory = inventory;
+        this.Type = type;
+        this.Sprite = sprite;
+        this.Abilities = "none";
+        this.DiceSprite = dice;
     }
 
-    public int Health
+    public void Init (int health, string type, Sprite sprite, Sprite[] diceSprite)
     {
-        get { return health; }
-        set { health = value; }
-    }
+        this .Health = health;
+        this.currentHealth = health;  
+        this .DiceSprite = diceSprite;  
+        this.Type = type;  
+        this.Sprite = sprite;
+        this.Abilities = "none";
+    }   
 
-    public int Moral
-    {
-        get { return moral; }
-        set { moral = value; }
-    }
 
-    public int Inventory
-    {
-        get { return inventory; }
-        set { inventory = value; }
-    }
 
-    public Dice Dice
-    {
-        get { return dice; }
-        set { dice = value; }
-    }
+    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    public string Abilities { get => abilities; set => abilities = value; }
+    public int Health { get => health; set => health = value; }
+    public int Moral { get => moral; set => moral = value; }
+    public int Inventory { get => inventory; set => inventory = value; }
 
-    public Sprite UnitSprite
-    {
-        get { return sprite; }
-        set { sprite = value; }
-    }
+    public Sprite Sprite { get => sprite; set => sprite = value; }
+    public string Type { get => type; set => type = value; }
+    public Sprite[] DiceSprite { get => dice; set => dice = value; }
 }

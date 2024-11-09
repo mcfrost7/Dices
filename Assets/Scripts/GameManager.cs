@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Player не назначен!");
             return;
         }
-
         if (tileConfig == null)
         {
             Debug.LogError("tileConfig не назначен!");
@@ -60,6 +59,11 @@ public class GameManager : MonoBehaviour
             return;
         if (tile.isWalkable == true && tile.isPassed == false)
         {
+            if (IsNewGame)
+            {
+                EnableManager(TeamManager, true);
+                EnableManager(TeamManager, false);
+            }
             EnableManager(MapManager, false);
             EnableManager(BattleManager, true);
             UpdateConfig(tile);
@@ -147,7 +151,7 @@ public class GameManager : MonoBehaviour
         EnableManager(MapManager, false);
         EnableManager(TeamManager, true);
     }
-    public void GoFromBattleToTeam()
+    public void GoFromBattleToMap()
     {
         EnableManager(MapManager, true);
         EnableManager(BattleManager, false);

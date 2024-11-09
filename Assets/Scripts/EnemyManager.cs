@@ -3,9 +3,44 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public GameObject battlemap; 
+    private Unit[] enemies;
+    private int difficulty = 1;
+    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private string[] enemyType;
+    [SerializeField] private Sprite[] enemySprite;
+    [SerializeField] private Sprite[] diceSprite;
 
-    public void SpawnEnemies()
+    public void CreateEnemies()
     {
+        int localDiff = DifficultyScaler();
+
+        // Очищаем массив врагов перед созданием новых
+        enemies = new Unit[localDiff];
+
+        for (int i = 0; i < localDiff; i++)
+        {
+            enemies[i] = new Unit();
+            int randomHealth = Random.Range(1, localDiff + 2);
+            int randomType = Random.Range(0, enemyType.Length); // исправляем индекс на 0, чтобы избежать ошибки
+            string randomTypeName = enemyType[randomType];
+            enemies[i].Init(randomHealth, randomTypeName, enemySprite[randomType], diceSprite);
+        }
+    }
+
+    public int DifficultyScaler()
+    {
+        return difficulty < 5 ? difficulty++ : difficulty;
+    }
+
+    public Unit[] Enemies
+    {
+        get => enemies;
+        set => enemies = value;
+    }
+
+    public GameObject EnemyPrefab
+    {
+        get => enemyPrefab;
+        set => enemyPrefab = value;
     }
 }

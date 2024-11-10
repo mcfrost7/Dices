@@ -21,7 +21,7 @@ public class EnemyManager : MonoBehaviour
         {
             enemies[i] = new Unit();
             int randomHealth = Random.Range(1, localDiff + 2);
-            int randomType = Random.Range(0, enemyType.Length); // исправляем индекс на 0, чтобы избежать ошибки
+            int randomType = Random.Range(1, enemyType.Length); 
             string randomTypeName = enemyType[randomType];
             enemies[i].Init(randomHealth, randomTypeName, enemySprite[randomType], diceSprite);
         }
@@ -42,5 +42,10 @@ public class EnemyManager : MonoBehaviour
     {
         get => enemyPrefab;
         set => enemyPrefab = value;
+    }
+
+    public void FindTarget()
+    {
+
     }
 }

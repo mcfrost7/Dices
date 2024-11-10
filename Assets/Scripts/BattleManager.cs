@@ -15,7 +15,9 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public GameObject unitPrefab; // Префаб юнита
     [SerializeField] private float diceRollDelay = 0.05f; // Задержка для анимации кубика
     private bool[] diceFrozen;
-    private int counter; 
+    private int counter;
+    private BattlePhase currentPhase = BattlePhase.BotRollsDice;
+
 
     private void OnEnable()
     {
@@ -70,6 +72,7 @@ public class BattleManager : MonoBehaviour
         {
             DrawUnits();
             DrawEnemies();
+            NextPhase();
         }
     }
 
@@ -165,40 +168,40 @@ public class BattleManager : MonoBehaviour
         SpawnEntities(enemyManagerTemp.EnemyPrefab, enemiesPanel, enemyManagerTemp.Enemies, false);
     }
 
-    public void RerollDice()
+    public void RerollDice(bool isPlayer)
     {
-        StartCoroutine(RollDiceCoroutine());
+        StartCoroutine(RollDiceCoroutine(isPlayer));
     }
 
-    private IEnumerator RollDiceCoroutine()
+    private IEnumerator RollDiceCoroutine(bool isPlayer)
     {
         GameManager gameManager = GameManager.Instance;
-        Player player = gameManager.player;
-        Transform unitsPanel = battleUI.transform.Find("Units");
+        Transform panel = isPlayer ? battleUI.transform.Find("Units") : battleUI.transform.Find("Enemies");
+        Unit[] units = isPlayer ? gameManager.player.units : enemyManager.GetComponent<EnemyManager>().Enemies;
 
-        if (unitsPanel != null)
+        if (panel != null)
         {
             List<Coroutine> diceCoroutines = new List<Coroutine>();
 
-            for (int i = 0; i < player.units.Length; i++)
+            for (int i = 0; i < units.Length; i++)
             {
-                Transform unitTransform = unitsPanel.GetChild(i);
+                Transform unitTransform = panel.GetChild(i);
                 Transform diceSpriteTransform = unitTransform.Find("Dice");
                 Image diceImage = diceSpriteTransform?.GetComponent<Image>();
 
-                if (diceImage != null && diceFrozen[i] == false)
+                // Проверяем условие заморозки только для игроков
+                if (diceImage != null && (isPlayer ? !diceFrozen[i] : true))
                 {
-                    diceCoroutines.Add(StartCoroutine(RollDiceForUnit(i, diceImage, player.units[i])));
+                    diceCoroutines.Add(StartCoroutine(RollDiceForUnit(i, diceImage, units[i])));
                 }
             }
-
-            // Ждем завершения всех корутин
             foreach (var coroutine in diceCoroutines)
             {
                 yield return coroutine;
             }
         }
     }
+
 
     private IEnumerator RollDiceForUnit(int unitIndex, Image diceImage, Unit unit)
     {
@@ -215,8 +218,75 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"Final dice side for unit {unitIndex}: {finalSide}");
     }
 
+
     private void Click(int i)
     {
         diceFrozen[i] = !diceFrozen[i];
     }
+
+    private void NextPhase()
+    {
+        switch (currentPhase)
+        {
+            case BattlePhase.BotRollsDice:
+                BotRollDiceAndSelectTarget();
+                currentPhase = BattlePhase.PlayerRollsDiceAndAction;
+                NextPhase();
+                break;
+
+            case BattlePhase.PlayerRollsDiceAndAction:
+                PlayerRollDiceAndTakeAction();
+                currentPhase = BattlePhase.BotAction;
+                NextPhase();
+                break;
+
+            case BattlePhase.BotAction:
+                BotTakeAction();
+                currentPhase = BattlePhase.CheckEndCondition;
+                NextPhase();
+                break;
+
+            case BattlePhase.CheckEndCondition:
+                if (IsAnyTeamAlive())
+                {
+                    currentPhase = BattlePhase.BotRollsDice;
+                }
+                else
+                {
+                    EndBattle();
+                }
+                break;
+        }
+    }
+
+    private void BotRollDiceAndSelectTarget()
+    {
+        RerollDice(false);
+        EnemyManager enemyManagerLocal  = enemyManager.GetComponent<EnemyManager>();
+        enemyManagerLocal.FindTarget();
+
+    }
+
+    private void PlayerRollDiceAndTakeAction()
+    {
+
+    }
+
+    private void BotTakeAction()
+    {
+        // Бот совершает свои действия
+    }
+
+    private bool IsAnyTeamAlive()
+    {
+        // Проверка: возвращает true, если обе команды живы
+        return  GameManager.Instance.player.units.Length > 0 && enemyManager.GetComponent<EnemyManager>().Enemies.Length > 0;
+    }
+
+    private void EndBattle()
+    {
+        // Логика завершения битвы
+    }
+
+
 }

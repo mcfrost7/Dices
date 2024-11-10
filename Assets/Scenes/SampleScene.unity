@@ -1463,14 +1463,14 @@ MonoBehaviour:
       - m_Target: {fileID: 464313283}
         m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
         m_MethodName: RerollDice
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &307720360
 MonoBehaviour:
@@ -2802,7 +2802,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0.5
+  m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -4737,11 +4737,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 8db5586785448674abb51244cb409286, type: 3}
   diceSprite:
   - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
-  - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
-  - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
-  - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
-  - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
-  - {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
+  - {fileID: 21300000, guid: 52ba7c59fb7354b448c9e32c8aec6d92, type: 3}
+  - {fileID: 21300000, guid: 4274b2051069fa6499bcfb33d818326e, type: 3}
+  - {fileID: 21300000, guid: afe419de1d9b54c47b24a1f85b1e31a2, type: 3}
+  - {fileID: 21300000, guid: cdeeb0fabf78a8749a40eed39b395b32, type: 3}
+  - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
 --- !u!1 &1432220270
 GameObject:
   m_ObjectHideFlags: 0

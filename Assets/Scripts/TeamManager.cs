@@ -47,7 +47,7 @@ public class TeamManager : MonoBehaviour
 
         for (int i = 0; i < teamPlayer.units.Length; i++)
         {
-            int randomHealth = Random.Range(1, 6);
+            int randomHealth = Random.Range(4, 6);
             int randomMoral = Random.Range(1, 3);
             int randomInventory = Random.Range(1, 3);
             int randomType = Random.Range(1, types.Length);

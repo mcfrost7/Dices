@@ -27,6 +27,22 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    public void RemoveEnemy(int indexToRemove)
+    {
+        // Преобразуем массив в List для удобства работы
+        List<Unit> enemyList = new List<Unit>(enemies);
+
+        // Удаляем элемент по индексу
+        if (indexToRemove >= 0 && indexToRemove < enemyList.Count)
+        {
+            enemyList.RemoveAt(indexToRemove);
+        }
+
+        // Преобразуем List обратно в массив
+        enemies = enemyList.ToArray();
+    }
+
+
     public int DifficultyScaler()
     {
         return difficulty < 5 ? difficulty++ : difficulty;
@@ -46,6 +62,6 @@ public class EnemyManager : MonoBehaviour
 
     public void FindTarget()
     {
-
+        Debug.Log("наёшл цель");
     }
 }

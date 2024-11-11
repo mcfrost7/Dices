@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static UnityEngine.EventSystems.EventTrigger;
+//using UnityEngine.UIElements;
 
 public class BattleManager : MonoBehaviour
 {
@@ -14,14 +16,16 @@ public class BattleManager : MonoBehaviour
     [SerializeField] public GameObject enemyManager; // Менеджер врагов
     [SerializeField] public GameObject unitPrefab; // Префаб юнита
     [SerializeField] private float diceRollDelay = 0.05f; // Задержка для анимации кубика
+    [SerializeField] private float timeToWait = 3f;
     private bool[] diceFrozen;
     private int counter;
+    private bool endTurn = false;
+    private int sumOfReroll = 0, currentRolls = 0;
     private BattlePhase currentPhase = BattlePhase.BotRollsDice;
 
 
     private void OnEnable()
     {
-        StartTimer();
         EnableBattleSystem(true);
     }
 
@@ -46,7 +50,7 @@ public class BattleManager : MonoBehaviour
 
     private void OnTimerFinished()
     {
-      //  gameObject.SetActive(false); // Деактивируем объект после завершения таймера
+        endTurn = true; // Деактивируем объект после завершения таймера
     }
 
     private void OnDisable()
@@ -70,8 +74,10 @@ public class BattleManager : MonoBehaviour
 
         if (enable)
         {
+            EnemyManager enemyManagerTemp = enemyManager.GetComponent<EnemyManager>();
+            enemyManagerTemp.CreateEnemies();
             DrawUnits();
-            DrawEnemies();
+            DrawEnemies(enemyManagerTemp);
             NextPhase();
         }
     }
@@ -158,12 +164,11 @@ public class BattleManager : MonoBehaviour
             diceFrozen[i] = false;
         }
         SpawnEntities(unitPrefab, unitsPanel, gameManager.player.units,true);
+
     }
 
-    public void DrawEnemies()
+    public void DrawEnemies(EnemyManager enemyManagerTemp)
     {
-        EnemyManager enemyManagerTemp = enemyManager.GetComponent<EnemyManager>();
-        enemyManagerTemp.CreateEnemies();
         Transform enemiesPanel = battleUI.transform.Find("Enemies");
         SpawnEntities(enemyManagerTemp.EnemyPrefab, enemiesPanel, enemyManagerTemp.Enemies, false);
     }
@@ -176,6 +181,10 @@ public class BattleManager : MonoBehaviour
     private IEnumerator RollDiceCoroutine(bool isPlayer)
     {
         GameManager gameManager = GameManager.Instance;
+
+        // Заморозка интерфейса
+        yield return StartCoroutine(SetUnitsAndButtonInteractableCoroutine(true));
+
         Transform panel = isPlayer ? battleUI.transform.Find("Units") : battleUI.transform.Find("Enemies");
         Unit[] units = isPlayer ? gameManager.player.units : enemyManager.GetComponent<EnemyManager>().Enemies;
 
@@ -189,17 +198,18 @@ public class BattleManager : MonoBehaviour
                 Transform diceSpriteTransform = unitTransform.Find("Dice");
                 Image diceImage = diceSpriteTransform?.GetComponent<Image>();
 
-                // Проверяем условие заморозки только для игроков
                 if (diceImage != null && (isPlayer ? !diceFrozen[i] : true))
                 {
                     diceCoroutines.Add(StartCoroutine(RollDiceForUnit(i, diceImage, units[i])));
                 }
             }
+
             foreach (var coroutine in diceCoroutines)
             {
                 yield return coroutine;
             }
         }
+        yield return StartCoroutine(SetUnitsAndButtonInteractableCoroutine(false));
     }
 
 
@@ -219,6 +229,7 @@ public class BattleManager : MonoBehaviour
     }
 
 
+
     private void Click(int i)
     {
         diceFrozen[i] = !diceFrozen[i];
@@ -226,67 +237,183 @@ public class BattleManager : MonoBehaviour
 
     private void NextPhase()
     {
+        StartCoroutine(NextPhaseCoroutine());
+    }
+
+    private IEnumerator NextPhaseCoroutine()
+    {
+        Transform button = battleUI.transform.Find("Reroll");
+        Button buttonSettings = button.GetComponent<Button>();
+
+        // Проверяем, живы ли команды перед каждой фазой
+        if (!IsAnyTeamAlive())
+        {
+            yield return new WaitForSeconds(timeToWait);
+            EndBattle();
+            yield break; // Прерываем выполнение корутины, если бой завершён
+        }
+
         switch (currentPhase)
         {
             case BattlePhase.BotRollsDice:
+                RerollsCount();
+                currentRolls = sumOfReroll;
+                DrawRerolls();
+                buttonSettings.interactable = false;
+
                 BotRollDiceAndSelectTarget();
-                currentPhase = BattlePhase.PlayerRollsDiceAndAction;
-                NextPhase();
                 break;
 
             case BattlePhase.PlayerRollsDiceAndAction:
-                PlayerRollDiceAndTakeAction();
-                currentPhase = BattlePhase.BotAction;
-                NextPhase();
+                buttonSettings.interactable = true;
                 break;
 
             case BattlePhase.BotAction:
+                buttonSettings.interactable = false;
+                yield return new WaitForSeconds(timeToWait);
                 BotTakeAction();
-                currentPhase = BattlePhase.CheckEndCondition;
-                NextPhase();
-                break;
-
-            case BattlePhase.CheckEndCondition:
-                if (IsAnyTeamAlive())
-                {
-                    currentPhase = BattlePhase.BotRollsDice;
-                }
-                else
-                {
-                    EndBattle();
-                }
                 break;
         }
     }
+
+
 
     private void BotRollDiceAndSelectTarget()
     {
         RerollDice(false);
         EnemyManager enemyManagerLocal  = enemyManager.GetComponent<EnemyManager>();
         enemyManagerLocal.FindTarget();
-
+        currentPhase = BattlePhase.PlayerRollsDiceAndAction;
+        NextPhase();
     }
 
-    private void PlayerRollDiceAndTakeAction()
+
+    public void PlayerRollDice()
+    {
+        EnemyManager enemy = enemyManager.GetComponent<EnemyManager>();
+        if (currentPhase == BattlePhase.PlayerRollsDiceAndAction)
+        {
+            for (int i = 0; i < enemy.Enemies.Length; i++)
+            {
+                enemy.Enemies[i].CurrentHealth--;
+                if (enemy.Enemies[i].CurrentHealth <= 0)
+                {
+                    enemy.RemoveEnemy(i);
+                    i--;
+                }
+
+            }
+            DrawEnemies(enemy);
+            DrawRerolls();
+            RerollDice(true);
+            currentRolls--;
+            DrawRerolls();
+            if (currentRolls <= 0)
+            {
+                Transform button = battleUI.transform.Find("Reroll");
+                if (button != null)
+                {
+                    Button buttonSettings = button.GetComponent<Button>();
+                    buttonSettings.interactable = false;
+                }
+                PlayerMakeAction();
+            }
+        }
+    }
+
+    private void PlayerMakeAction()
     {
 
+        StartTimer();
+        if (endTurn == true)
+        {
+            Debug.Log("Отыграл бой");
+            currentPhase = BattlePhase.BotAction;
+            NextPhase();
+        }
     }
+
+    public void RerollsCount()
+    {
+        Player player = GameManager.Instance.player;
+
+        for (int i = 0; i < player.units.Length; i++)
+        {
+            sumOfReroll += player.units[i].Moral;
+        }
+        sumOfReroll /= player.units.Length;
+    }
+    private void DrawRerolls()
+    {
+        Transform rerollPanel = battleUI.transform.Find("Reroll");
+        if (rerollPanel != null)
+        {
+            Transform textComponents = rerollPanel.transform.Find("Rerolls");
+            TextMeshProUGUI rerollText = textComponents.GetComponent<TextMeshProUGUI>();
+            if (rerollText != null)
+            {
+                rerollText.text = currentRolls + "/" + sumOfReroll;
+            }
+        }
+    }
+
 
     private void BotTakeAction()
     {
-        // Бот совершает свои действия
+        Debug.Log("Бот сыграл в ответ");
+        currentPhase = BattlePhase.BotRollsDice;
+        NextPhase();
     }
 
     private bool IsAnyTeamAlive()
     {
-        // Проверка: возвращает true, если обе команды живы
         return  GameManager.Instance.player.units.Length > 0 && enemyManager.GetComponent<EnemyManager>().Enemies.Length > 0;
     }
 
     private void EndBattle()
     {
-        // Логика завершения битвы
+        gameObject.SetActive(false);
     }
 
+
+    private IEnumerator SetUnitsAndButtonInteractableCoroutine(bool isFrozen)
+    {
+        // Получаем ссылку на панель с юнитами и кнопку
+        Transform unitsPanel = battleUI.transform.Find("Units");
+        Transform button = battleUI.transform.Find("Reroll");
+
+        if (unitsPanel != null)
+        {
+            // Получаем или добавляем CanvasGroup на панель с юнитами
+            CanvasGroup canvasGroup = unitsPanel.GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = unitsPanel.gameObject.AddComponent<CanvasGroup>();
+            }
+
+            // Устанавливаем состояние для панели с юнитами
+            canvasGroup.interactable = !isFrozen;
+            canvasGroup.blocksRaycasts = !isFrozen;
+            canvasGroup.alpha = isFrozen ? 0.5f : 1f;
+        }
+
+        if (button != null)
+        {
+            // Получаем или добавляем CanvasGroup на кнопку
+            CanvasGroup buttonCanvasGroup = button.GetComponent<CanvasGroup>();
+            if (buttonCanvasGroup == null)
+            {
+                buttonCanvasGroup = button.gameObject.AddComponent<CanvasGroup>();
+            }
+
+            // Устанавливаем состояние для кнопки
+            buttonCanvasGroup.interactable = !isFrozen;
+            buttonCanvasGroup.blocksRaycasts = !isFrozen;
+            buttonCanvasGroup.alpha = isFrozen ? 0.5f : 1f;
+        }
+
+        // Пауза для обновления UI перед продолжением
+        yield return null;
+    }
 
 }

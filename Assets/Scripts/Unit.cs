@@ -41,7 +41,6 @@ public class Unit
     public int Health { get => health; set => health = value; }
     public int Moral { get => moral; set => moral = value; }
     public int Inventory { get => inventory; set => inventory = value; }
-
     public Sprite Sprite { get => sprite; set => sprite = value; }
     public string Type { get => type; set => type = value; }
     public Sprite[] DiceSprite { get => dice; set => dice = value; }

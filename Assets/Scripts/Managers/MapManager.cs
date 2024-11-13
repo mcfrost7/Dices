@@ -14,6 +14,10 @@ public class MapManager : MonoBehaviour
     public Button button;
     public Sprite[] sprites;
 
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
     void OnEnable()
     {
         mapCanvas.SetActive(true);

@@ -6,10 +6,12 @@ public class EnemyManager : MonoBehaviour
     private Unit[] enemies;
     private int difficulty = 1;
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private string[] enemyType;
-    [SerializeField] private Sprite[] enemySprite;
-    [SerializeField] private Sprite[] diceSprite;
+    [SerializeField] private TypesInfo typesInfo;
 
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
     public void CreateEnemies()
     {
         int localDiff = DifficultyScaler();
@@ -21,9 +23,8 @@ public class EnemyManager : MonoBehaviour
         {
             enemies[i] = new Unit();
             int randomHealth = Random.Range(1, localDiff + 2);
-            int randomType = Random.Range(1, enemyType.Length); 
-            string randomTypeName = enemyType[randomType];
-            enemies[i].Init(randomHealth, randomTypeName, enemySprite[randomType], diceSprite);
+            TypesInfo.Type randomType = typesInfo.types[Random.Range(0, typesInfo.types.Length)];
+            enemies[i].Init(randomHealth, randomType);
         }
     }
 

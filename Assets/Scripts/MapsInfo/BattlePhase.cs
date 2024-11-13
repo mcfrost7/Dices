@@ -1,7 +1,8 @@
 public enum BattlePhase
 {
     BotRollsDice,
-    PlayerRollsDiceAndAction,
+    PlayerRollsDice,
+    PlayerAction,
     BotAction,
     CheckEndCondition
 }

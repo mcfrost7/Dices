@@ -6,6 +6,12 @@ public class MenuManager : MonoBehaviour
 {
     public Canvas menuCanvas;
     public GameObject GameManager;
+
+
+    private void Awake()
+    {
+        menuCanvas.gameObject.SetActive(true); 
+    }
     public void CreateNewGame()
     {
         menuCanvas.gameObject.SetActive(false);

@@ -44,8 +44,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("tileConfig не назначен!");
             return;
-        }
+        } 
         player.tileConfig = Instantiate(tileConfig);
+        gameObject.SetActive(false);
     }
     private void OnEnable()
     {

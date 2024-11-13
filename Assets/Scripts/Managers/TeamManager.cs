@@ -8,11 +8,8 @@ public class TeamManager : MonoBehaviour
 {
     Player teamPlayer = null;
     [SerializeField] private Canvas Canvas;
-    [SerializeField] private Sprite[] sprites;
-    [SerializeField] private string[] types;
     [SerializeField] private GameObject teamPlace;
-    [SerializeField] private Sprite[] diceSprite;
-
+    [SerializeField] private TypesInfo typesInfo;
     private void OnEnable()
     {
         Canvas.gameObject.SetActive(true);
@@ -23,6 +20,10 @@ public class TeamManager : MonoBehaviour
             GameManager.Instance.SetGameStatus(false);
         }
         DrawTeam();
+    }
+    private void Awake()
+    {
+        gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -48,11 +49,10 @@ public class TeamManager : MonoBehaviour
         for (int i = 0; i < teamPlayer.units.Length; i++)
         {
             int randomHealth = Random.Range(4, 6);
-            int randomMoral = Random.Range(1, 3);
+            int randomMoral = Random.Range(2, 3);
             int randomInventory = Random.Range(1, 3);
-            int randomType = Random.Range(1, types.Length);
-            string randomTypeName = types[randomType];
-            teamPlayer.units[i].Init(randomHealth, randomMoral, diceSprite ,randomInventory, randomTypeName, GetSpriteByType(randomTypeName));
+            TypesInfo.Type randomType = typesInfo.types[Random.Range(0, typesInfo.types.Length)];
+            teamPlayer.units[i].Init(randomHealth, randomMoral ,randomInventory,randomType);
         }
     }
 
@@ -66,7 +66,7 @@ public class TeamManager : MonoBehaviour
             {
                 // Устанавливаем изображение для кнопки
                 Image buttonImage = buttons[i].GetComponent<Image>();
-                buttonImage.sprite = GetSpriteByType(teamPlayer.units[i].Type);  // Берём спрайт юнита
+                buttonImage.sprite = teamPlayer.units[i].Sprite;  // Берём спрайт юнита
 
                 // Сохраняем индекс, чтобы избежать замыкания лямбда-выражения
                 int unitIndex = i;
@@ -76,20 +76,6 @@ public class TeamManager : MonoBehaviour
                 buttons[i].onClick.AddListener(() => OnUnitButtonClicked(unitIndex));
             }
         }
-    }
-
-
-
-    private Sprite GetSpriteByType(string type)
-    {
-        Sprite sprite = sprites[0];
-        for (int i = 0; i < types.Length; i++)
-        {
-            if (types[i] ==  type)
-                return sprites[i];
-        }
-        return sprite;
-
     }
 
     private void OnUnitButtonClicked(int unitIndex)

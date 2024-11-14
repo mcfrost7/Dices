@@ -5,6 +5,6 @@ using UnityEngine;
 
 public class Player 
 {
-    public Unit[] units;
+    public List<UnitStats> units = new List<UnitStats>();
     public TileConfig tileConfig;
 }

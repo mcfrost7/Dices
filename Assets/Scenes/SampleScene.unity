@@ -2036,6 +2036,10 @@ MonoBehaviour:
   unitPrefab: {fileID: 415606186908714635, guid: ab7624861e666d145bee5b3640cfdb15, type: 3}
   diceRollDelay: 0.1
   timeToWait: 3
+  button_reroll: {fileID: 307720359}
+  button_end: {fileID: 1597873624}
+  text_end_reroll: {fileID: 1604276026}
+  text_end_turn: {fileID: 1204597940}
 --- !u!1 &550840378
 GameObject:
   m_ObjectHideFlags: 0
@@ -4984,7 +4988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4712609715597989730, guid: 392a3b232481a73429f1636816f8a7a0, type: 3}
-  typesInfo: {fileID: 11400000, guid: dbce99d8ad13a4a4fa390603cd9a344a, type: 2}
+  typesInfo: {fileID: 11400000, guid: 22910d441dc86924b9b94f7ae81bf1fc, type: 2}
 --- !u!1 &1432220270
 GameObject:
   m_ObjectHideFlags: 0

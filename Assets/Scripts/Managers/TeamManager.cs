@@ -35,56 +35,47 @@ public class TeamManager : MonoBehaviour
 
     public void CreateRandomTeam()
     {
-        // Убедитесь, что массив был создан и инициализирован объектами Unit
-        if (teamPlayer.units == null || teamPlayer.units.Length != 5)
+        for (int i = 0; i < 5; i++)
         {
-            teamPlayer.units = new Unit[5];
-
-            for (int i = 0; i < teamPlayer.units.Length; i++)
-            {
-                teamPlayer.units[i] = new Unit(); // Инициализируем каждый элемент массива объектом Unit
-            }
-        }
-
-        for (int i = 0; i < teamPlayer.units.Length; i++)
-        {
+            // Генерация случайных значений для параметров
             int randomHealth = Random.Range(4, 6);
             int randomMoral = Random.Range(2, 3);
-            int randomInventory = Random.Range(1, 3);
             TypesInfo.Type randomType = typesInfo.types[Random.Range(0, typesInfo.types.Length)];
-            teamPlayer.units[i].Init(randomHealth, randomMoral ,randomInventory,randomType);
+            GameManager.Instance.player.units.Add(new UnitStats(randomHealth, randomMoral, randomType)); 
         }
     }
 
     private void DrawTeam()
     {
         Button[] buttons = teamPlace.GetComponentsInChildren<Button>();
+        int index = 0;
 
-        for (int i = 0; i < 5; i++)
+        // Проходим по кнопкам и юнитам одновременно
+        foreach (Button button in buttons)
         {
-            if (i < buttons.Length)
+            if (index < teamPlayer.units.Count)
             {
                 // Устанавливаем изображение для кнопки
-                Image buttonImage = buttons[i].GetComponent<Image>();
-                buttonImage.sprite = teamPlayer.units[i].Sprite;  // Берём спрайт юнита
-
-                // Сохраняем индекс, чтобы избежать замыкания лямбда-выражения
-                int unitIndex = i;
+                Image buttonImage = button.GetComponent<Image>();
+                buttonImage.sprite = teamPlayer.units[index].Sprite;  // Берём спрайт юнита
 
                 // Удаляем существующие события и добавляем новое
-                buttons[i].onClick.RemoveAllListeners();
-                buttons[i].onClick.AddListener(() => OnUnitButtonClicked(unitIndex));
+                button.onClick.RemoveAllListeners();
+                int unitIndex = index; // Сохраняем индекс, чтобы избежать замыкания лямбда-выражения
+                button.onClick.AddListener(() => OnUnitButtonClicked(unitIndex));
             }
+            index++;
         }
     }
 
+
     private void OnUnitButtonClicked(int unitIndex)
     {
-        Unit selectedUnit = teamPlayer.units[unitIndex];
+        UnitStats selectedUnit = teamPlayer.units[unitIndex];
         Debug.Log("Выбран юнит с показателями: " +
-                  "Здоровье: " + selectedUnit.Health +
+                  "Текущее здоровье: " + selectedUnit.CurrentHealth +
                   ", Мораль: " + selectedUnit.Moral +
-                  ", Инвентарь: " + selectedUnit.Inventory);
+                  ", Тип юнита: " + selectedUnit.Type.TypeName);
 
     }
 }

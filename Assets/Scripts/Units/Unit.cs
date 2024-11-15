@@ -26,33 +26,34 @@ public class Unit : MonoBehaviour
         return null;
     }
 
-    public void PerformDiceAction(DiceConfig.ActionType actionType, Unit target)
+    public void PerformDiceAction(DiceConfig.DiceAction dice_action, Unit target)
     {
-        // Находим нужное действие в diceActions по actionType
-        DiceConfig.DiceAction action = UnitStats.Type.Dice.DiceActions.FirstOrDefault(a => a.actionType == actionType);
 
-        if (action == null)
+        if (dice_action == null)
         {
             Debug.LogWarning("Неизвестный тип действия дайса.");
             return;
         }
 
-        int power = action.power; // Извлекаем значение power из найденного действия
+        int power = dice_action.power; // Извлекаем значение power из найденного действия
 
-        switch (actionType)
+        switch (dice_action.actionType)
         {
             case DiceConfig.ActionType.Attack:
                 UnitStats.Type.Dice.PerformAttack(target, power);
                 break;
 
             case DiceConfig.ActionType.Heal:
-                UnitStats.Type.Dice.PerformHeal(this, power);
+                UnitStats.Type.Dice.PerformHeal(target, power);
                 break;
 
             case DiceConfig.ActionType.LifeSteal:
                 UnitStats.Type.Dice.PerformLifeSteal(target, this, power);
                 break;
 
+            case DiceConfig.ActionType.None:
+                Debug.Log("Ничего не происходит.");
+                break;
             default:
                 Debug.LogWarning("Неизвестный тип действия дайса.");
                 break;

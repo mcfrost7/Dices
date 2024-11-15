@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static DiceConfig;
 
 public class UnitStats
 {
@@ -12,12 +13,12 @@ public class UnitStats
     public int Moral { get; private set; }
     public int CurrentHealth { get; private set; }
     //public int Inventory { get; private set; }
-   // public string Abilities { get;private set; }
+    //public string Abilities { get;private set; }
     public Sprite Sprite { get; private set; }
     public bool IsPlayerUnit { get; private set; }
     public TypesInfo.Type Type { get; private set; }
 
-    // Конструктор для инициализации состояния юнита
+    public DiceAction Current_dice_side { get; set; }
     public UnitStats(int health, int moral, TypesInfo.Type type)
     {
         Health = health;

@@ -53,6 +53,13 @@ public class GameManager : MonoBehaviour
         Canvas.gameObject.SetActive(true);
         EnableManager(MapManager, true);
     }
+    private void OnDisable()
+    {
+        Canvas.gameObject.SetActive(false);
+        EnableManager(MapManager, false);
+        EnableManager(BattleManager, false);
+        EnableManager(TeamManager, false);
+    }
 
     public void BattleTileClick(Tile tile)
     {

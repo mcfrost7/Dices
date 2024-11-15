@@ -21,7 +21,7 @@ public class EnemyManager : MonoBehaviour
 
         for (int i = 0; i < localDiff; i++)
         {
-            int randomHealth = Random.Range(1, localDiff + 2);
+            int randomHealth = Random.Range(10, localDiff + 10);
             TypesInfo.Type randomType = typesInfo.types[Random.Range(0, typesInfo.types.Length)];
             enemies.Add(new UnitStats(randomHealth, randomType));
         }

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+
 using Random = UnityEngine.Random;
 
 public class BattleManager : MonoBehaviour
@@ -33,7 +34,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text_end_reroll = null;
     [SerializeField] private TextMeshProUGUI text_end_turn = null;
     private bool[] diceFrozen;
-    private int clickedUnits = 0;
+   // private int clickedUnits = 0;
     private int sumOfReroll = 0, currentRolls = 0;
     private BattlePhase currentPhase = BattlePhase.BotRollsDice;
     private int[] finalSide = new int[6];
@@ -66,7 +67,6 @@ public class BattleManager : MonoBehaviour
 
         // Сброс значений переменных для фаз боя и роллов
         currentPhase = BattlePhase.BotRollsDice;
-        clickedUnits = 0;
         sumOfReroll = 0;
         currentRolls = 0;
 
@@ -271,8 +271,9 @@ public class BattleManager : MonoBehaviour
         }
 
         finalSide[unitIndex] = randomDiceSide;
+        diceImage.sprite = diceConfig.ActionSprites[finalSide[unitIndex]];
         DiceConfig.DiceAction diceAction = diceConfig.DiceActions[finalSide[unitIndex]];
-        diceConfig.Current_dice_side = diceAction.actionType;
+        unit.UnitStats.Current_dice_side = diceAction;
         Debug.Log($"Final dice side for {unit.UnitStats.Type.TypeName} - {unitIndex} : {finalSide[unitIndex]}");
     }
 
@@ -387,29 +388,29 @@ public class BattleManager : MonoBehaviour
                 unit.Text_is_picked.enabled = false;
                 current_clicked_unit_1 = null;
             }
-            else if (current_clicked_unit_2 == null)
+            else if (unit != current_clicked_unit_1.gameObject && current_clicked_unit_1 != null)
             {
-                current_clicked_unit_2 = unit.gameObject;
-                unit.Text_is_picked.enabled = true; 
-            }
-            else if (current_clicked_unit_2 == unit.gameObject)
-            {
-                unit.Text_is_picked.enabled = false;
-                current_clicked_unit_2 = null;
+                current_clicked_unit_1.GetComponent<Unit>().Text_is_picked.enabled = false;
+                current_clicked_unit_1 = unit.gameObject;
+                unit.Text_is_picked.enabled = true;
             }
         }
     }
 
     public void EnemyClicked(Unit unit)
     {
-        if (currentPhase == BattlePhase.PlayerAction)
+        if (currentPhase == BattlePhase.PlayerAction && current_clicked_unit_1!=null )
         {
             current_clicked_unit_2 = unit.gameObject;
-            UnitStats stats = current_clicked_unit_1 != null ? current_clicked_unit_1.GetComponent<Unit>().UnitStats : null;
-            current_clicked_unit_1.GetComponent<Unit>().PerformDiceAction(stats.Type.Dice.Current_dice_side, current_clicked_unit_2.GetComponent<Unit>());
+            UnitStats stats =  current_clicked_unit_1.GetComponent<Unit>().UnitStats;
+            current_clicked_unit_1.GetComponent<Unit>().PerformDiceAction(stats.Current_dice_side, current_clicked_unit_2.GetComponent<Unit>());
             UpdateAllEnemiesStats();
             UpdateAllUnitsStats();
+            current_clicked_unit_1.GetComponent<Unit>().Text_is_picked.enabled = false;
+            current_clicked_unit_1 = null;
+            current_clicked_unit_2 = null;
         }
+        
     }
 
     public void OnUnitDeath(UnitStats unit)

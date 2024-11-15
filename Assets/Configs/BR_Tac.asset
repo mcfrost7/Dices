@@ -15,20 +15,23 @@ MonoBehaviour:
   actionSprites:
   - {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
   - {fileID: 21300000, guid: 98092288af0dc244094b2bc05cf94608, type: 3}
-  - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
-  - {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
-  - {fileID: 21300000, guid: 98092288af0dc244094b2bc05cf94608, type: 3}
   - {fileID: 21300000, guid: 9b42247fef98db7458b6c7d889b2d89f, type: 3}
+  - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
+  - {fileID: 21300000, guid: cb967abe53daffd4fb89f64d4ceb7ed5, type: 3}
+  - {fileID: 21300000, guid: 7b386b2561ff6d74b9517d44f5f140a5, type: 3}
   diceActions:
-  - actionType: 1
-    power: 1
-  - actionType: 1
-    power: 2
-  - actionType: 0
-    power: 0
   - actionType: 1
     power: 1
   - actionType: 1
     power: 2
   - actionType: 1
     power: 3
+  - actionType: 0
+    power: 0
+  - actionType: 3
+    power: 1
+  - actionType: 4
+    power: 1
+  current_dice_side:
+    actionType: 1
+    power: 1

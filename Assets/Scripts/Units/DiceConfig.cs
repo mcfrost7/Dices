@@ -7,11 +7,11 @@ public class DiceConfig : ScriptableObject
 {
     [SerializeField] private Sprite[] actionSprites;
     [SerializeField] private DiceAction[] diceActions;
-    [SerializeField] private ActionType current_dice_side;
+    [SerializeField] private DiceAction current_dice_side;
 
     public Sprite[] ActionSprites { get => actionSprites; set => actionSprites = value; }
     public DiceAction[] DiceActions { get => diceActions; set => diceActions = value; }
-    public ActionType Current_dice_side { get => current_dice_side; set => current_dice_side = value; }
+
 
     public enum ActionType
     {
@@ -38,23 +38,22 @@ public class DiceConfig : ScriptableObject
     {
         // Используем метод UnitStatus для обновления здоровья
         target.UnitStats.UpdateHealth(power);
-        if (target.UnitStats.CurrentHealth > target.UnitStats.Health)
-        {
-            target.UnitStats.UpdateHealth(target.UnitStats.Health - target.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
-        }
+        //if (target.UnitStats.CurrentHealth > target.UnitStats.Health)
+        //{
+        //    target.UnitStats.UpdateHealth(target.UnitStats.Health - target.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
+        //}
     }
 
     public void PerformLifeSteal(Unit target, Unit user, int power)
     {
-        // Первая часть: атакуем цель
+        user.UnitStats.UpdateHealth(power);
         TakeDamage(power, target);
 
-        // Вторая часть: восстанавливаем здоровье пользователю
-        user.UnitStats.UpdateHealth(power);
-        if (user.UnitStats.CurrentHealth > user.UnitStats.Health)
-        {
-            user.UnitStats.UpdateHealth(user.UnitStats.Health - user.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
-        }
+
+        //if (user.UnitStats.CurrentHealth > user.UnitStats.Health)
+        //{
+        //    user.UnitStats.UpdateHealth(user.UnitStats.Health - user.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
+        //}
     }
 
     public void TakeDamage(int damage, Unit target)

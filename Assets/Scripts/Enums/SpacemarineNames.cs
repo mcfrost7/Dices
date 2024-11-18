@@ -1,0 +1,23 @@
+public enum Names
+{
+    DomicianVolgaris,
+    CastorLacrinius,
+    FaustTarentius,
+    MartiusSeptim,
+    TiberiusChronophage,
+    VarentiusCardius,
+    AugustinMordicus,
+    MacrianTulkar,
+    GallusExecutor,
+    LuciusIncarnatus,
+    CainFeralis,
+    ServiusMaltis,
+    DecimPyromatik,
+    FlaviusArbitrum,
+    AlexiusVeritas,
+    MagnusFuror,
+    CalidonSpeculum,
+    VargarTempestus,
+    SeverusInfectio,
+    RufiusNecrocan
+}

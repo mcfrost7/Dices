@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject BattleManager;
-    public GameObject MapManager;
-    public GameObject MenuManager;
-    public GameObject TeamManager;
-    public Canvas Canvas;
+    [SerializeField]private GameObject BattleManager;
+    [SerializeField] private GameObject MapManager;
+    [SerializeField] private GameObject MenuManager;
+    [SerializeField] private GameObject TeamManager;
+    [SerializeField] private Canvas Canvas;
     [SerializeField] private TileConfig tileConfig;
-    public Player player = new();
+    private Player player = new();
 
     private bool IsNewGame;
 
@@ -27,6 +27,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public GameObject BattleManager1 { get => BattleManager; set => BattleManager = value; }
+    public GameObject MapManager1 { get => MapManager; set => MapManager = value; }
+    public GameObject MenuManager1 { get => MenuManager; set => MenuManager = value; }
+    public GameObject TeamManager1 { get => TeamManager; set => TeamManager = value; }
+    public Canvas Canvas1 { get => Canvas; set => Canvas = value; }
+    public TileConfig TileConfig { get => tileConfig; set => tileConfig = value; }
+    public Player Player { get => player; set => player = value; }
+    public bool IsNewGame1 { get => IsNewGame; set => IsNewGame = value; }
 
     public void EnableManager(GameObject manager, bool enable)
     {
@@ -35,30 +43,30 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (player == null)
+        if (Player == null)
         {
             Debug.LogError("Player не назначен!");
             return;
         }
-        if (tileConfig == null)
+        if (TileConfig == null)
         {
             Debug.LogError("tileConfig не назначен!");
             return;
         } 
-        player.tileConfig = Instantiate(tileConfig);
+        Player.tileConfig = Instantiate(TileConfig);
         gameObject.SetActive(false);
     }
     private void OnEnable()
     {
-        Canvas.gameObject.SetActive(true);
-        EnableManager(MapManager, true);
+        Canvas1.gameObject.SetActive(true);
+        EnableManager(MapManager1, true);
     }
     private void OnDisable()
     {
-        Canvas.gameObject.SetActive(false);
-        EnableManager(MapManager, false);
-        EnableManager(BattleManager, false);
-        EnableManager(TeamManager, false);
+        if (Canvas1 != null) Canvas1.gameObject.SetActive(false);
+        EnableManager(MapManager1, false);
+        EnableManager(BattleManager1, false);
+        EnableManager(TeamManager1, false);
     }
 
     public void BattleTileClick(Tile tile)
@@ -67,13 +75,13 @@ public class GameManager : MonoBehaviour
             return;
         if (tile.isWalkable == true && tile.isPassed == false)
         {
-            if (IsNewGame)
+            if (IsNewGame1)
             {
-                EnableManager(TeamManager, true);
-                EnableManager(TeamManager, false);
+                EnableManager(TeamManager1, true);
+                EnableManager(TeamManager1, false);
             }
-            EnableManager(MapManager, false);
-            EnableManager(BattleManager, true);
+            EnableManager(MapManager1, false);
+            EnableManager(BattleManager1, true);
             UpdateConfig(tile);
             //SaveTileConfigToFile();
             //LoadTileConfigFromFile();
@@ -109,7 +117,7 @@ public class GameManager : MonoBehaviour
         string clickedTileName = clickedTile.tileName;
 
         // Проходим по массиву тайлов в конфиге и обновляем их
-        foreach (var tileData in player.tileConfig.tiles)
+        foreach (var tileData in Player.tileConfig.tiles)
         {
             // Если тайл совпадает с нажатым, обновляем isPassed
             if (tileData.level == currentLevel && tileData.tileName == clickedTileName)
@@ -127,7 +135,7 @@ public class GameManager : MonoBehaviour
     }
     public void SaveTileConfigToFile()
     {
-        string json = JsonUtility.ToJson(player.tileConfig, true); // Конвертируем конфиг в JSON
+        string json = JsonUtility.ToJson(Player.tileConfig, true); // Конвертируем конфиг в JSON
         File.WriteAllText(Application.persistentDataPath + "/TileConfig.json", json); // Сохраняем JSON в файл
         Debug.Log("TileConfig сохранен в файл");
     }
@@ -139,7 +147,7 @@ public class GameManager : MonoBehaviour
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path); // Читаем JSON из файла
-            JsonUtility.FromJsonOverwrite(json, player.tileConfig); // Обновляем TileConfig
+            JsonUtility.FromJsonOverwrite(json, Player.tileConfig); // Обновляем TileConfig
             Debug.Log("TileConfig загружен из файла");
         }
         else
@@ -150,26 +158,26 @@ public class GameManager : MonoBehaviour
 
     public void BackFromTeamToMap()
     {
-        EnableManager(MapManager, true);
-        EnableManager(TeamManager, false);
+        EnableManager(MapManager1, true);
+        EnableManager(TeamManager1, false);
     }
 
     public void GoFromMapToTeam()
     {
-        EnableManager(MapManager, false);
-        EnableManager(TeamManager, true);
+        EnableManager(MapManager1, false);
+        EnableManager(TeamManager1, true);
     }
     public void GoFromBattleToMap()
     {
-        EnableManager(MapManager, true);
-        EnableManager(BattleManager, false);
+        EnableManager(MapManager1, true);
+        EnableManager(BattleManager1, false);
     }
 
     public void SetGameStatus(bool status)
     {
-        IsNewGame = status;
+        IsNewGame1 = status;
     }
-    public bool GetGameStatus(){ return IsNewGame; }
+    public bool GetGameStatus(){ return IsNewGame1; }
 
     public void SetActualData()
     {

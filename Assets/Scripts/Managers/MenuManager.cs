@@ -54,6 +54,7 @@ public class MenuManager : MonoBehaviour
 
     public void ExitToMenu()
     {
+
         gameManager.SetActive(false);
         MenuCanvas.gameObject.SetActive(true);
     }

@@ -22,7 +22,7 @@ public class MapManager : MonoBehaviour
     {
         mapCanvas.SetActive(true);
         map.gameObject.SetActive(true);
-        CreateTiles(GameManager.Instance.player.tileConfig);
+        CreateTiles(GameManager.Instance.Player.tileConfig);
         DrawTiles();
     }
 
@@ -60,9 +60,9 @@ public class MapManager : MonoBehaviour
     {
         Tile newTile = tileData.tileType switch
         {
-            TileConfig.TileType.BattleTile => gameObject.AddComponent<BattleTile>(),
-            TileConfig.TileType.LootTile => CreateLootTile(tileData),
-            TileConfig.TileType.CampfireTile => gameObject.AddComponent<CampfireTile>(),
+            TileType.BattleTile => gameObject.AddComponent<BattleTile>(),
+            TileType.LootTile => CreateLootTile(tileData),
+            TileType.CampfireTile => gameObject.AddComponent<CampfireTile>(),
             _ => throw new System.ArgumentException("Unknown tile type: " + tileData.tileType)
         };
 

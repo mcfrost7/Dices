@@ -1,0 +1,23 @@
+public enum OrcsNames
+{
+    GrukMogorka,
+    UrgZogblasta,
+    MorktoofGrobz,
+    ZogskragStompa,
+    GorgZodfang,
+    KrugIronteef,
+    DakkaSkullbash,
+    GrotSmashak,
+    WazzBlitzfang,
+    RukkSkumgrin,
+    SnaggaBoltgut,
+    ThruggRumblegut,
+    SkarzBlakjaw,
+    ZugGorkblasta,
+    KlankRotfang,
+    ZodSkulkilla,
+    WargSmashteef,
+    GroznakRottusk,
+    MorkaSkullchoppa,
+    KrunkDaStompa
+}

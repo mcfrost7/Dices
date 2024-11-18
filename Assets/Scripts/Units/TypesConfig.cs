@@ -11,6 +11,7 @@ public class TypesInfo : ScriptableObject
     public class Type
     { 
         [SerializeField] private string typeName;
+        [SerializeField] private UnitSide unit_side;
         [SerializeField] private Sprite sprite;
         [SerializeField] private int level;
         [SerializeField] private DiceConfig dice;
@@ -19,6 +20,7 @@ public class TypesInfo : ScriptableObject
         public Sprite Sprite { get => sprite; set => sprite = value; }
         public int Level { get => level; set => level = value; }
         public DiceConfig Dice { get => dice; set => dice = value; }
+        public UnitSide Unit_side { get => unit_side; set => unit_side = value; }
     }
 }
 

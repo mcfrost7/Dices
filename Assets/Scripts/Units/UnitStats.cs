@@ -18,7 +18,10 @@ public class UnitStats
     public bool IsPlayerUnit { get; private set; }
     public TypesInfo.Type Type { get; private set; }
 
+    public string Name { get; private set; }
     public DiceAction Current_dice_side { get; set; }
+
+    public Unit Target {  get;  set; }
     public UnitStats(int health, int moral, TypesInfo.Type type)
     {
         Health = health;
@@ -27,6 +30,8 @@ public class UnitStats
         Sprite = type.Sprite;
         Type = type;
         IsPlayerUnit = true;
+        Name = ((Names)Random.Range(0, System.Enum.GetValues(typeof(Names)).Length)).ToString() ;
+
     }
     public UnitStats(int health, TypesInfo.Type type)
     {
@@ -35,6 +40,7 @@ public class UnitStats
         Sprite = type.Sprite;
         Type = type;
         IsPlayerUnit = false;
+        Name = ((OrcsNames)Random.Range(0, System.Enum.GetValues(typeof(OrcsNames)).Length)).ToString();
     }
 
     // Метод для обновления здоровья

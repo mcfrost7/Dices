@@ -6,27 +6,21 @@ using UnityEngine;
 public class DiceConfig : ScriptableObject
 {
     [SerializeField] private Sprite[] actionSprites;
-    [SerializeField] private DiceAction[] diceActions;
+    [SerializeField] private List<DiceAction> diceActions = new List<DiceAction>();
     [SerializeField] private DiceAction current_dice_side;
 
     public Sprite[] ActionSprites { get => actionSprites; set => actionSprites = value; }
-    public DiceAction[] DiceActions { get => diceActions; set => diceActions = value; }
+    public List<DiceAction> DiceActions { get => diceActions; set => diceActions = value; }
 
-
-    public enum ActionType
-    {
-        None,
-        Attack,
-        Defense,
-        Heal,
-        LifeSteal
-    }
 
     [System.Serializable]
     public class DiceAction
     {
-        public ActionType actionType;
-        public int power; // сила действия, влияющая на урон или лечение
+        [SerializeField] private ActionType actionType;
+        [SerializeField] private int power; // сила действия, влияющая на урон или лечение
+
+        public ActionType ActionType { get => actionType; set => actionType = value; }
+        public int Power { get => power; set => power = value; }
     }
 
     public void PerformAttack(Unit target, int power)
@@ -38,22 +32,12 @@ public class DiceConfig : ScriptableObject
     {
         // Используем метод UnitStatus для обновления здоровья
         target.UnitStats.UpdateHealth(power);
-        //if (target.UnitStats.CurrentHealth > target.UnitStats.Health)
-        //{
-        //    target.UnitStats.UpdateHealth(target.UnitStats.Health - target.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
-        //}
     }
 
     public void PerformLifeSteal(Unit target, Unit user, int power)
     {
         user.UnitStats.UpdateHealth(power);
         TakeDamage(power, target);
-
-
-        //if (user.UnitStats.CurrentHealth > user.UnitStats.Health)
-        //{
-        //    user.UnitStats.UpdateHealth(user.UnitStats.Health - user.UnitStats.CurrentHealth); // Не даем выйти за пределы максимума
-        //}
     }
 
     public void TakeDamage(int damage, Unit target)

@@ -32,3 +32,6 @@ MonoBehaviour:
     power: 3
   - actionType: 1
     power: 3
+  current_dice_side:
+    actionType: 0
+    power: 0

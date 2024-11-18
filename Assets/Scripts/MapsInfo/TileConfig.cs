@@ -17,11 +17,4 @@ public class TileConfig : ScriptableObject
         public TileType tileType; // Используем enum вместо строки
         public string lootType; // для LootTile
     }
-
-    public enum TileType // Определяем enum для типов тайлов
-    {
-        BattleTile,
-        LootTile,
-        CampfireTile
-    }
 }

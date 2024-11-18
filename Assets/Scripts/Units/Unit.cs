@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class Unit : MonoBehaviour 
 {
     private UnitStats unitStats; // Экземпляр UnitStatus для управления состоянием
+    private bool can_act,can_be_interacted;
+
+
     [SerializeField] private TextMeshProUGUI text_hp;
     [SerializeField] private TextMeshProUGUI text_moral;
     [SerializeField] private TextMeshProUGUI text_is_picked;
@@ -15,9 +18,11 @@ public class Unit : MonoBehaviour
     public void Init(UnitStats unitStats)
     {
         this.UnitStats = unitStats;
+        Can_act = true;
+        Can_be_interacted = true;
     }
 
-    public Sprite GetDiceSideSprite(DiceConfig.ActionType actionType)
+    public Sprite GetDiceSideSprite(ActionType actionType)
     {
         if (UnitStats.Type.Dice != null)
         {
@@ -35,23 +40,23 @@ public class Unit : MonoBehaviour
             return;
         }
 
-        int power = dice_action.power; // Извлекаем значение power из найденного действия
+        int power = dice_action.Power; // Извлекаем значение power из найденного действия
 
-        switch (dice_action.actionType)
+        switch (dice_action.ActionType)
         {
-            case DiceConfig.ActionType.Attack:
+            case ActionType.Attack:
                 UnitStats.Type.Dice.PerformAttack(target, power);
                 break;
 
-            case DiceConfig.ActionType.Heal:
+            case ActionType.Heal:
                 UnitStats.Type.Dice.PerformHeal(target, power);
                 break;
 
-            case DiceConfig.ActionType.LifeSteal:
+            case ActionType.LifeSteal:
                 UnitStats.Type.Dice.PerformLifeSteal(target, this, power);
                 break;
 
-            case DiceConfig.ActionType.None:
+            case ActionType.None:
                 Debug.Log("Ничего не происходит.");
                 break;
             default:
@@ -76,7 +81,7 @@ public class Unit : MonoBehaviour
         Image_unit.sprite = UnitStats.Type.Sprite;
     }
 
-    public void UpdateDice( bool isPlayer, int index)
+    public void UpdateDice(bool isPlayer, int index)
     {
         Button_dice.GetComponent<Image>().sprite = UnitStats.Type.Dice.ActionSprites[1];
         if (isPlayer)
@@ -85,16 +90,9 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void UpdateActionTrigger(bool isPlyer, Unit unit)
+    public void UpdateActionTrigger(Unit unit)
     {
-        if (isPlyer)
-        {
-            Button_action_trigger.GetComponent<Button>().onClick.AddListener(() => BattleManager.Instance.PlayerMakeAction(unit));
-        }
-        else
-        {
-            Button_action_trigger.GetComponent<Button>().onClick.AddListener(() => BattleManager.Instance.EnemyClicked(unit));
-        }
+        Button_action_trigger.GetComponent<Button>().onClick.AddListener(() => BattleManager.Instance.PerformAction(unit));
     }
     public UnitStats UnitStats { get => unitStats; set => unitStats = value; }
     public TextMeshProUGUI Text_hp { get => text_hp; set => text_hp = value; }
@@ -103,4 +101,6 @@ public class Unit : MonoBehaviour
     public Button Button_dice { get => button_dice; set => button_dice = value; }
     public Button Button_action_trigger { get => button_action_trigger; set => button_action_trigger = value; }
     public Image Image_unit { get => image_unit; set => image_unit = value; }
+    public bool Can_be_interacted { get => can_be_interacted; set => can_be_interacted = value; }
+    public bool Can_act { get => can_act; set => can_act = value; }
 }

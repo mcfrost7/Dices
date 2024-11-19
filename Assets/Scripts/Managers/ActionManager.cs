@@ -58,7 +58,8 @@ public class ActionManager : MonoBehaviour
 
         // Обновление состояния активного юнита
         active.Can_act = false;
-        SetUnitInteractable(active); // Обновляем визуальное состояние
+        if (active.UnitStats.IsPlayerUnit == true) 
+            SetUnitInteractable(active); 
     }
 
     private void ResetSelection()

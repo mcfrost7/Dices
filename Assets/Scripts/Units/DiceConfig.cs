@@ -55,7 +55,7 @@ public class DiceConfig : ScriptableObject
     {
         Debug.Log($"{target.UnitStats.Type.TypeName} погиб.");
 
-        BattleManager.Instance.OnUnitDeath(target.UnitStats);
+        BattleManager.Instance.OnUnitDeath(target);
     }
 
     // Метод для получения спрайта в зависимости от типа действия

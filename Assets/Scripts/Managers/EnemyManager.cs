@@ -44,19 +44,25 @@ public class EnemyManager : MonoBehaviour
         set => enemyPrefab = value;
     }
 
-    public void FindTarget(List<GameObject> units)
+    public void FindTarget(List<GameObject> unitsObj, List<GameObject> enemiesObj)
     {
         List<Unit> unitList = new List<Unit>();
-        foreach (GameObject unit in units)
+        List<UnitStats> enemyList = new List<UnitStats>();
+        foreach (GameObject unit in unitsObj)
         {
             unitList.Add(unit.GetComponent<Unit>());
         }
+        foreach (GameObject unit in enemiesObj)
+        {
+            enemyList.Add(unit.GetComponent<Unit>().UnitStats);
+        }
+
         ActionResolver actionResolver = new ActionResolver();
         List<Unit> targets = new List<Unit>();
-        foreach (UnitStats unit in enemies)
+        foreach (UnitStats enemyUnit in enemyList)
         {
-            unit.Target = actionResolver.ChooseUnitToAttack(unitList);
-            Debug.Log("Цель с именем " + unit.Target.UnitStats.Name + " для " + unit.Name+ " .");
+            enemyUnit.Target = actionResolver.ChooseUnitToAttack(unitList);
+            Debug.Log("Цель с именем " + enemyUnit.Target.UnitStats.Name + " для " + enemyUnit.Name+ " .");
         }
     }
 }

@@ -22,6 +22,11 @@ public class UnitStats
     public DiceAction Current_dice_side { get; set; }
 
     public Unit Target {  get;  set; }
+
+    public UnitStats()
+    {
+
+    }
     public UnitStats(int health, int moral, TypesInfo.Type type)
     {
         Health = health;

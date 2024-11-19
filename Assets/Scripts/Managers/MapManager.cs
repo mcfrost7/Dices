@@ -13,6 +13,8 @@ public class MapManager : MonoBehaviour
 
     private List<Tile> tiles = new List<Tile>(); // Используем список для хранения тайлов
 
+    public List<Tile> Tiles { get => tiles; set => tiles = value; }
+
     private void Awake()
     {
         gameObject.SetActive(false);
@@ -36,24 +38,24 @@ public class MapManager : MonoBehaviour
     private void CreateTiles(TileConfig config)
     {
         ClearOldTiles();
-        tiles.Clear(); // Очищаем список перед созданием новых тайлов
+        Tiles.Clear(); // Очищаем список перед созданием новых тайлов
 
         foreach (TileConfig.TileData tileData in config.tiles)
         {
-            tiles.Add(CreateTile(tileData)); // Добавляем новые тайлы в список
+            Tiles.Add(CreateTile(tileData)); // Добавляем новые тайлы в список
         }
     }
 
     private void ClearOldTiles()
     {
-        foreach (var tile in tiles)
+        foreach (var tile in Tiles)
         {
             if (tile != null)
             {
                 Destroy(tile);
             }
         }
-        tiles.Clear(); // Очищаем список тайлов
+        Tiles.Clear(); // Очищаем список тайлов
     }
 
     private Tile CreateTile(TileConfig.TileData tileData)
@@ -79,7 +81,7 @@ public class MapManager : MonoBehaviour
 
     private void DrawTiles()
     {
-        Tile[] sortedTiles = tiles.OrderBy(t => t.level).ToArray();
+        Tile[] sortedTiles = Tiles.OrderBy(t => t.level).ToArray();
         int[] rowCounts = CountTilesPerLevel(sortedTiles);
 
         int previousLevel = -1;

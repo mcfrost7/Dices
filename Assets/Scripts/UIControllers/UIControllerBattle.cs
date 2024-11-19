@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class DrawBattleManager : MonoBehaviour
+public class UIControllerBattle : MonoBehaviour
 {
 
     [SerializeField] private Transform unitsPanel;

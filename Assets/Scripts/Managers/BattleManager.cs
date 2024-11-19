@@ -23,10 +23,8 @@ public class BattleManager : MonoBehaviour
     }
 
     public GameObject Action_manager { get => ActionManager; set => ActionManager = value; }
-    public Camera MainCamera { get => mainCamera; set => mainCamera = value; }
     public GameObject BattleUI { get => battleUI; set => battleUI = value; }
     public GameObject ActionManager { get => actionManager; set => actionManager = value; }
-    public GameObject MapManager { get => mapManager; set => mapManager = value; }
     public GameObject EnemyManager { get => enemyManager; set => enemyManager = value; }
     public GameObject DrawBattleManager { get => drawBattleManager; set => drawBattleManager = value; }
     public float DiceRollDelay { get => diceRollDelay; set => diceRollDelay = value; }
@@ -41,12 +39,11 @@ public class BattleManager : MonoBehaviour
     public List<GameObject> UnitList { get => unitList; set => unitList = value; }
     public List<GameObject> EnemyList { get => enemyList; set => enemyList = value; }
     public GameObject TeamManager { get => teamManager; set => teamManager = value; }
-    public DrawBattleManager DrawBattleManagerLocal { get => drawBattleManagerLocal; set => drawBattleManagerLocal = value; }
+    public UIControllerBattle DrawBattleManagerLocal { get => drawBattleManagerLocal; set => drawBattleManagerLocal = value; }
 
     [SerializeField] private Camera mainCamera; // Основная камера
     [SerializeField] private GameObject battleUI; // UI для битвы
     [SerializeField] private GameObject actionManager; // UI для битвы
-    [SerializeField] private GameObject mapManager; // Менеджер карты
     [SerializeField] private GameObject teamManager; // Менеджер команды
     [SerializeField] private GameObject enemyManager; // Менеджер врагов
     [SerializeField] private GameObject drawBattleManager; // Менеджер отрисовки
@@ -62,16 +59,15 @@ public class BattleManager : MonoBehaviour
     private bool[] diceFrozen;
     private int usedUnits = 0;
     private BattlePhase currentPhase = BattlePhase.BotRollsDice;
-    private int[] finalSide = new int[6];
-    private List<GameObject> unitList = new List<GameObject>();
-    private List<GameObject> enemyList = new List<GameObject>();
-    private DrawBattleManager drawBattleManagerLocal = null;
+    private List<GameObject> unitList = new();
+    private List<GameObject> enemyList = new();
+    private UIControllerBattle drawBattleManagerLocal = null;
 
 
     private void Awake()
     {
         gameObject.SetActive(false);
-        drawBattleManagerLocal = DrawBattleManager.GetComponent<DrawBattleManager>();
+        drawBattleManagerLocal = DrawBattleManager.GetComponent<UIControllerBattle>();
     }
 
     private void OnEnable()
@@ -148,6 +144,7 @@ public class BattleManager : MonoBehaviour
             enemyManagerTemp.CreateEnemies();
             DrawBattleManagerLocal.DrawUnits();
             DrawBattleManagerLocal.DrawEnemies();
+
             NextPhase();
         }
     }
@@ -282,7 +279,7 @@ public class BattleManager : MonoBehaviour
     {
         RerollDice(false);
         EnemyManager enemyManagerLocal  = EnemyManager.GetComponent<EnemyManager>();
-        enemyManagerLocal.FindTarget(unitList);
+        enemyManagerLocal.FindTarget(unitList, enemyList);
         CurrentPhase = BattlePhase.PlayerRollsDice;
         NextPhase();
     }
@@ -320,7 +317,7 @@ public class BattleManager : MonoBehaviour
             Text_end_reroll.enabled = true;
             Text_end_turn.enabled = false;
             UsedUnits = 0;
-            for (int i = 0; i < GameManager.Instance.Player.units.Count; i++)
+            for (int i = 0; i < unitList.Count; i++)
             {
                 DiceFrozen[i] = false;
             }
@@ -361,16 +358,18 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void OnUnitDeath(UnitStats unit)
+    public void OnUnitDeath(Unit unit)
     {
-        if (unit.IsPlayerUnit)
+        if (unit.UnitStats.IsPlayerUnit)
         {
-            GameManager.Instance.Player.units.Remove(unit); // Удаляем юнита
+
+            unitList.Remove(unit.gameObject); // Удаляем юнита
+            Destroy(unit.gameObject);
         }
         else
         {
-            EnemyManager enemyManagerTemp = EnemyManager.GetComponent<EnemyManager>();
-            enemyManagerTemp.Enemies.Remove(unit); // Удаляем юнита
+            EnemyList.Remove(unit.gameObject); // Удаляем юнита
+            Destroy(unit.gameObject);
         }
 
         DrawBattleManagerLocal.UpdateAllUnitsStats();
@@ -404,11 +403,17 @@ public class BattleManager : MonoBehaviour
 
     private bool IsAnyTeamAlive()
     {
-        return  GameManager.Instance.Player.units.Count > 0 && EnemyManager.GetComponent<EnemyManager>().Enemies.Count > 0;
+        return  unitList.Count > 0 && enemyList.Count > 0;
     }
 
     private void EndBattle()
     {
+        GameManager.Instance.Player.units.Clear();
+        foreach (GameObject unitObj in unitList)
+        {
+            GameManager.Instance.Player.units.Add(unitObj.GetComponent<Unit>().UnitStats);
+        }
+
         CurrentPhase = BattlePhase.BotRollsDice;
         gameObject.SetActive(false);
     }

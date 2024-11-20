@@ -36,8 +36,8 @@ public class TeamManager : MonoBehaviour
         for (int i = 0; i < numberOfUnits; i++)
         {
             // Генерация случайных значений для параметров
-            int randomHealth = Random.Range(3, 6);
-            int randomMoral = Random.Range(2, 3);
+            int randomHealth = Random.Range(3, 8);
+            int randomMoral = Random.Range(1, 4);
             TypesInfo.Type randomType = TypesInfo.types[Random.Range(0, TypesInfo.types.Length)];
             GameManager.Instance.Player.units.Add(new UnitStats(randomHealth, randomMoral, randomType));
         }

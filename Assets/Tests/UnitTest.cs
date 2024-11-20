@@ -20,7 +20,7 @@ public class UnitStatsTests
         testType = new TypesInfo.Type
         {
             TypeName = "TestType",
-            Sprite = sprite,
+            Sprite_type = sprite,
             Level = 1,
             Dice = ScriptableObject.CreateInstance<DiceConfig>()
         };
@@ -33,7 +33,7 @@ public class UnitStatsTests
     public void TearDown()
     {
         // Очистка ресурсов после теста
-        Object.DestroyImmediate(testType.Sprite.texture);  // Уничтожение текстуры
+        Object.DestroyImmediate(testType.Sprite_type.texture);  // Уничтожение текстуры
         Object.DestroyImmediate(testType.Dice);  // Уничтожение DiceConfig
     }
 
@@ -44,7 +44,7 @@ public class UnitStatsTests
         Assert.AreEqual(100, unitStats.Health);
         Assert.AreEqual(50, unitStats.Moral);
         Assert.AreEqual(100, unitStats.CurrentHealth);
-        Assert.AreEqual(testType.Sprite, unitStats.Sprite);
+        Assert.AreEqual(testType.Sprite_type, unitStats.Sprite);
         Assert.IsTrue(unitStats.IsPlayerUnit);
     }
 

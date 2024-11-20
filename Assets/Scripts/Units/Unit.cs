@@ -78,7 +78,7 @@ public class Unit : MonoBehaviour
 
     public void UpdateImage()
     {
-        Image_unit.sprite = UnitStats.Type.Sprite;
+        Image_unit.sprite = UnitStats.Type.Sprite_type;
     }
 
     public void UpdateDice(bool isPlayer, int index)

@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   types:
   - typeName: BR_tac
-    sprite: {fileID: 21300000, guid: afe419de1d9b54c47b24a1f85b1e31a2, type: 3}
+    unit_side: 0
+    sprite_type: {fileID: 21300000, guid: afe419de1d9b54c47b24a1f85b1e31a2, type: 3}
+    sprite_level: {fileID: 21300000, guid: 2160e4db5e579c74fb23806c82e1a70c, type: 3}
     level: 1
     dice: {fileID: 11400000, guid: 025927dca816d1d428cb62a33ad4d7c8, type: 2}
   - typeName: BR_st
-    sprite: {fileID: 21300000, guid: 4274b2051069fa6499bcfb33d818326e, type: 3}
+    unit_side: 0
+    sprite_type: {fileID: 21300000, guid: 4274b2051069fa6499bcfb33d818326e, type: 3}
+    sprite_level: {fileID: 21300000, guid: 2160e4db5e579c74fb23806c82e1a70c, type: 3}
     level: 1
     dice: {fileID: 11400000, guid: 699fa5d6be00c194083191470da4ccbd, type: 2}

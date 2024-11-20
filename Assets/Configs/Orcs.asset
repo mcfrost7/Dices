@@ -15,6 +15,7 @@ MonoBehaviour:
   types:
   - typeName: Boyz
     unit_side: 1
-    sprite: {fileID: 21300000, guid: 8db5586785448674abb51244cb409286, type: 3}
+    sprite_type: {fileID: 21300000, guid: 8db5586785448674abb51244cb409286, type: 3}
+    sprite_level: {fileID: 0}
     level: 1
     dice: {fileID: 11400000, guid: 7599c2f35ef00a247aa5bff11918a235, type: 2}

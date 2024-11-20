@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIControllerTeam : MonoBehaviour
+public class UIControllerTeamUnitPanel : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject unitPanel;
     [SerializeField] private GameObject unitTeamPrefab;
     [SerializeField] private GameObject addButton;
     [SerializeField] private TeamManager teamManager;
+    [SerializeField] private UIControllerTeamUnitStats uIControllerTeamUnitStats;
 
     private void OnEnable()
     {
@@ -24,6 +25,7 @@ public class UIControllerTeam : MonoBehaviour
 
         canvas.gameObject.SetActive(true);
         DrawAllUnits();
+
     }
 
     private void OnDisable()
@@ -49,6 +51,8 @@ public class UIControllerTeam : MonoBehaviour
         {
             DrawUnit(unit);
         }
+        if (units[0]!=null)
+            OnUnitButtonClicked(units[0]);
     }
 
     private void DrawUnit(UnitStats unitStats)
@@ -71,7 +75,7 @@ public class UIControllerTeam : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Компонент Image не найден у unitTeamPrefab или Sprite отсутствует в UnitStats.");
+            Debug.LogWarning("Компонент Image не найден у unitTeamPrefab или Sprite_type отсутствует в UnitStats.");
         }
 
         // Получаем компонент Button и добавляем слушатель
@@ -84,16 +88,14 @@ public class UIControllerTeam : MonoBehaviour
         {
             Debug.LogWarning("Компонент Button не найден у unitTeamPrefab.");
         }
-
         Debug.Log($"Юнит с именем {unitStats.Type.TypeName} добавлен на панель.");
     }
 
     private void OnUnitButtonClicked(UnitStats unitStats)
     {
-        Debug.Log("Выбран юнит с показателями: " +
-                  "Текущее здоровье: " + unitStats.CurrentHealth +
-                  ", Мораль: " + unitStats.Moral +
-                  ", Тип юнита: " + unitStats.Type.TypeName);
+        uIControllerTeamUnitStats.GetComponent<UIControllerTeamUnitStats>().DrawAllPanels(unitStats);
+        uIControllerTeamUnitStats.GetComponent<UIControllerTeamInventory>().DrawAllPanels(unitStats);
+
     }
 
     public void OnAddUnitButtonClicked()

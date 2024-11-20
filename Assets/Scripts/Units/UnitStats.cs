@@ -21,6 +21,8 @@ public class UnitStats
     public string Name { get; private set; }
     public DiceAction Current_dice_side { get; set; }
 
+    public int Experience {  get; set; }
+
     public Unit Target {  get;  set; }
 
     public UnitStats()
@@ -32,17 +34,18 @@ public class UnitStats
         Health = health;
         CurrentHealth = health;
         Moral = moral;
-        Sprite = type.Sprite;
+        Sprite = type.Sprite_type;
         Type = type;
         IsPlayerUnit = true;
-        Name = ((Names)Random.Range(0, System.Enum.GetValues(typeof(Names)).Length)).ToString() ;
+        Name = ((Names)Random.Range(0, System.Enum.GetValues(typeof(Names)).Length)).ToString();
+        Experience = 0;
 
     }
     public UnitStats(int health, TypesInfo.Type type)
     {
         Health = health;
         CurrentHealth = health;
-        Sprite = type.Sprite;
+        Sprite = type.Sprite_type;
         Type = type;
         IsPlayerUnit = false;
         Name = ((OrcsNames)Random.Range(0, System.Enum.GetValues(typeof(OrcsNames)).Length)).ToString();

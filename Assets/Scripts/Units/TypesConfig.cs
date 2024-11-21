@@ -17,6 +17,7 @@ public class TypesInfo : ScriptableObject
         [SerializeField] private int level;
         [SerializeField] private DiceConfig dice;
 
+
         public string TypeName { get => typeName; set => typeName = value; }
         public Sprite Sprite_type { get => sprite_type; set => sprite_type = value; }
         public int Level { get => level; set => level = value; }

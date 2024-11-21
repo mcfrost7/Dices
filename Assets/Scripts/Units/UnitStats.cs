@@ -24,6 +24,8 @@ public class UnitStats
     public int Experience {  get; set; }
 
     public Unit Target {  get;  set; }
+    
+    public bool IsClickable { get; set; }
 
     public UnitStats()
     {
@@ -39,6 +41,7 @@ public class UnitStats
         IsPlayerUnit = true;
         Name = ((Names)Random.Range(0, System.Enum.GetValues(typeof(Names)).Length)).ToString();
         Experience = 0;
+        IsClickable = true;
 
     }
     public UnitStats(int health, TypesInfo.Type type)
@@ -49,6 +52,7 @@ public class UnitStats
         Type = type;
         IsPlayerUnit = false;
         Name = ((OrcsNames)Random.Range(0, System.Enum.GetValues(typeof(OrcsNames)).Length)).ToString();
+        IsClickable = true;
     }
 
     // Метод для обновления здоровья

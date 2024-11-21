@@ -26,27 +26,26 @@ public class BattleManager : MonoBehaviour
     public GameObject BattleUI { get => battleUI; set => battleUI = value; }
     public GameObject ActionManager { get => actionManager; set => actionManager = value; }
     public GameObject EnemyManager { get => enemyManager; set => enemyManager = value; }
-    public GameObject DrawBattleManager { get => drawBattleManager; set => drawBattleManager = value; }
+    public GameObject DrawBattleManager { get => uiControllerBattleManager; set => uiControllerBattleManager = value; }
     public float DiceRollDelay { get => diceRollDelay; set => diceRollDelay = value; }
     public float TimeToWait { get => timeToWait; set => timeToWait = value; }
     public Button Button_reroll { get => button_reroll; set => button_reroll = value; }
     public Button Button_end { get => button_end; set => button_end = value; }
     public TextMeshProUGUI Text_end_reroll { get => text_end_reroll; set => text_end_reroll = value; }
     public TextMeshProUGUI Text_end_turn { get => text_end_turn; set => text_end_turn = value; }
-    public bool[] DiceFrozen { get => diceFrozen; set => diceFrozen = value; }
     public int UsedUnits { get => usedUnits; set => usedUnits = value; }
     public BattlePhase CurrentPhase { get => currentPhase; set => currentPhase = value; }
     public List<GameObject> UnitList { get => unitList; set => unitList = value; }
     public List<GameObject> EnemyList { get => enemyList; set => enemyList = value; }
     public GameObject TeamManager { get => teamManager; set => teamManager = value; }
-    public UIControllerBattle DrawBattleManagerLocal { get => drawBattleManagerLocal; set => drawBattleManagerLocal = value; }
+    public UIControllerBattle UiControllerBattle { get => uiControllerBattle; set => uiControllerBattle = value; }
 
     [SerializeField] private Camera mainCamera; // Основная камера
     [SerializeField] private GameObject battleUI; // UI для битвы
     [SerializeField] private GameObject actionManager; // UI для битвы
     [SerializeField] private GameObject teamManager; // Менеджер команды
     [SerializeField] private GameObject enemyManager; // Менеджер врагов
-    [SerializeField] private GameObject drawBattleManager; // Менеджер отрисовки
+    [SerializeField] private GameObject uiControllerBattleManager; // Менеджер отрисовки
 
     [SerializeField] private float diceRollDelay = 0.05f; // Задержка для анимации кубика
     [SerializeField] private float timeToWait = 3f;
@@ -56,18 +55,17 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text_end_reroll = null;
     [SerializeField] private TextMeshProUGUI text_end_turn = null;
 
-    private bool[] diceFrozen;
     private int usedUnits = 0;
     private BattlePhase currentPhase = BattlePhase.BotRollsDice;
     private List<GameObject> unitList = new();
     private List<GameObject> enemyList = new();
-    private UIControllerBattle drawBattleManagerLocal = null;
+    private UIControllerBattle uiControllerBattle = null;
 
 
     private void Awake()
     {
         gameObject.SetActive(false);
-        drawBattleManagerLocal = DrawBattleManager.GetComponent<UIControllerBattle>();
+        uiControllerBattle = uiControllerBattleManager.GetComponent<UIControllerBattle>();
     }
 
     private void OnEnable()
@@ -88,12 +86,9 @@ public class BattleManager : MonoBehaviour
 
         // Сброс значений переменных для фаз боя и роллов
         CurrentPhase = BattlePhase.BotRollsDice;
-        DrawBattleManagerLocal.SumOfReroll = 0;
-        DrawBattleManagerLocal.CurrentRolls = 0;
+        UiControllerBattle.SumOfReroll = 0;
+        UiControllerBattle.CurrentRolls = 0;
         UsedUnits = 0;
-
-        // Сброс статуса кубиков
-        DiceFrozen = new bool[0];
     }
 
     private void ResetUI()
@@ -142,8 +137,8 @@ public class BattleManager : MonoBehaviour
         {
             EnemyManager enemyManagerTemp = EnemyManager.GetComponent<EnemyManager>();
             enemyManagerTemp.CreateEnemies();
-            DrawBattleManagerLocal.DrawUnits();
-            DrawBattleManagerLocal.DrawEnemies();
+            UiControllerBattle.DrawUnits();
+            UiControllerBattle.DrawEnemies();
 
             NextPhase();
         }
@@ -162,7 +157,7 @@ public class BattleManager : MonoBehaviour
         // Заморозка интерфейса
         yield return StartCoroutine(SetInteractableCoroutine(true));
 
-        Transform panel = isPlayer ? BattleUI.transform.Find("Units") : BattleUI.transform.Find("Enemies");
+        Transform panel = isPlayer ? UiControllerBattle.UnitsPanel : UiControllerBattle.EnemiesPanel;
         List<GameObject> units = isPlayer ? UnitList : EnemyList;
 
         if (panel != null)
@@ -182,7 +177,7 @@ public class BattleManager : MonoBehaviour
                 Transform diceSpriteTransform = unitTransform.Find("Dice");
                 Image diceImage = diceSpriteTransform?.GetComponent<Image>();
 
-                if (diceImage != null && (isPlayer ? !DiceFrozen[i] : true))
+                if (diceImage != null && (isPlayer ? units[i].GetComponent<Unit>().UnitStats.IsClickable : true)) 
                 {
                     if (units[i] != null)
                         diceCoroutines.Add(StartCoroutine(RollDiceForUnit(i, diceImage, units[i].GetComponent<Unit>())));
@@ -224,12 +219,6 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"Final dice side for {unit.UnitStats.Type.TypeName} - {unitIndex} : {randomDiceSide}");
     }
 
-
-    public void OnDiceClick(int i)
-    {
-        DiceFrozen[i] = !DiceFrozen[i];
-    }
-
     private void NextPhase()
     {
         StartCoroutine(NextPhaseCoroutine());
@@ -247,9 +236,9 @@ public class BattleManager : MonoBehaviour
         switch (CurrentPhase)
         {
             case BattlePhase.BotRollsDice:
-                DrawBattleManagerLocal.RerollsCount();
-                DrawBattleManagerLocal.CurrentRolls = DrawBattleManagerLocal.SumOfReroll;
-                DrawBattleManagerLocal.DrawRerolls();
+                UiControllerBattle.RerollsCount();
+                UiControllerBattle.CurrentRolls = UiControllerBattle.SumOfReroll;
+                UiControllerBattle.DrawRerolls();
                 FreezeUIButtons(true);
                 BotRollDiceAndSelectTarget();
                 break;
@@ -288,11 +277,11 @@ public class BattleManager : MonoBehaviour
     {
         if (CurrentPhase == BattlePhase.PlayerRollsDice)
         {
-            DrawBattleManagerLocal.DrawRerolls();
+            UiControllerBattle.DrawRerolls();
             RerollDice(true);
-            DrawBattleManagerLocal.CurrentRolls--;
-            DrawBattleManagerLocal.DrawRerolls();
-            if (DrawBattleManagerLocal.CurrentRolls <= 0)
+            UiControllerBattle.CurrentRolls--;
+            UiControllerBattle.DrawRerolls();
+            if (UiControllerBattle.CurrentRolls <= 0)
             {
                 EndButonAction();
             }
@@ -317,9 +306,9 @@ public class BattleManager : MonoBehaviour
             Text_end_reroll.enabled = true;
             Text_end_turn.enabled = false;
             UsedUnits = 0;
-            for (int i = 0; i < unitList.Count; i++)
+            foreach (var unit in unitList)
             {
-                DiceFrozen[i] = false;
+                unit.GetComponent<Unit>().UnitStats.IsClickable = true;
             }
             CurrentPhase = BattlePhase.BotAction;
             NextPhase();
@@ -332,8 +321,8 @@ public class BattleManager : MonoBehaviour
         if (CurrentPhase == BattlePhase.PlayerAction)
         {
             Action_manager.GetComponent<ActionManager>().SelectUnit(unit);
-            drawBattleManagerLocal.UpdateAllEnemiesStats();
-            drawBattleManagerLocal.UpdateAllUnitsStats();
+            uiControllerBattle.UpdateAllEnemiesStats();
+            uiControllerBattle.UpdateAllUnitsStats();
             CheckUsedUnits();
 
         }
@@ -372,8 +361,8 @@ public class BattleManager : MonoBehaviour
             Destroy(unit.gameObject);
         }
 
-        DrawBattleManagerLocal.UpdateAllUnitsStats();
-        DrawBattleManagerLocal.UpdateAllEnemiesStats();
+        UiControllerBattle.UpdateAllUnitsStats();
+        UiControllerBattle.UpdateAllEnemiesStats();
 
         // Проверка конца игры
         if (!IsAnyTeamAlive())
@@ -394,8 +383,8 @@ public class BattleManager : MonoBehaviour
             {
                 actionManager.PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
             }
-            drawBattleManagerLocal.UpdateAllEnemiesStats();
-            drawBattleManagerLocal.UpdateAllUnitsStats();
+            uiControllerBattle.UpdateAllEnemiesStats();
+            uiControllerBattle.UpdateAllUnitsStats();
             CurrentPhase = BattlePhase.BotRollsDice;
             NextPhase();
         }

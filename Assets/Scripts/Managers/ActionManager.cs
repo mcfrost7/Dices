@@ -78,7 +78,7 @@ public class ActionManager : MonoBehaviour
     {
         if (unit != null)
         {
-           unit.Text_is_picked.enabled = highlight;
+           unit.UiController.UpdatePickStatus(highlight);
         }
     }
 

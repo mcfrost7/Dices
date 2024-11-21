@@ -150,9 +150,13 @@ public class MapManager : MonoBehaviour
 
     private void ClearTilesContainer()
     {
-        foreach (Transform child in tiles_container.transform)
+        if (tiles_container != null)
         {
-            Destroy(child.gameObject); // Уничтожаем все кнопки в контейнере
+            foreach (Transform child in tiles_container.transform)
+            {
+                if (child != null)
+                    Destroy(child.gameObject); // Уничтожаем все кнопки в контейнере
+            }
         }
     }
 }

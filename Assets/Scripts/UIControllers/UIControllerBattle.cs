@@ -9,6 +9,7 @@ public class UIControllerBattle : MonoBehaviour
     [SerializeField] private Transform unitsPanel;
     [SerializeField] private Transform enemiesPanel;
     [SerializeField] private TextMeshProUGUI rerollText;
+
     BattleManager battleManager = null;
     private int sumOfReroll = 0, currentRolls = 0;
 
@@ -38,11 +39,8 @@ public class UIControllerBattle : MonoBehaviour
             var entityObject = Instantiate(entityPrefab, panel);
             Unit unit = entityObject.GetComponent<Unit>();
             unit.Init(entity);
-            unit.UpdateUI();
-            unit.UpdateImage();
-            unit.UpdateDice(isPlayerUnit, i);
-            unit.UpdateActionTrigger(unit);
-            unit.GetComponent<Unit>().Init(entity);
+            unit.UpdateUI(entity,i,unit);
+
             if (isPlayerUnit)
             {
                 battleManager.UnitList.Add(entityObject);
@@ -58,11 +56,6 @@ public class UIControllerBattle : MonoBehaviour
     public void DrawUnits()
     {
         GameManager gameManager = GameManager.Instance;
-        battleManager.DiceFrozen = new bool[gameManager.Player.units.Count];
-        for (int i = 0; i < gameManager.Player.units.Count; i++)
-        {
-            battleManager.DiceFrozen[i] = false;
-        }
         SpawnEntities(battleManager.TeamManager.GetComponent<TeamManager>().UnitPrefab, UnitsPanel, gameManager.Player.units, true);
     }
 
@@ -88,7 +81,7 @@ public class UIControllerBattle : MonoBehaviour
         {
             var entity = entities[i];
 
-            entity.GetComponent<Unit>().UpdateUI();
+            entity.GetComponent<Unit>().UiController.UpdateText(entity.GetComponent<Unit>().UnitStats);
         }
     }
     public void DrawRerolls()
@@ -97,13 +90,15 @@ public class UIControllerBattle : MonoBehaviour
     }
     public void RerollsCount()
     {
+        float tempRoll = 0;
         Player player = GameManager.Instance.Player;
 
         for (int i = 0; i < player.units.Count; i++)
         {
-            SumOfReroll += player.units[i].Moral;
+            tempRoll += player.units[i].Moral;
         }
-        SumOfReroll /= player.units.Count;
+        tempRoll /= player.units.Count;
+        SumOfReroll = (int)Mathf.Ceil(tempRoll);
     }
 
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b1851bab44848294b9bff3645e705832
+guid: 4a59f7affdde49146b70dd356ddbac15
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Jaro Cyrillic
+  - Waterway (Demo)
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

@@ -12,6 +12,8 @@ public class DiceConfig : ScriptableObject
     public Sprite[] ActionSprites { get => actionSprites; set => actionSprites = value; }
     public List<DiceAction> DiceActions { get => diceActions; set => diceActions = value; }
 
+    
+
 
     [System.Serializable]
     public class DiceAction

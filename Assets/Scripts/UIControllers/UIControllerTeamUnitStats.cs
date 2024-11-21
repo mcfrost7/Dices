@@ -21,7 +21,7 @@ public class UIControllerTeamUnitStats : MonoBehaviour
     private void DrawStatsPanel(UnitStats stats)
     {
         image_level_panel_.GetComponent<Image>().sprite = stats.Type.Sprite_level;
-        text_hp.text = stats.CurrentHealth.ToString() + " / " + stats.CurrentHealth.ToString();
+        text_hp.text = stats.CurrentHealth.ToString() + " / " + stats.Health.ToString();
         text_moral.text = stats.Moral.ToString();
         text_level.text = stats.Experience.ToString() + " / " + (stats.Type.Level*10).ToString();
 

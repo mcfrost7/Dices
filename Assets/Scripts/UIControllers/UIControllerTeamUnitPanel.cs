@@ -50,9 +50,10 @@ public class UIControllerTeamUnitPanel : MonoBehaviour
         foreach (var unit in units)
         {
             DrawUnit(unit);
+            OnUnitButtonClicked(unit);
         }
-        if (units[0]!=null)
-            OnUnitButtonClicked(units[0]);
+
+            
     }
 
     private void DrawUnit(UnitStats unitStats)

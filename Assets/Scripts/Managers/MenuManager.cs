@@ -5,13 +5,9 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private Canvas menuCanvas;
-    [SerializeField] private GameObject gameManager;
     [SerializeField] private GameObject settingsManager;
 
-
-
     public Canvas MenuCanvas { get => menuCanvas; set => menuCanvas = value; }
-    public GameObject GameManager { get => gameManager; set => gameManager = value; }
     public GameObject SettingsManager { get => settingsManager; set => settingsManager = value; }
 
 
@@ -28,18 +24,16 @@ public class MenuManager : MonoBehaviour
     public void CreateNewGame()
     {
         MenuCanvas.gameObject.SetActive(false);
-        GameManager gameManager = GameManager.GetComponent<GameManager>();
-        gameManager.SetGameStatus(true);
-        gameManager.EnableManager(GameManager, true);
+        GameManager.Instance.SetGameStatus(true);
+        GameManager.Instance.EnableManager(GameManager.Instance.gameObject, true);
 
     }
 
     public void ContinueGame()
     {
         MenuCanvas.gameObject.SetActive(false);
-        GameManager gameManager = GameManager.GetComponent<GameManager>();
-        gameManager.SetGameStatus(false);
-        gameManager.EnableManager(GameManager, true);
+        GameManager.Instance.SetGameStatus(false);
+        GameManager.Instance.EnableManager(GameManager.Instance.gameObject, true);
 
     }
 
@@ -52,20 +46,11 @@ public class MenuManager : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    public void ExitToMenu()
-    {
-
-        gameManager.SetActive(false);
-        MenuCanvas.gameObject.SetActive(true);
-    }
-
 
     public void Exit()
     {
         Application.Quit();
         Debug.Log("Игра завершена.");
     }
-
-
 
 }

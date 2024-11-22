@@ -6,25 +6,13 @@ public class TeamManager : MonoBehaviour
     private Player teamPlayer = null;
 
     [SerializeField] private TypesInfo typesInfo;
-    [SerializeField] private int numberOfUnits;
+
     [SerializeField] private GameObject unitPrefab;
 
     public Player TeamPlayer { get => teamPlayer; private set => teamPlayer = value; }
     public TypesInfo TypesInfo { get => typesInfo; set => typesInfo = value; }
-    public int NumberOfUnits { get => numberOfUnits; set => numberOfUnits = value; }
+
     public GameObject UnitPrefab { get => unitPrefab; set => unitPrefab = value; }
-
-    private void OnEnable()
-    {
-        TeamPlayer = GameManager.Instance.Player;
-
-        // Создаем юниты, если игра только началась
-        if (GameManager.Instance.GetGameStatus())
-        {
-            CreateUnit(numberOfUnits);
-            GameManager.Instance.SetGameStatus(false);
-        }
-    }
 
     private void Awake()
     {
@@ -39,12 +27,14 @@ public class TeamManager : MonoBehaviour
             int randomHealth = Random.Range(3, 8);
             int randomMoral = Random.Range(1, 4);
             TypesInfo.Type randomType = TypesInfo.types[Random.Range(0, TypesInfo.types.Length)];
-            GameManager.Instance.Player.units.Add(new UnitStats(randomHealth, randomMoral, randomType));
+            GameManager.Instance.Player.Units.Add(new UnitStats(randomHealth, randomMoral, randomType));
         }
     }
 
+
+
     public List<UnitStats> GetPlayerUnits()
     {
-        return GameManager.Instance.Player.units;
+        return GameManager.Instance.Player.Units;
     }
 }

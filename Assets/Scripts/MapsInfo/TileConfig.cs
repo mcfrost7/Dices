@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TileConfig", menuName = "ScriptableObjects/TileConfig")]
+[CreateAssetMenu(fileName = "TileConfig1", menuName = "ScriptableObjects/TileConfig1")]
 public class TileConfig : ScriptableObject
 {
     public TileData[] tiles;

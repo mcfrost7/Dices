@@ -56,7 +56,7 @@ public class UIControllerBattle : MonoBehaviour
     public void DrawUnits()
     {
         GameManager gameManager = GameManager.Instance;
-        SpawnEntities(battleManager.TeamManager.GetComponent<TeamManager>().UnitPrefab, UnitsPanel, gameManager.Player.units, true);
+        SpawnEntities(battleManager.TeamManager.GetComponent<TeamManager>().UnitPrefab, UnitsPanel, gameManager.Player.Units, true);
     }
 
     public void DrawEnemies()
@@ -93,11 +93,11 @@ public class UIControllerBattle : MonoBehaviour
         float tempRoll = 0;
         Player player = GameManager.Instance.Player;
 
-        for (int i = 0; i < player.units.Count; i++)
+        for (int i = 0; i < player.Units.Count; i++)
         {
-            tempRoll += player.units[i].Moral;
+            tempRoll += player.Units[i].Moral;
         }
-        tempRoll /= player.units.Count;
+        tempRoll /= player.Units.Count;
         SumOfReroll = (int)Mathf.Ceil(tempRoll);
     }
 

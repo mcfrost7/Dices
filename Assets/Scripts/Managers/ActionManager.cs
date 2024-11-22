@@ -18,7 +18,7 @@ public class ActionManager : MonoBehaviour
     public void SelectUnit(Unit unit)
     {
         // Если уже выбран активный юнит, то выбираем цель
-        if (activeUnit == null)
+        if (activeUnit == null && unit.UnitStats.IsPlayerUnit)
         {
             if (unit.Can_act) // Проверяем, может ли юнит выполнять действия
             {

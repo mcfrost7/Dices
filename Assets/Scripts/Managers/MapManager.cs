@@ -7,13 +7,10 @@ public class MapManager : MonoBehaviour
 {
     [SerializeField] private Canvas map;
     [SerializeField] private GameObject mapCanvas;
+    [SerializeField] private Sprite[] sprites;
     [SerializeField] private GameObject tiles_container; // Контейнер для тайлов
     [SerializeField] private Button button_tile_prefab; // Переименуем в buttonPrefab для ясности
-    [SerializeField] private Sprite[] sprites;
 
-    private List<Tile> tiles = new List<Tile>(); // Используем список для хранения тайлов
-
-    public List<Tile> Tiles { get => tiles; set => tiles = value; }
 
     private void Awake()
     {
@@ -24,7 +21,7 @@ public class MapManager : MonoBehaviour
     {
         mapCanvas.SetActive(true);
         map.gameObject.SetActive(true);
-        CreateTiles(GameManager.Instance.Player.tileConfig);
+        gameObject.GetComponent<TileManager>().LoadTilesToPlayer();
         DrawTiles();
     }
 
@@ -35,53 +32,9 @@ public class MapManager : MonoBehaviour
         map.gameObject.SetActive(false);
     }
 
-    private void CreateTiles(TileConfig config)
-    {
-        ClearOldTiles();
-        Tiles.Clear(); // Очищаем список перед созданием новых тайлов
-
-        foreach (TileConfig.TileData tileData in config.tiles)
-        {
-            Tiles.Add(CreateTile(tileData)); // Добавляем новые тайлы в список
-        }
-    }
-
-    private void ClearOldTiles()
-    {
-        foreach (var tile in Tiles)
-        {
-            if (tile != null)
-            {
-                Destroy(tile);
-            }
-        }
-        Tiles.Clear(); // Очищаем список тайлов
-    }
-
-    private Tile CreateTile(TileConfig.TileData tileData)
-    {
-        Tile newTile = tileData.tileType switch
-        {
-            TileType.BattleTile => gameObject.AddComponent<BattleTile>(),
-            TileType.LootTile => CreateLootTile(tileData),
-            TileType.CampfireTile => gameObject.AddComponent<CampfireTile>(),
-            _ => throw new System.ArgumentException("Unknown tile type: " + tileData.tileType)
-        };
-
-        newTile.Initialize(tileData.level, tileData.tileName, tileData.isWalkable, tileData.isPassed);
-        return newTile;
-    }
-
-    private LootTile CreateLootTile(TileConfig.TileData tileData)
-    {
-        LootTile lootTile = gameObject.AddComponent<LootTile>();
-        lootTile.lootType = tileData.lootType; // Устанавливаем тип лута
-        return lootTile;
-    }
-
     private void DrawTiles()
     {
-        Tile[] sortedTiles = Tiles.OrderBy(t => t.level).ToArray();
+        Tile[] sortedTiles = GameManager.Instance.Player.Tiles.OrderBy(t => t.level).ToArray();
         int[] rowCounts = CountTilesPerLevel(sortedTiles);
 
         int previousLevel = -1;
@@ -159,4 +112,6 @@ public class MapManager : MonoBehaviour
             }
         }
     }
+
+
 }

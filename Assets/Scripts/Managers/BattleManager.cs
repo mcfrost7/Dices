@@ -192,8 +192,6 @@ public class BattleManager : MonoBehaviour
         yield return StartCoroutine(SetInteractableCoroutine(false));
     }
 
-
-
     private IEnumerator RollDiceForUnit(int unitIndex, Image diceImage, Unit unit)
     {
         int randomDiceSide = 0;
@@ -372,8 +370,6 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
-
     private void BotTakeAction()
     {
         if (currentPhase == BattlePhase.BotAction)
@@ -390,21 +386,40 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private bool IsPlayerTeamAlive()
+    {
+        return unitList.Count > 0; // Проверяем, есть ли юниты у игрока
+    }
+
+    private bool IsEnemyTeamAlive()
+    {
+        return enemyList.Count > 0; // Проверяем, есть ли юниты у врага
+    }
+
     private bool IsAnyTeamAlive()
     {
-        return  unitList.Count > 0 && enemyList.Count > 0;
+        return IsPlayerTeamAlive() && IsEnemyTeamAlive(); // Проверяем, живы ли обе команды
     }
+
 
     private void EndBattle()
     {
-        GameManager.Instance.Player.units.Clear();
-        foreach (GameObject unitObj in unitList)
+        if ((IsPlayerTeamAlive() == true) && (IsEnemyTeamAlive() == false))
         {
-            GameManager.Instance.Player.units.Add(unitObj.GetComponent<Unit>().UnitStats);
+            GameManager.Instance.Player.Units.Clear();
+            foreach (GameObject unitObj in unitList)
+            {
+                GameManager.Instance.Player.Units.Add(unitObj.GetComponent<Unit>().UnitStats);
+            }
+            GameManager.Instance.Status = BattleStatus.Win;
+            GameManager.Instance.EndBattleChecker();
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            GameManager.Instance.Status = BattleStatus.Lose;
         }
 
-        CurrentPhase = BattlePhase.BotRollsDice;
-        gameObject.SetActive(false);
     }
 
 

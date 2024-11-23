@@ -14,10 +14,12 @@ public class UIControllerGlobalMenu : MonoBehaviour
     [SerializeField] private GameObject button_call_task;
     [SerializeField] private GameObject image_freeze;
 
+    public GameObject Image_freeze { get => image_freeze; set => image_freeze = value; }
+
     private void Awake()
     {
         panel_menu.SetActive(false);
-        image_freeze.SetActive(false);
+        Image_freeze.SetActive(false);
     }
 
     public void CallMenuButton()
@@ -25,7 +27,7 @@ public class UIControllerGlobalMenu : MonoBehaviour
         if (button_call_menu != null)
         {
             panel_menu.SetActive(true);
-            image_freeze.SetActive(true);
+            Image_freeze.SetActive(true);
             Time.timeScale = 0;
         }
 
@@ -36,7 +38,7 @@ public class UIControllerGlobalMenu : MonoBehaviour
         if (button_continue != null)
         {
             panel_menu.SetActive(false);
-            image_freeze.SetActive(false);
+            Image_freeze.SetActive(false);
             Time.timeScale = 1;
         }
     }

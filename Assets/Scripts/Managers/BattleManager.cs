@@ -89,6 +89,7 @@ public class BattleManager : MonoBehaviour
         UiControllerBattle.SumOfReroll = 0;
         UiControllerBattle.CurrentRolls = 0;
         UsedUnits = 0;
+        GameManager.Instance.Status = BattleStatus.None;
     }
 
     private void ResetUI()
@@ -401,7 +402,6 @@ public class BattleManager : MonoBehaviour
         return IsPlayerTeamAlive() && IsEnemyTeamAlive(); // Проверяем, живы ли обе команды
     }
 
-
     private void EndBattle()
     {
         if ((IsPlayerTeamAlive() == true) && (IsEnemyTeamAlive() == false))
@@ -412,14 +412,12 @@ public class BattleManager : MonoBehaviour
                 GameManager.Instance.Player.Units.Add(unitObj.GetComponent<Unit>().UnitStats);
             }
             GameManager.Instance.Status = BattleStatus.Win;
-            GameManager.Instance.EndBattleChecker();
-            gameObject.SetActive(false);
         }
         else
         {
             GameManager.Instance.Status = BattleStatus.Lose;
         }
-
+        GameManager.Instance.EndBattleChecker();
     }
 
 

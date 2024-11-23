@@ -7,13 +7,11 @@ public class DiceConfig : ScriptableObject
 {
     [SerializeField] private Sprite[] actionSprites;
     [SerializeField] private List<DiceAction> diceActions = new List<DiceAction>();
-    [SerializeField] private DiceAction current_dice_side;
+    private DiceAction current_dice_side;
 
     public Sprite[] ActionSprites { get => actionSprites; set => actionSprites = value; }
     public List<DiceAction> DiceActions { get => diceActions; set => diceActions = value; }
-
-    
-
+    public DiceAction Current_dice_side { get => current_dice_side; set => current_dice_side = value; }
 
     [System.Serializable]
     public class DiceAction

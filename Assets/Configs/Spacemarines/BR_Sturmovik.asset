@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a1b1af9359d4aa498dbc1ca35fbc6bd, type: 3}
-  m_Name: BR_Tac
+  m_Name: BR_Sturmovik
   m_EditorClassIdentifier: 
   actionSprites:
   - {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}

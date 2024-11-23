@@ -110,8 +110,8 @@ public class GameManager : MonoBehaviour
         if (Status == BattleStatus.Win)
         {
            MapManager1.GetComponent<TileManager>().UpdateTileConfig(currentTile);
-            Status = BattleStatus.None;
         }
+        MenuManager1.GetComponent<UIControllerNotification>().LoadInfoMenu();
     }
 
     public void BackFromTeamToMap()

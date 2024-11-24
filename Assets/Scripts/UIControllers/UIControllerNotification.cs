@@ -40,6 +40,7 @@ public class UIControllerNotification : MonoBehaviour
         panel_main.SetActive(false);
         gameObject.GetComponent<UIControllerGlobalMenu>().Image_freeze.SetActive(false);
         GameManager.Instance.EnableManager(GameManager.Instance.BattleManager1, false );
+        GameManager.Instance.MenuManager1.GetComponent<UIControllerResources>().UpdateResources();
     }
 
 }

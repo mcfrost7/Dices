@@ -18,6 +18,7 @@ public class CameraMovement : MonoBehaviour
     {
         cam = GetComponent<Camera>(); // Получаем компонент камеры
         SetBounds();
+        SetStartPosition();
     }
 
     void SetBounds()
@@ -64,7 +65,13 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-    // Метод для запрета зумирования и перемещения камеры
+    void SetStartPosition()
+    {
+        float initialX = plane.transform.position.x; // Центральная позиция по оси X
+        float initialY = minBounds.y; 
+        cam.transform.position = new Vector3(initialX, initialY, cam.transform.position.z); 
+    }
+
     public void SetCameraMovementEnabled(bool enabled)
     {
         canMoveAndZoom = enabled;

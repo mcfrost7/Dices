@@ -12,40 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c494ca63295f21d4e87fee8c52bd487a, type: 3}
   m_Name: Tiles
   m_EditorClassIdentifier: 
+  resources:
+  - {fileID: 11400000, guid: 1398a2fb37e882441b0b5e5cfc342d47, type: 2}
   tiles:
   - level: 1
-    tileName: 11
-    isWalkable: 1
-    isPassed: 0
     tileType: 0
-    lootType: 
   - level: 2
-    tileName: 21
-    isWalkable: 0
-    isPassed: 0
     tileType: 1
-    lootType: goida
   - level: 2
-    tileName: 22
-    isWalkable: 0
-    isPassed: 0
     tileType: 0
-    lootType: goida
   - level: 3
-    tileName: 31
-    isWalkable: 0
-    isPassed: 0
     tileType: 2
-    lootType: 
   - level: 3
-    tileName: 32
-    isWalkable: 0
-    isPassed: 0
     tileType: 0
-    lootType: 
   - level: 3
-    tileName: 33
-    isWalkable: 0
-    isPassed: 0
     tileType: 1
-    lootType: 
+  - level: 4
+    tileType: 0
+  - level: 5
+    tileType: 0
+  - level: 5
+    tileType: 1
+  - level: 6
+    tileType: 0

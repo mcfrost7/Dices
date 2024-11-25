@@ -73,12 +73,9 @@ public class GameManager : MonoBehaviour
     {
         if (tile == null)
             return;
-        if (tile.isWalkable == true && tile.isPassed == false)
+        if (tile.TileData.IsWalkable == true && tile.TileData.IsPassed == false)
         {
-
-
-            EnableManager(MapManager1, false);
-            EnableManager(BattleManager1, true);
+            tile.OnTileClicked();
             currentTile = tile;
         }
 
@@ -87,9 +84,10 @@ public class GameManager : MonoBehaviour
     {
         if (tile == null)
             return;
-        if (tile.isWalkable == true && tile.isPassed == false)
+        if (tile.TileData.IsWalkable == true && tile.TileData.IsPassed == false)
         {
-            Debug.Log("loot");
+            tile.OnTileClicked();
+            currentTile = tile;
         }
 
     }
@@ -97,19 +95,18 @@ public class GameManager : MonoBehaviour
     {
         if (tile == null)
             return;
-        if (tile.isWalkable == true && tile.isPassed == false)
+        if (tile.TileData.IsWalkable == true && tile.TileData.IsPassed == false)
         {
-            Debug.Log("campfire");
+            tile.OnTileClicked();
+            currentTile = tile;
         }
-
-
     }
 
     public void EndBattleChecker()
     {
         if (Status == BattleStatus.Win)
         {
-            MapManager1.GetComponent<TileManager>().UpdateTileConfig(currentTile);
+            MapManager1.GetComponent<TileManager>().UpdateTileData(currentTile);
             BattleManager1.GetComponent<RewardManager>().AddReward();
 
         }

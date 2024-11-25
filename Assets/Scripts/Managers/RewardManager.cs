@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    private void ResourceReward()
+    [SerializeField] private int resource_amount;
+    [SerializeField] private int exp_amount;
+
+    public int Resource_amount { get => resource_amount; set => resource_amount = value; }
+    public int Exp_amount { get => exp_amount; set => exp_amount = value; }
+
+    public void ResourceReward()
     {
         foreach (var resource in GameManager.Instance.Player.Resources)
         {
             if (resource.ResourcesType == ResourcesType.SignalTransmitter )
             {
-                resource.AddAmount(1);
+                resource.AddAmount(Resource_amount);
             }
         }
 
@@ -20,7 +26,7 @@ public class RewardManager : MonoBehaviour
     {
         foreach (var unitStats in GameManager.Instance.Player.Units)
         {
-            unitStats.AddExperience(1);
+            unitStats.AddExperience(Exp_amount);
         }
     }
 

@@ -375,10 +375,10 @@ public class BattleManager : MonoBehaviour
     {
         if (currentPhase == BattlePhase.BotAction)
         {
-            ActionManager actionManager = new ActionManager();
+
             foreach (GameObject enemy in enemyList)
             {
-                actionManager.PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
+                gameObject.GetComponent<ActionManager>().PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
             }
             uiControllerBattle.UpdateAllEnemiesStats();
             uiControllerBattle.UpdateAllUnitsStats();

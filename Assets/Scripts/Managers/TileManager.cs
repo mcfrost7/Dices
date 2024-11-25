@@ -1,111 +1,119 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
-using UnityEngine.UI;
 
 public class TileManager : MonoBehaviour
 {
-    public TileConfig TileConfig1 { get; set; }
-
+    private List<Tile> activeTiles = new(); // Список активных объектов тайлов
+     TileConfig TileConfig1 { get; set; }
+    public List<Tile> ActiveTiles { get => activeTiles; set => activeTiles = value; }
 
     public void Initialize(TileConfig tileConfig)
     {
         TileConfig1 = Instantiate(tileConfig);
     }
+    public void LoadTilesToManager()
+    {
+        ClearOldTiles(); // Уничтожение старых объектов
 
-    public void UpdateTileConfig(Tile clickedTile)
+        foreach (var tileData in TileConfig1.Tiles)
+        {
+            Tile newTile = CreateTile(tileData); // Создание нового объекта
+            if (newTile != null)
+            {
+                ActiveTiles.Add(newTile); // Добавление объекта в список
+            }
+        }
+
+        Debug.Log("Объекты тайлов успешно созданы.");
+    }
+
+    public void UpdateTileData(Tile clickedTile)
     {
         if (clickedTile == null)
             return;
 
-        int currentLevel = clickedTile.level;
-        string clickedTileName = clickedTile.tileName;
+        var clickedTileData = clickedTile.TileData;
+        if (clickedTileData == null)
+            return;
 
-        foreach (var tileData in TileConfig1.tiles)
+        int currentLevel = clickedTileData.Level;
+
+        foreach (var tileData in TileConfig1.Tiles)
         {
-            if (tileData.level == currentLevel && tileData.tileName == clickedTileName)
+            if (tileData.Level == currentLevel)
             {
-                tileData.isPassed = true;
+                tileData.IsPassed = true; // Отметить тайл как пройденный
             }
-            if (tileData.level == currentLevel + 1)
+            else if (tileData.Level == currentLevel + 1)
             {
-                tileData.isWalkable = true;
+                tileData.IsWalkable = true; // Сделать следующий тайл доступным
             }
         }
     }
 
-    public void SaveTileConfigToFile()
+    public void SaveDataFromObjects(List<TileConfig.TileData> tileDataList)
     {
-        string json = JsonUtility.ToJson(TileConfig1, true);
-        File.WriteAllText(Application.persistentDataPath + "/TileConfig1.json", json);
-        Debug.Log("TileConfig1 сохранен в файл");
-    }
-
-    public void LoadTileConfigFromFile()
-    {
-        string path = Application.persistentDataPath + "/TileConfig1.json";
-
-        if (File.Exists(path))
+        foreach (var tile in ActiveTiles)
         {
-            string json = File.ReadAllText(path);
-            JsonUtility.FromJsonOverwrite(json, TileConfig1);
-            Debug.Log("TileConfig1 загружен из файла");
-        }
-        else
-        {
-            Debug.LogWarning("Файл конфигурации не найден: загрузка пропущена");
-        }
-    }
-
-    public void LoadTilesToPlayer()
-    {
-        // Очистка текущих тайлов игрока
-        GameManager.Instance.Player.Tiles.Clear();
-
-        // Перебор всех данных тайлов в конфиге
-        foreach (TileConfig.TileData tileData in TileConfig1.tiles)
-        {
-            // Создание тайла из данных TileData
-            Tile newTile = CreateTile(tileData);
-
-            // Добавление созданного тайла в список Tiles игрока
-            GameManager.Instance.Player.Tiles.Add(newTile);
+            TileConfig.TileData tileData = tile.TileData;
+            if (tileData != null && tileDataList.Contains(tileData))
+            {
+                // Обновляем данные на основе состояния объекта
+                tileData.IsWalkable = tile.TileData.IsWalkable;
+                tileData.IsPassed = tile.TileData.IsPassed;
+            }
         }
 
-        Debug.Log("Тайлы успешно загружены в Player.");
+        Debug.Log("Данные тайлов обновлены.");
     }
 
     private Tile CreateTile(TileConfig.TileData tileData)
     {
-        Tile newTile = tileData.tileType switch
+        Tile newTile = tileData.TileType switch
         {
             TileType.BattleTile => gameObject.AddComponent<BattleTile>(),
             TileType.LootTile => CreateLootTile(tileData),
             TileType.CampfireTile => gameObject.AddComponent<CampfireTile>(),
-            _ => throw new System.ArgumentException("Unknown tile type: " + tileData.tileType)
+            _ => null
         };
 
-        newTile.Initialize(tileData.level, tileData.tileName, tileData.isWalkable, tileData.isPassed);
+        if (newTile != null)
+        {
+            newTile.Initialize(tileData); // Инициализация объекта
+        }
+
         return newTile;
     }
+
     private LootTile CreateLootTile(TileConfig.TileData tileData)
     {
         LootTile lootTile = gameObject.AddComponent<LootTile>();
-        lootTile.lootType = tileData.lootType; // Устанавливаем тип лута
+        lootTile.Initialize(tileData, TileConfig1.Resources[0]);
         return lootTile;
     }
 
     private void ClearOldTiles()
     {
-        foreach (var tile in GameManager.Instance.Player.Tiles)
+        // Проходим по всем активным тайлам
+        foreach (var tile in ActiveTiles)
         {
-            if (tile != null)
+            if (tile is LootTile lootTile)
             {
-                Destroy(tile);
+                Destroy(lootTile);  // Уничтожаем компонент LootTile
+            }
+            else if (tile is CampfireTile campfireTile)
+            {
+                Destroy(campfireTile);  // Уничтожаем компонент CampfireTile
+            }
+            else if (tile is BattleTile battleTile)
+            {
+                Destroy(battleTile);  // Уничтожаем компонент BattleTile
             }
         }
-        GameManager.Instance.Player.Tiles.Clear(); // Очищаем список тайлов
+
+        // Очищаем список активных тайлов
+        ActiveTiles.Clear();
     }
 
 }

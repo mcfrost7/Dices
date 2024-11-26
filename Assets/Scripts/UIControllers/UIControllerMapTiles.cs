@@ -11,11 +11,11 @@ public class UIControllerMapTiles : MonoBehaviour
     {
         foreach (var tile_sprite in Sprites_for_tileTypes )
         {
-            if (tile_sprite.name == "battle" && tileType == TileType.BattleTile)
+            if (tile_sprite.name == "battle_tile" && tileType == TileType.BattleTile)
                 return tile_sprite;
-            if (tile_sprite.name == "campfire" && tileType == TileType.CampfireTile)
+            if (tile_sprite.name == "campfire_tile" && tileType == TileType.CampfireTile)
                 return tile_sprite;
-            if (tile_sprite.name == "loot" && tileType == TileType.LootTile)
+            if (tile_sprite.name == "loot_tile" && tileType == TileType.LootTile)
                 return tile_sprite;
         }
         return null;

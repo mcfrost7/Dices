@@ -42,7 +42,7 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] private Camera mainCamera; // Основная камера
     [SerializeField] private GameObject battleUI; // UI для битвы
-    [SerializeField] private GameObject actionManager; // UI для битвы
+    [SerializeField] private GameObject actionManager; //совершение действий битвы
     [SerializeField] private GameObject teamManager; // Менеджер команды
     [SerializeField] private GameObject enemyManager; // Менеджер врагов
     [SerializeField] private GameObject uiControllerBattleManager; // Менеджер отрисовки
@@ -378,7 +378,7 @@ public class BattleManager : MonoBehaviour
 
             foreach (GameObject enemy in enemyList)
             {
-                gameObject.GetComponent<ActionManager>().PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
+                actionManager.GetComponent<ActionManager>().PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
             }
             uiControllerBattle.UpdateAllEnemiesStats();
             uiControllerBattle.UpdateAllUnitsStats();

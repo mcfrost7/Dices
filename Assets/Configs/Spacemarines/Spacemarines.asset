@@ -49,3 +49,15 @@ MonoBehaviour:
     sprite_level: {fileID: 21300000, guid: 2160e4db5e579c74fb23806c82e1a70c, type: 3}
     level: 3
     dice: {fileID: 11400000, guid: 1da84e381e808f44b8e04f9ee74d7ce3, type: 2}
+  - typeName: BR_Razvedchik
+    unit_side: 0
+    sprite_type: {fileID: 21300000, guid: 65807c24eba7ca94cb39294c2869b9b0, type: 3}
+    sprite_level: {fileID: 21300000, guid: 2160e4db5e579c74fb23806c82e1a70c, type: 3}
+    level: 2
+    dice: {fileID: 11400000, guid: ba1908773ab435f49ac8fc9d73292a04, type: 2}
+  - typeName: BR_Bastion
+    unit_side: 0
+    sprite_type: {fileID: 21300000, guid: cbc6674647443fd41bbf33857d6446d7, type: 3}
+    sprite_level: {fileID: 21300000, guid: 2160e4db5e579c74fb23806c82e1a70c, type: 3}
+    level: 4
+    dice: {fileID: 11400000, guid: c10ebc823fe678c40a2f0f1f93938ce0, type: 2}

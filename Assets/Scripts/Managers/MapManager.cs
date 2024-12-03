@@ -22,11 +22,8 @@ public class MapManager : MonoBehaviour
         mapCanvas.SetActive(true);
         map.gameObject.SetActive(true);
         gameObject.GetComponent<TileManager>().LoadTilesToManager();
+        ClearTilesContainer();
         DrawTiles();
-    }
-    private void OnDestroy()
-    {
-        Debug.LogError($"OnDestroy вызван на объекте {gameObject.name}. Стек вызовов:\n{System.Environment.StackTrace}");
     }
 
     private void OnDisable()

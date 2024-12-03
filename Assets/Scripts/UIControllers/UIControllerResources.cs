@@ -69,6 +69,7 @@ public class UIControllerResources : MonoBehaviour
     // Метод для отображения всех ресурсов
     public void SpawnResources()
     {
+        ClearResources();
         // Получаем список всех ресурсов
         List<Resource> resources = GameManager.Instance.Player.Resources;
 
@@ -83,5 +84,27 @@ public class UIControllerResources : MonoBehaviour
         {
             CreateResource(resource.Name, resource.Icon, resource.Amount);
         }
+    }
+
+    public void ClearResources()
+    {
+
+        foreach (var resourceInstance in resourceInstances)
+        {
+            if (resourceInstance != null)
+            {
+                Destroy(resourceInstance);
+            }
+        }
+
+        // Очищаем список
+        resourceInstances.Clear();
+    }
+
+
+    private void OnDisable()
+    {
+        GameManager.Instance.Player.Resources.Clear();
+        ClearResources ();
     }
 }

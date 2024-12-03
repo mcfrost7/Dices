@@ -14,7 +14,7 @@ public class DiceConfig : ScriptableObject
     public DiceAction Current_dice_side { get => current_dice_side; set => current_dice_side = value; }
 
     [System.Serializable]
-    public class DiceAction
+    public class DiceAction 
     {
         [SerializeField] private ActionType actionType;
         [SerializeField] private int power; // сила действия, влияющая на урон или лечение
@@ -26,18 +26,22 @@ public class DiceConfig : ScriptableObject
     public void PerformAttack(Unit target, int power)
     {
         TakeDamage(power, target);
+        Sounds.Instance.PlaySound(Sounds.Instance.Sounds1[0], volume: 0.7f);
     }
 
     public void PerformHeal(Unit target, int power)
     {
         // Используем метод UnitStatus для обновления здоровья
         target.UnitStats.UpdateHealth(power);
+        Sounds.Instance.PlaySound(Sounds.Instance.Sounds1[1], volume: 0.7f);
     }
 
     public void PerformLifeSteal(Unit target, Unit user, int power)
     {
         user.UnitStats.UpdateHealth(power);
+        Sounds.Instance.PlaySound(Sounds.Instance.Sounds1[1], volume: 0.7f);
         TakeDamage(power, target);
+        Sounds.Instance.PlaySound(Sounds.Instance.Sounds1[0], volume:0.7f);
     }
 
     public void TakeDamage(int damage, Unit target)

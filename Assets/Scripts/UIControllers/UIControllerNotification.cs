@@ -37,10 +37,20 @@ public class UIControllerNotification : MonoBehaviour
 
     public void ConfirmButtonClick()
     {
-        panel_main.SetActive(false);
-        gameObject.GetComponent<UIControllerGlobalMenu>().Image_freeze.SetActive(false);
-        GameManager.Instance.EnableManager(GameManager.Instance.BattleManager1, false );
-        GameManager.Instance.MenuManager1.GetComponent<UIControllerResources>().UpdateResources();
+        if (GameManager.Instance.Status == BattleStatus.Win)
+        {
+            panel_main.SetActive(false);
+            gameObject.GetComponent<UIControllerGlobalMenu>().Image_freeze.SetActive(false);
+            GameManager.Instance.EnableManager(GameManager.Instance.BattleManager1, false);
+            GameManager.Instance.MenuManager1.GetComponent<UIControllerResources>().UpdateResources();
+        }
+        else if (GameManager.Instance.Status == BattleStatus.Lose)
+        {
+            panel_main.SetActive(false);
+            gameObject.GetComponent<UIControllerGlobalMenu>().Image_freeze.SetActive(false);
+            GameManager.Instance.GoFromBattleToMap();
+            GameManager.Instance.MenuManager1.GetComponent <UIControllerGlobalMenu>().ExitToMenuButton();
+        }
     }
 
 }

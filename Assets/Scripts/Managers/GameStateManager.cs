@@ -43,12 +43,15 @@ public class GameStateManager : MonoBehaviour
 
     private void InitResources()
     {
-        foreach (var resource in resources)
+        if (GameManager.Instance.Player.Resources.Count == 0)
         {
-            Resource newResource = ScriptableObject.CreateInstance<Resource>();
-            newResource.Initialize(resource.Name, resource.Amount, resource.Icon, resource.ResourcesType);
-            GameManager.Instance.Player.Resources.Add(newResource);
+            foreach (var resource in resources)
+            {
+                Resource newResource = ScriptableObject.CreateInstance<Resource>();
+                newResource.Initialize(resource.Name, resource.Amount, resource.Icon, resource.ResourcesType);
+                GameManager.Instance.Player.Resources.Add(newResource);
+            }
+            gameObject.GetComponent<GameManager>().MenuManager1.GetComponent<UIControllerResources>().SpawnResources();
         }
-        gameObject.GetComponent<GameManager>().MenuManager1.GetComponent<UIControllerResources>().SpawnResources();
     }
 }

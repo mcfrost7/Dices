@@ -375,17 +375,31 @@ public class BattleManager : MonoBehaviour
     {
         if (currentPhase == BattlePhase.BotAction)
         {
-
-            foreach (GameObject enemy in enemyList)
-            {
-                actionManager.GetComponent<ActionManager>().PerformAction(enemy.GetComponent<Unit>(), enemy.GetComponent<Unit>().UnitStats.Target);
-            }
-            uiControllerBattle.UpdateAllEnemiesStats();
-            uiControllerBattle.UpdateAllUnitsStats();
-            CurrentPhase = BattlePhase.BotRollsDice;
-            NextPhase();
+            StartCoroutine(BotActionWithDelay());
         }
     }
+
+    private IEnumerator BotActionWithDelay()
+    {
+        foreach (GameObject enemy in enemyList)
+        {
+            // Выполнение действия для текущего врага
+            actionManager.GetComponent<ActionManager>().PerformAction(
+                enemy.GetComponent<Unit>(),
+                enemy.GetComponent<Unit>().UnitStats.Target
+            );
+            uiControllerBattle.UpdateAllEnemiesStats();
+            uiControllerBattle.UpdateAllUnitsStats();
+            // Задержка между действиями
+            yield return new WaitForSeconds(0.7f); // Замените 1.0f на нужное время задержки в секундах
+        }
+
+
+        // Переход к следующей фазе
+        CurrentPhase = BattlePhase.BotRollsDice;
+        NextPhase();
+    }
+
 
     private bool IsPlayerTeamAlive()
     {

@@ -35,3 +35,15 @@ MonoBehaviour:
     tileType: 1
   - level: 6
     tileType: 0
+  - level: 7
+    tileType: 0
+  - level: 7
+    tileType: 2
+  - level: 8
+    tileType: 1
+  - level: 9
+    tileType: 1
+  - level: 9
+    tileType: 0
+  - level: 10
+    tileType: 0

@@ -19,3 +19,15 @@ MonoBehaviour:
     sprite_level: {fileID: 0}
     level: 1
     dice: {fileID: 11400000, guid: 7599c2f35ef00a247aa5bff11918a235, type: 2}
+  - typeName: Rubaki
+    unit_side: 1
+    sprite_type: {fileID: 21300000, guid: 4ed0e7fa6fca03f47b9c79885d8a9b41, type: 3}
+    sprite_level: {fileID: 0}
+    level: 2
+    dice: {fileID: 11400000, guid: 5cc3dc7ccb33e2844911e921a362a39f, type: 2}
+  - typeName: Shotaboyz
+    unit_side: 1
+    sprite_type: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}
+    sprite_level: {fileID: 0}
+    level: 3
+    dice: {fileID: 11400000, guid: 3b427f096b3018e40b5040549a0ff977, type: 2}

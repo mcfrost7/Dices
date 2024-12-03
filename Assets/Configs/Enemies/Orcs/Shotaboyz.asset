@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a1b1af9359d4aa498dbc1ca35fbc6bd, type: 3}
-  m_Name: Boyz
+  m_Name: Shotaboyz
   m_EditorClassIdentifier: 
   actionSprites:
-  - {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
-  - {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
+  - {fileID: 21300000, guid: 9b42247fef98db7458b6c7d889b2d89f, type: 3}
+  - {fileID: 21300000, guid: 9b42247fef98db7458b6c7d889b2d89f, type: 3}
+  - {fileID: 21300000, guid: 9b42247fef98db7458b6c7d889b2d89f, type: 3}
   - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
-  - {fileID: 21300000, guid: 4c2275b15db06da41ad0dca5ef0bd6dc, type: 3}
   - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
   - {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
   diceActions:
   - actionType: 1
-    power: 1
+    power: 3
   - actionType: 1
-    power: 1
+    power: 3
+  - actionType: 1
+    power: 3
   - actionType: 0
     power: 0
-  - actionType: 1
-    power: 2
   - actionType: 0
     power: 0
   - actionType: 0

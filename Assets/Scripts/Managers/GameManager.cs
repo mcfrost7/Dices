@@ -108,7 +108,6 @@ public class GameManager : MonoBehaviour
         {
             MapManager1.GetComponent<TileManager>().UpdateTileData(currentTile);
             BattleManager1.GetComponent<RewardManager>().AddReward();
-
         }
         MenuManager1.GetComponent<UIControllerNotification>().LoadInfoMenu();
     }

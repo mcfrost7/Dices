@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GlobalSoundManager : MonoBehaviour
 {
+
     [SerializeField] Slider slider;
     private AudioSource audioSource;
 

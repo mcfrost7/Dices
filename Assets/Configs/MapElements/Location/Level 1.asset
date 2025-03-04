@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   locationName: "\u0412\u043D\u0435\u0448\u043D\u044F\u044F \u043F\u0430\u043B\u0443\u0431\u0430"
-  gridWidth: 5
-  gridHeight: 20
   tiles:
   - tileConfig: {fileID: 11400000, guid: 18fe1d9a49e402e41a55cdfb092dd96e, type: 2}
     gridPosition: {x: 0, y: 0}

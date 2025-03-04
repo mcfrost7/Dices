@@ -12,7 +12,5 @@ public class LocationConfig : ScriptableObject
     }
 
     public string locationName;
-    public int gridWidth = 5;
-    public int gridHeight = 20;
     public List<LocationTile> tiles = new List<LocationTile>();
 }

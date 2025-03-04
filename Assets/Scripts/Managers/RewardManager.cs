@@ -1,39 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    [SerializeField] private int resource_amount;
-    [SerializeField] private int exp_amount;
+    public void AddAllReward(RewardConfig reward)
+    {
+        ResourceReward(reward.resourceAmount);
+        ExperienceReward(reward.expAmount);
+    }
 
-    public int Resource_amount { get => resource_amount; set => resource_amount = value; }
-    public int Exp_amount { get => exp_amount; set => exp_amount = value; }
-
-    public void ResourceReward()
+    private void ResourceReward(int amount)
     {
         foreach (var resource in GameManager.Instance.Player.Resources)
         {
-            if (resource.ResourcesType == ResourcesType.SignalTransmitter )
+            if (resource.ResourcesType == ResourcesType.SignalTransmitter)
             {
-                resource.AddAmount(Resource_amount);
+                resource.AddAmount(amount);
             }
         }
-
     }
 
-    private void ExperienceReward()
+    private void ExperienceReward(int amount)
     {
         foreach (var unitStats in GameManager.Instance.Player.Units)
         {
-            unitStats.AddExperience(Exp_amount);
+            unitStats.AddExperience(amount);
         }
     }
 
-    public void AddReward()
+    private void ItemReward(ItemConfig item)
     {
-        ResourceReward();
-        ExperienceReward();
+        GameManager.Instance.Player.Items.Add(item);
     }
-
 }

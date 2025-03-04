@@ -60,7 +60,7 @@ public class LootTile : Tile
         if (TileData.IsWalkable == true)
         {
 
-            GameManager.Instance.BattleManager1.GetComponent<RewardManager>().ResourceReward();
+            //GameManager.Instance.BattleManager1.GetComponent<RewardManager>().ResourceReward();
             GameManager.Instance.MapManager1.GetComponent<TileManager>().UpdateTileData(this);
             GameManager.Instance.MenuManager1.GetComponent<UIControllerResources>().UpdateResources();
             GameManager.Instance.MenuManager1.GetComponent<UIControllerMenuInfoPanel>().ChooseInfo(TileType.LootTile,0,lootType);
@@ -83,7 +83,7 @@ public class CampfireTile : Tile
             {
                 unitStats.UpdateHealth(heal);
             }
-            GameManager.Instance.MenuManager1.GetComponent<UIControllerMenuInfoPanel>().ChooseInfo(TileType.CampfireTile, heal);
+            GameManager.Instance.MenuManager1.GetComponent<UIControllerMenuInfoPanel>().ChooseInfo(TileType.CampTile, heal);
             GameManager.Instance.MenuManager1.GetComponent<UIControllerMenuInfoPanel>().Main_panel.SetActive(true);
             GameManager.Instance.MenuManager1.GetComponent<UIControllerResources>().UpdateResources();
             GameManager.Instance.MapManager1.GetComponent<TileManager>().UpdateTileData(this);

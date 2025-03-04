@@ -2,5 +2,8 @@ public enum TileType
 {
     BattleTile,
     LootTile,
-    CampfireTile
+    CampTile,
+    RouleteTile,
+    BossTile
+
 }

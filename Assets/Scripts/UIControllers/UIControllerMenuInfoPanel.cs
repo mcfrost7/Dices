@@ -16,7 +16,7 @@ public class UIControllerMenuInfoPanel : MonoBehaviour
     {
         switch (tileType)
         {
-            case TileType.CampfireTile:
+            case TileType.CampTile:
                 SetUpTextCampfire(heal);
                 break;
             case TileType.LootTile:
@@ -52,7 +52,7 @@ public class UIControllerMenuInfoPanel : MonoBehaviour
     private void SetUpTextLoot(Resource resource)
     {
         Text_name.text = "Ресурсы";
-        Text_info.text = "Найден ресурс " + resource.name+ ":" + BattleManager.Instance.GetComponent<RewardManager>().Resource_amount + " ед.";
+        Text_info.text = "Найден ресурс " + resource.name+ ": ед.";
     }
 
     public void OnButtonClick()

@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
         if (Status == BattleStatus.Win)
         {
             MapManager1.GetComponent<TileManager>().UpdateTileData(currentTile);
-            BattleManager1.GetComponent<RewardManager>().AddReward();
+            //BattleManager1.GetComponent<RewardManager>().AddReward();
         }
         MenuManager1.GetComponent<UIControllerNotification>().LoadInfoMenu();
     }

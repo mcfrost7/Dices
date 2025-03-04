@@ -13,7 +13,7 @@ public class UIControllerMapTiles : MonoBehaviour
         {
             if (tile_sprite.name == "battle_tile" && tileType == TileType.BattleTile)
                 return tile_sprite;
-            if (tile_sprite.name == "campfire_tile" && tileType == TileType.CampfireTile)
+            if (tile_sprite.name == "campfire_tile" && tileType == TileType.CampTile)
                 return tile_sprite;
             if (tile_sprite.name == "loot_tile" && tileType == TileType.LootTile)
                 return tile_sprite;

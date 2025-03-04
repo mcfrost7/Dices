@@ -74,7 +74,7 @@ public class TileManager : MonoBehaviour
         {
             TileType.BattleTile => gameObject.AddComponent<BattleTile>(),
             TileType.LootTile => CreateLootTile(tileData),
-            TileType.CampfireTile => gameObject.AddComponent<CampfireTile>(),
+            TileType.CampTile => gameObject.AddComponent<CampfireTile>(),
             _ => null
         };
 
@@ -104,7 +104,7 @@ public class TileManager : MonoBehaviour
             }
             else if (tile is CampfireTile campfireTile)
             {
-                Destroy(campfireTile);  // Уничтожаем компонент CampfireTile
+                Destroy(campfireTile);  // Уничтожаем компонент CampTile
             }
             else if (tile is BattleTile battleTile)
             {

@@ -9,11 +9,11 @@ public class TileConfigEditor : Editor
         NewTileConfig config = (NewTileConfig)target;
 
         // Отображаем спрайт и тип тайла
-        config.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite", config.sprite, typeof(Sprite), false);
-        config.type = (TileType)EditorGUILayout.EnumPopup("Tile Type", config.type);
+        config.tileSprite = (Sprite)EditorGUILayout.ObjectField("Sprite", config.tileSprite, typeof(Sprite), false);
+        config.tileType = (TileType)EditorGUILayout.EnumPopup("Tile Type", config.tileType);
 
         // В зависимости от типа тайла отображаем нужные параметры
-        switch (config.type)
+        switch (config.tileType)
         {
             case TileType.BattleTile:
                 if (config.battleSettings == null) config.battleSettings = new BattleSettings();

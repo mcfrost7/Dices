@@ -5,5 +5,4 @@ public enum TileType
     CampTile,
     RouleteTile,
     BossTile
-
 }

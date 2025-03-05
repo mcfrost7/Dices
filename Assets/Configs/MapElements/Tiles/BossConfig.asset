@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d33361d4d28c1d142a52ddfa6c916b25, type: 3}
   m_Name: BossConfig
   m_EditorClassIdentifier: 
-  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  type: 4
+  tileType: 4
+  tileSprite: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}
   battleSettings:
     battleDifficulty: 0
-    typesInfo: {fileID: 0}
+    typesInfo: {fileID: 11400000, guid: ff0ba30d28c6ef946b5d88bd5fc5c9a8, type: 2}
     reward:
       resourceAmount: 2
       expAmount: 5

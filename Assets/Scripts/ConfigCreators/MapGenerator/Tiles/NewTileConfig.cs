@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewTileConfig", menuName = "Configs/NewTileConfig")]
 public class NewTileConfig : ScriptableObject
 {
-    public Sprite sprite;  // Картинка тайла
-    public TileType type;  // Тип тайла
+    public TileType tileType;
+    public Sprite tileSprite; // Спрайт для этого типа тайла
     public BattleSettings battleSettings;
     public LootSettings lootSettings;
     public CampSettings campSettings;

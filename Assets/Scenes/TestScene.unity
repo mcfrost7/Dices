@@ -1139,7 +1139,7 @@ RectTransform:
   m_GameObject: {fileID: 400710139}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1888338942}
@@ -3497,6 +3497,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1725379677}
+  - component: {fileID: 1725379679}
   - component: {fileID: 1725379678}
   m_Layer: 0
   m_Name: MapCreator
@@ -3529,11 +3530,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 1725379676}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a8d639475449a44faad89395271ec12, type: 3}
+  m_Script: {fileID: 11500000, guid: a1a45032390a2804d8343c351b4e867b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapConfig: {fileID: 11400000, guid: c682692d744618d489ac10ea0f664f63, type: 2}
-  tileContainer: {fileID: 1888338942}
+--- !u!114 &1725379679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725379676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 996c8cc912471084abe8c44781306639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generationSettings:
+    mapContainer: {fileID: 1888338942}
+    nodePrefab: {fileID: 6958758824216107968, guid: c322a7cfbf9e5c04f8995d7659ceae04, type: 3}
+    maxNodes: 30
+    minNodesPerLayer: 2
+    maxNodesPerLayer: 5
+    layerHeight: 150
+    locationConfigs:
+    - {fileID: 11400000, guid: 56c9edc9e0bb4cf419a9ed096d0c819f, type: 2}
+    - {fileID: 11400000, guid: ab4fb01b21cd76d4eaef70b0c9241295, type: 2}
+    nodeHorizontalSpread: 0
+    tileSpawnProbabilities:
+    - tileType: 0
+      probability: 0.6
+    - tileType: 1
+      probability: 0.1
+    - tileType: 2
+      probability: 0.1
+    - tileType: 3
+      probability: 0.2
+    - tileType: 4
+      probability: 0
+  OnTileClicked:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1888338941
 GameObject:
   m_ObjectHideFlags: 0
@@ -3557,18 +3593,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1888338941}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400710140}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 1000, y: 2000}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -150}
+  m_SizeDelta: {x: 1000, y: 2500}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1898978828
 GameObject:
   m_ObjectHideFlags: 0

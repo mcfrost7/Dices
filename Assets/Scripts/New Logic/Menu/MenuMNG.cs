@@ -1,18 +1,53 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MenuMNG : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject _menuWindow;
+    [SerializeField] private GameObject _InfoPanel;
+    [SerializeField] private GameObject _freeze;
+    [SerializeField] private GameObject _task;
+
+    private GameObject _currentActiveWindow;
+    private bool _visibility = false;
+
+    public void ShowWindow(GameObject _window)
     {
-        
+        _window.SetActive(true);
+        _freeze.SetActive(true);
+        _currentActiveWindow = _window;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void HideWindow()
     {
-        
+        _freeze.SetActive(false);
+        _currentActiveWindow.SetActive(false);
     }
+
+    public void ShowInfo()
+    {
+        _currentActiveWindow = _InfoPanel;
+        _freeze.SetActive(true);
+    }
+
+    public void CallTask()
+    {
+        if (_task != null && _visibility == false)
+        {
+            _task.transform.DOLocalMoveX(_task.transform.localPosition.x - 560, 0.8f).SetEase(Ease.InOutExpo);
+        } else
+        {
+            _task.transform.DOLocalMoveX(_task.transform.localPosition.x + 560, 0.8f).SetEase(Ease.InOutExpo);
+        }
+        _visibility = !_visibility;
+    }
+    
+    public void ChangeVisibilityOfDownPanel(GameObject _panel)
+    {
+        _panel.SetActive(!_panel.activeSelf);
+
+    }
+
 }

@@ -1,14 +1,16 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject _menu;
-    [SerializeField] private GameObject _globalCanvs;
-    [SerializeField] private GameObject _Settings;
+    [SerializeField] private GameObject _globalCanvas;
+    [SerializeField] private GameObject _settings;
     [SerializeField] private GameObject _team;
     [SerializeField] private GameObject _battle;
 
     private GameObject _currentActiveCanvas;
+    private Stack<GameObject> _canvasHistory = new Stack<GameObject>();
 
     private void Awake()
     {
@@ -16,61 +18,61 @@ public class UIController : MonoBehaviour
         ShowMenu();
     }
 
-    public void ShowMenu()
-    {
-        SwitchCanvas(_menu);
-    }
+    public void ShowMenu() => SwitchCanvas(_menu);
+    public void ShowGlobalCanvas() => SwitchCanvas(_globalCanvas);
+    public void ShowTeam() => SwitchCanvas(_team);
+    public void ShowBattle() => SwitchCanvas(_battle);
 
-    public void ShowGlobalCanvas()
-    {
-        SwitchCanvas(_globalCanvs);
-    }
-
+    // Метод для показа настроек с сохранением предыдущего экрана
     public void ShowSettings()
     {
-        SwitchCanvas(_Settings);
+        if (_currentActiveCanvas != _settings)
+        {
+            _canvasHistory.Push(_currentActiveCanvas); // Сохраняем предыдущий экран
+        }
+        SwitchCanvas(_settings);
     }
 
-    public void ShowTeam()
+    // Метод для возврата на предыдущий экран
+    public void GoBack()
     {
-        SwitchCanvas(_team);
-    }
-
-    public void ShowBattle()
-    {
-        SwitchCanvas(_battle);
-    }
-
-    // Метод для скрытия всех канвасов
-    public void HideAllCanvases()
-    {
-        _menu.SetActive(false);
-        _globalCanvs.SetActive(false);
-        _Settings.SetActive(false);
-        _team.SetActive(false);
-        _battle.SetActive(false);
-        _currentActiveCanvas = null;
+        if (_canvasHistory.Count > 0)
+        {
+            GameObject previousCanvas = _canvasHistory.Pop();
+            SwitchCanvas(previousCanvas, false); // Не добавляем в историю
+        }
     }
 
     // Универсальный метод для переключения между канвасами
-    private void SwitchCanvas(GameObject targetCanvas)
+    private void SwitchCanvas(GameObject targetCanvas, bool addToHistory = true)
     {
-        // Если текущий канвас такой же как целевой, ничего не делаем
         if (_currentActiveCanvas == targetCanvas)
             return;
 
-        // Деактивируем все канвасы
-        HideAllCanvases();
+        if (addToHistory && _currentActiveCanvas != null)
+        {
+            _canvasHistory.Push(_currentActiveCanvas);
+        }
 
-        // Активируем целевой канвас
+        HideAllCanvases();
         targetCanvas.SetActive(true);
         _currentActiveCanvas = targetCanvas;
     }
 
+    // Метод для скрытия всех канвасов
+    private void HideAllCanvases()
+    {
+        _menu.SetActive(false);
+      //  _globalCanvas.SetActive(false);
+        _settings.SetActive(false);
+        _team.SetActive(false);
+        _battle.SetActive(false);
+    }
+
     // Методы для проверки активности конкретного канваса
     public bool IsMenuActive() => _menu.activeSelf;
-    public bool IsGlobalCanvasActive() => _globalCanvs.activeSelf;
-    public bool IsSettingsActive() => _Settings.activeSelf;
+    public bool IsGlobalCanvasActive() => _globalCanvas.activeSelf;
+    public bool IsSettingsActive() => _settings.activeSelf;
     public bool IsTeamActive() => _team.activeSelf;
     public bool IsBattleActive() => _battle.activeSelf;
 }

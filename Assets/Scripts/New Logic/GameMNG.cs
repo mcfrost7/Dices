@@ -14,4 +14,10 @@ public class GameMNG : MonoBehaviour
         MapMNG.Instance.LoadGame();
     }
 
+    public void OnExitGame()
+    {
+        Application.Quit();
+        Debug.Log("Игра завершена.");
+    }
+
 }

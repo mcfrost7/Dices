@@ -2,19 +2,20 @@ using UnityEngine;
 
 public class NewCameraMovement : MonoBehaviour
 {
-    public float moveSpeed = 3f;     // Скорость движения камеры
-    public float zoomSpeed = 2f;     // Скорость зумирования
-    public float minZoom = 1f;       // Минимальный размер камеры (максимальное приближение)
-    public float maxZoom = 4f;       // Максимальный размер камеры (максимальное отдаление)
+    public float moveSpeed = 3f;
+    public float zoomSpeed = 2f;
+    public float minZoom = 1f;
+    public float maxZoom = 4f;
 
     private Vector2 minBounds;
     private Vector2 maxBounds;
 
     private Camera cam;
-    [SerializeField] private GameObject plane;  // Ссылка на компонент Plane
-    private bool canMoveAndZoom = true;         // Флаг для контроля возможности зумирования и перемещения
+    [SerializeField] private GameObject plane;
+    [SerializeField] private UIController uiController; // Ссылка на UIController
 
-    private Vector3 lastMouseWorldPosition;     // Последняя позиция мыши в мировых координатах
+    private bool canMoveAndZoom = true;
+    private Vector3 lastMouseWorldPosition;
     private bool isDragging = false;
 
     void Start()
@@ -24,25 +25,17 @@ public class NewCameraMovement : MonoBehaviour
         SetStartPosition();
     }
 
-    void SetBounds()
-    {
-        Vector3 planeSize = plane.GetComponent<RectTransform>().sizeDelta;
-
-        float camHeight = cam.orthographicSize;
-        float camWidth = camHeight * cam.aspect;
-
-        minBounds = new Vector2(
-            plane.transform.position.x - planeSize.x / 2 + camWidth,
-            plane.transform.position.y - planeSize.y / 2 + camHeight
-        );
-        maxBounds = new Vector2(
-            plane.transform.position.x + planeSize.x / 2 - camWidth,
-            plane.transform.position.y + planeSize.y / 2 - camHeight
-        );
-    }
-
     void Update()
     {
+        if (uiController != null && uiController.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
+        {
+            canMoveAndZoom = true;
+        }
+        else
+        {
+            canMoveAndZoom = false;
+        }
+
         if (canMoveAndZoom)
         {
             HandlePanning();
@@ -101,15 +94,27 @@ public class NewCameraMovement : MonoBehaviour
         }
     }
 
+    void SetBounds()
+    {
+        Vector3 planeSize = plane.GetComponent<RectTransform>().sizeDelta;
+
+        float camHeight = cam.orthographicSize;
+        float camWidth = camHeight * cam.aspect;
+
+        minBounds = new Vector2(
+            plane.transform.position.x - planeSize.x / 2 + camWidth,
+            plane.transform.position.y - planeSize.y / 2 + camHeight
+        );
+        maxBounds = new Vector2(
+            plane.transform.position.x + planeSize.x / 2 - camWidth,
+            plane.transform.position.y + planeSize.y / 2 - camHeight
+        );
+    }
+
     void SetStartPosition()
     {
         float initialX = plane.transform.position.x;
         float initialY = minBounds.y;
         cam.transform.position = new Vector3(initialX, initialY, cam.transform.position.z);
-    }
-
-    public void SetCameraMovementEnabled(bool enabled)
-    {
-        canMoveAndZoom = enabled;
     }
 }

@@ -5,6 +5,7 @@ public class MapMNG : MonoBehaviour
     public static MapMNG Instance { get; private set; }
 
     [SerializeField] private CanvasMapGenerator mapGenerator;
+    [SerializeField] private TeamMNG teamMNG;
 
     private PlayerData playerData;
 
@@ -22,8 +23,12 @@ public class MapMNG : MonoBehaviour
 
     public void StartNewGame()
     {
-        playerData = new PlayerData();
+        playerData = new PlayerData(); // Новый пустой профиль
 
+        if (teamMNG != null)
+        {
+            teamMNG.NewGame();
+        }
         if (mapGenerator != null)
         {
             mapGenerator.GenerateMap();
@@ -31,6 +36,7 @@ public class MapMNG : MonoBehaviour
             SaveGame();
         }
     }
+
 
     public void LoadGame()
     {
@@ -42,6 +48,10 @@ public class MapMNG : MonoBehaviour
 
         playerData = SaveLoadMNG.Load();
 
+        if (teamMNG != null)
+        {
+            teamMNG.LoadUnits();
+        }
         if (mapGenerator != null)
         {
             mapGenerator.LoadMapFromPlayerData(playerData);
@@ -50,12 +60,15 @@ public class MapMNG : MonoBehaviour
 
     public void SaveGame()
     {
-        if (playerData == null || mapGenerator == null)
+        if (playerData == null || mapGenerator == null || teamMNG == null)
         {
             Debug.LogWarning("Ошибка сохранения: данные отсутствуют!");
             return;
         }
 
+        teamMNG.SaveUnits();
+
+        // Сохраняем карту
         mapGenerator.SaveMapToPlayerData(playerData);
         SaveLoadMNG.Save(playerData);
     }

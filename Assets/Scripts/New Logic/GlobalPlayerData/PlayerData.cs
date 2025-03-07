@@ -7,19 +7,13 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    [SerializeField] private List<UnitStats> units = new();
-    [SerializeField] private List<TileConfig.TileData> tiles = new();
-    [SerializeField] private List<Resource> resources = new();
-    [SerializeField] private List<ItemConfig> items = new();
     [SerializeField] private List<MapNodeData> mapNodes = new(); // Хранение нодов карты
     [SerializeField] private int currentAvailableLayer = -1; // Текущий доступный слой
+    [SerializeField] private List<NewUnitStats> playerUnits = new(); // Список юнитов игрока
 
-    public List<UnitStats> Units { get => units; set => units = value; }
-    public List<TileConfig.TileData> Tiles { get => tiles; set => tiles = value; }
-    public List<Resource> Resources { get => resources; set => resources = value; }
-    public List<ItemConfig> Items { get => items; set => items = value; }
     public List<MapNodeData> MapNodes { get => mapNodes; set => mapNodes = value; }
     public int CurrentAvailableLayer { get => currentAvailableLayer; set => currentAvailableLayer = value; }
+    public List<NewUnitStats> PlayerUnits { get => playerUnits; set => playerUnits = value; }
 }
 
 // Сериализуемый класс для хранения данных о ноде карты

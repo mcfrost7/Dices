@@ -3913,7 +3913,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1632566107}
         m_TargetAssemblyTypeName: MenuMNG, MainCode
-        m_MethodName: Hide
+        m_MethodName: HideWindow
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7063,7 +7063,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1632566107}
         m_TargetAssemblyTypeName: MenuMNG, MainCode
-        m_MethodName: HideDownPanel
+        m_MethodName: ChangeVisibilityOfDownPanel
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1195432937}
@@ -8479,6 +8479,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1632566107}
+        m_TargetAssemblyTypeName: MenuMNG, MainCode
+        m_MethodName: ChangeVisibilityOfDownPanel
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1195432937}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1516489341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9467,6 +9479,7 @@ Transform:
   - {fileID: 1693321207}
   - {fileID: 1725379677}
   - {fileID: 683583384}
+  - {fileID: 1947326594}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1671518070
@@ -9947,6 +9960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 1725379679}
+  teamMNG: {fileID: 1947326595}
 --- !u!114 &1725379679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11595,6 +11609,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944682030}
   m_CullTransparentMesh: 1
+--- !u!1 &1947326593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1947326594}
+  - component: {fileID: 1947326595}
+  m_Layer: 0
+  m_Name: TeamMNG
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1947326594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947326593}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1671086863}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1947326595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947326593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8282014a0973913488bc229c371532b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _diceConfigLevel1:
+  - {fileID: 11400000, guid: 8d629eaf70361764dbb5c766c84e2b1d, type: 2}
+  _diceConfigLevel2:
+  - {fileID: 11400000, guid: f04ef70fa4d6b0e42ac562bd61fe5c86, type: 2}
+  _diceConfigLevel3:
+  - {fileID: 11400000, guid: 2008e3766fd83a74f98c215eae393769, type: 2}
+  _buffsConfigLevel1:
+  - {fileID: 11400000, guid: 5b51b79a5a8a7bb478eb9629d3310a5c, type: 2}
+  _buffsConfigLevel2:
+  - {fileID: 11400000, guid: 5b51b79a5a8a7bb478eb9629d3310a5c, type: 2}
+  _buffsConfigLevel3:
+  - {fileID: 11400000, guid: 5b51b79a5a8a7bb478eb9629d3310a5c, type: 2}
+  _units_count: 5
 --- !u!1 &1952379332
 GameObject:
   m_ObjectHideFlags: 0
@@ -12310,7 +12381,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1632566107}
         m_TargetAssemblyTypeName: MenuMNG, MainCode
-        m_MethodName: Show
+        m_MethodName: ShowWindow
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 683133975}

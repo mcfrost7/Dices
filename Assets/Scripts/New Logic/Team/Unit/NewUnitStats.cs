@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class NewUnitStats
 {
     public string _name;
@@ -11,11 +10,11 @@ public class NewUnitStats
     public int _current_exp;
     public int _level;
     public List<NewUnitStats> _upgrade_list = new List<NewUnitStats>();
-    public NewDiceConfig _dice;
-    public BuffConfig _buff;
+    public Dice _dice;
+    public List<BuffConfig> _buffs = new List<BuffConfig>();
 
     // Конструктор для удобства
-    public NewUnitStats(string name, int health, int moral, int level, NewDiceConfig dice, BuffConfig buff)
+    public NewUnitStats(string name, int health, int moral, int level, Dice dice, List<BuffConfig> buffs)
     {
         _name = name;
         _health = health;
@@ -23,6 +22,6 @@ public class NewUnitStats
         _current_exp = 0;
         _level = level;
         _dice = dice;
-        _buff = buff;
+        _buffs = buffs;
     }
 }

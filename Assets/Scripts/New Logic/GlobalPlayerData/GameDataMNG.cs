@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class MapMNG : MonoBehaviour
+public class GameDataMNG : MonoBehaviour
 {
-    public static MapMNG Instance { get; private set; }
+    public static GameDataMNG Instance { get; private set; }
+    public PlayerData PlayerData { get => playerData; set => playerData = value; }
 
     [SerializeField] private CanvasMapGenerator mapGenerator;
     [SerializeField] private TeamMNG teamMNG;
@@ -23,16 +24,12 @@ public class MapMNG : MonoBehaviour
 
     public void StartNewGame()
     {
-        playerData = new PlayerData(); // Новый пустой профиль
-
-        if (teamMNG != null)
+        PlayerData = new PlayerData();
+        if (mapGenerator != null && teamMNG != null)
         {
             teamMNG.NewGame();
-        }
-        if (mapGenerator != null)
-        {
             mapGenerator.GenerateMap();
-            mapGenerator.SaveMapToPlayerData(playerData);
+            mapGenerator.SaveMapToPlayerData(PlayerData);
             SaveGame();
         }
     }
@@ -46,21 +43,17 @@ public class MapMNG : MonoBehaviour
             return;
         }
 
-        playerData = SaveLoadMNG.Load();
-
-        if (teamMNG != null)
+        PlayerData = SaveLoadMNG.Load();
+        if (mapGenerator != null && teamMNG != null)
         {
             teamMNG.LoadUnits();
-        }
-        if (mapGenerator != null)
-        {
-            mapGenerator.LoadMapFromPlayerData(playerData);
+            mapGenerator.LoadMapFromPlayerData(PlayerData);
         }
     }
 
     public void SaveGame()
     {
-        if (playerData == null || mapGenerator == null || teamMNG == null)
+        if (PlayerData == null || mapGenerator == null || teamMNG == null)
         {
             Debug.LogWarning("Ошибка сохранения: данные отсутствуют!");
             return;
@@ -69,8 +62,8 @@ public class MapMNG : MonoBehaviour
         teamMNG.SaveUnits();
 
         // Сохраняем карту
-        mapGenerator.SaveMapToPlayerData(playerData);
-        SaveLoadMNG.Save(playerData);
+        mapGenerator.SaveMapToPlayerData(PlayerData);
+        SaveLoadMNG.Save(PlayerData);
     }
 
     public void InitializeEventHandlers()

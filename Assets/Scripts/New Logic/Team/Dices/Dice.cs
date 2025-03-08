@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Dice
 {
-    public DiceConfig diceConfig; 
+    public NewDiceConfig diceConfig; 
     private DiceSide currentSide;
-    private List<ItemConfig> items;
+    public List<ItemConfig> items;
 
     public DiceSide GetCurrentSide()
     {

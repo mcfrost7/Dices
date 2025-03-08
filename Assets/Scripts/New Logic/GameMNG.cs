@@ -6,12 +6,12 @@ public class GameMNG : MonoBehaviour
 {
     public void OnNewGameStart()
     {
-        MapMNG.Instance.StartNewGame();
+        GameDataMNG.Instance.StartNewGame();
     }
 
     public void OnContinueGame()
     {
-        MapMNG.Instance.LoadGame();
+        GameDataMNG.Instance.LoadGame();
     }
 
     public void OnExitGame()

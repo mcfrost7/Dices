@@ -25,37 +25,62 @@ public class TeamMNG : MonoBehaviour
             _newUnits.Add(unitLevel1);
         }
         SaveUnits();
-        DebugUnits();
-    } 
+    }
+
+    private const int MAX_UPGRADE_COUNT = 2; // Максимальное количество улучшений
 
     private NewUnitStats GenerateUnit(int level)
     {
         if (level > 3) return null; // Ограничиваем уровень до 3
 
-        // Получаем случайные данные в зависимости от уровня
+        // Получаем списки конфигураций
         List<NewDiceConfig> diceList = GetDiceListByLevel(level);
         List<BuffConfig> buffList = GetBuffListByLevel(level);
 
+        // Проверка наличия данных
         if (diceList.Count == 0 || buffList.Count == 0)
         {
             Debug.LogWarning($"Не найдены данные для юнитов уровня {level}!");
             return null;
         }
 
-        // Создаем юнита
+        // Генерация случайного количества бафов (от 0 до уровня)
+        int randomBuffsCount = Mathf.Min(Random.Range(0, level + 1), buffList.Count);
+        List<BuffConfig> tempBuffList = new List<BuffConfig>();
+
+        List<BuffConfig> availableBuffs = new List<BuffConfig>(buffList); // Копия списка, чтобы удалять использованные бафы
+
+        for (int i = 0; i < randomBuffsCount; i++)
+        {
+            if (availableBuffs.Count == 0) break; // Если бафов не осталось, выходим
+
+            int randomIndex = Random.Range(0, availableBuffs.Count);
+            tempBuffList.Add(availableBuffs[randomIndex]);
+            availableBuffs.RemoveAt(randomIndex); // Удаляем выбранный бафф
+        }
+
+        // Создаём новый кубик для юнита
+        Dice dice = new Dice
+        {
+            items = new List<ItemConfig>(),
+            diceConfig = diceList[Random.Range(0, diceList.Count)]
+        };
+
+        // Создаём юнита
         NewUnitStats newUnit = new NewUnitStats(
-            $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Генерация случайного имени
+            $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Случайное имя
             Random.Range(3, 5) * level,  // Случайное здоровье
             Random.Range(1, 3) * level,   // Случайная мораль
             level,
-            diceList[Random.Range(0, diceList.Count)],
-            buffList[Random.Range(0, buffList.Count)]
+            dice,
+            tempBuffList
         );
 
-        // Если уровень ниже 3, добавляем 2 варианта улучшения
+        // Если уровень ниже 3, добавляем 2 варианта улучшения (не _units_count)
         if (level < 3)
         {
-            for (int i = 0; i < 2; i++)
+            int upgradesCount = Mathf.Min(MAX_UPGRADE_COUNT, _units_count); // Ограничиваем улучшения
+            for (int i = 0; i < upgradesCount; i++)
             {
                 NewUnitStats upgradeUnit = GenerateUnit(level + 1);
                 if (upgradeUnit != null)
@@ -67,6 +92,7 @@ public class TeamMNG : MonoBehaviour
 
         return newUnit;
     }
+
 
     // Получение списка кубиков по уровню
     private List<NewDiceConfig> GetDiceListByLevel(int level)
@@ -92,57 +118,15 @@ public class TeamMNG : MonoBehaviour
         };
     }
 
-    // Вывести в лог созданных юнитов
-    public void DebugUnits()
-    {
-        foreach (var unit in _newUnits)
-        {
-            Debug.Log(GenerateUnitDebugInfo(unit, 0));
-        }
-    }
-
-    // Рекурсивный метод для форматирования информации о юните
-    private string GenerateUnitDebugInfo(NewUnitStats unit, int depth)
-    {
-        string indent = new string('-', depth * 2); // Визуальный отступ для дерева улучшений
-
-        string unitInfo = $"{indent}Юнит: {unit._name}\n" +
-                          $"{indent}  - Уровень: {unit._level}\n" +
-                          $"{indent}  - Здоровье: {unit._health}\n" +
-                          $"{indent}  - Мораль: {unit._moral}\n" +
-                          $"{indent}  - Текущий опыт: {unit._current_exp}\n" +
-                          $"{indent}  - Кубик: {(unit._dice != null ? unit._dice.name : "Нет")}\n" +
-                          $"{indent}  - Бафф: {(unit._buff != null ? unit._buff.name : "Нет")}\n";
-
-        // Если есть улучшения, добавляем их
-        if (unit._upgrade_list.Count > 0)
-        {
-            unitInfo += $"{indent}  - Возможные улучшения:\n";
-            foreach (var upgrade in unit._upgrade_list)
-            {
-                unitInfo += GenerateUnitDebugInfo(upgrade, depth + 1);
-            }
-        }
-        else
-        {
-            unitInfo += $"{indent}  - Нет доступных улучшений\n";
-        }
-
-        return unitInfo;
-    }
-
     public void SaveUnits()
     {
-        PlayerData playerData = SaveLoadMNG.Load();
-        playerData.PlayerUnits = _newUnits;
-        SaveLoadMNG.Save(playerData);
+        GameDataMNG.Instance.PlayerData.PlayerUnits = _newUnits;
         Debug.Log("Юниты сохранены.");
     }
 
     public void LoadUnits()
     {
-        PlayerData playerData = SaveLoadMNG.Load();
-        _newUnits = playerData.PlayerUnits ?? new List<NewUnitStats>();
+        _newUnits = GameDataMNG.Instance.PlayerData.PlayerUnits ?? new List<NewUnitStats>();
 
         if (_newUnits.Count == 0)
         {
@@ -158,7 +142,6 @@ public class TeamMNG : MonoBehaviour
     public void NewGame()
     {
         Debug.Log("Начало новой игры: удаление старых юнитов и создание новых.");
-
         _newUnits.Clear(); // Удаляем старых юнитов
         CreateUnits(); // Создаем новых юнитов и сохраняем их
     }

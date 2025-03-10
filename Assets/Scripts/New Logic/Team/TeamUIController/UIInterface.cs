@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewUnit : MonoBehaviour
+public class UIInterface : MonoBehaviour
 {
 
 }

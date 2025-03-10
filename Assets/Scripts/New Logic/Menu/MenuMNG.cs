@@ -47,7 +47,14 @@ public class MenuMNG : MonoBehaviour
     public void ChangeVisibilityOfDownPanel(GameObject _panel)
     {
         _panel.SetActive(!_panel.activeSelf);
-
     }
 
+    public void TurnOnUI(GameObject _gameObject)
+    {
+        _gameObject.SetActive(true);
+    }
+    public void TurnOffUI(GameObject _gameObject)
+    {
+        _gameObject.SetActive(false);
+    }
 }

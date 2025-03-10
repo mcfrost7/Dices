@@ -1,12 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[Serializable]
 public class Dice
 {
-    public NewDiceConfig diceConfig; 
-    private DiceSide currentSide;
-    public List<ItemConfig> items;
+    [SerializeField] public NewDiceConfig diceConfig;
+    [SerializeField] private DiceSide currentSide;
+    [SerializeField] public List<ItemConfig> items;
 
     public DiceSide GetCurrentSide()
     {

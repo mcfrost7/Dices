@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8686146956374137549}
   - component: {fileID: 2378328046904997681}
   m_Layer: 0
-  m_Name: UnitTeam
+  m_Name: UnitUpgrade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 164, y: 164}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6103472637629951504
 CanvasRenderer:
@@ -135,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _image: {fileID: 3635741481095079178}
   _button: {fileID: 8686146956374137549}
+  _text: {fileID: 0}

@@ -8,7 +8,7 @@ public class UnitsPanelUI : MonoBehaviour
 {
     public static event Action<NewUnitStats> OnUnitSelected;
 
-    [SerializeField] private GameObject _unitOnPanelPrefab;
+    [SerializeField] private UIUnit _unitOnPanelPrefab;
     [SerializeField] private GameObject _panel;
     [SerializeField] private GameObject _addButton;
 
@@ -23,37 +23,24 @@ public class UnitsPanelUI : MonoBehaviour
     private void DrawUnitsOnPanel()
     {
         ClearPanel();
-        if (_unitOnPanelPrefab != null && _panel != null)
+        foreach (NewUnitStats unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
         {
-            foreach (NewUnitStats unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
-            {
-                GameObject _unitOnPanel = Instantiate(_unitOnPanelPrefab, _panel.transform);
-                Image image = _unitOnPanel.GetComponent<Image>();
-                if (image != null) 
-                {
-                    image.sprite = unit._dice.diceConfig._unitSprite;
-                }
-                Button button = _unitOnPanel.GetComponent<Button>();
-                if (button != null)
-                {
-                    button.onClick.AddListener(() => OnUnitSelected?.Invoke(unit));
-                }
-            }
+            UIUnit _unitOnPanel = Instantiate(_unitOnPanelPrefab, _panel.transform);
+            _unitOnPanel.Initialize(unit._dice.diceConfig, ()=>OnUnitSelected.Invoke(unit));
         }
     }
 
+
+
     private void ClearPanel()
     {
-        if (_panel != null) 
+        foreach (Transform child in _panel.transform)
         {
-            foreach (Transform child in _panel.transform)
+            if (child.gameObject.name != "AddButton")
             {
-                if (child.gameObject.name != "AddButton")
-                {
-                    Destroy(child.gameObject);
-                }
+                Destroy(child.gameObject);
             }
-        }
+        }   
     }
 
 }

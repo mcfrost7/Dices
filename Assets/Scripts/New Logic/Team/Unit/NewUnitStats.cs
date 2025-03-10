@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class NewUnitStats
 {
+    public int _ID;
     public string _name;
     public int _health;
     public int _moral;
     public int _current_exp;
     public int _level;
-    public List<NewUnitStats> _upgrade_list = new List<NewUnitStats>();
+    public List<int> _upgrade_list = new List<int>();
     public Dice _dice;
     public List<BuffConfig> _buffs = new List<BuffConfig>();
 

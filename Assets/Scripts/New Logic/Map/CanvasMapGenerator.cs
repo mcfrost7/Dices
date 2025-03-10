@@ -241,7 +241,7 @@ public class CanvasMapGenerator : MonoBehaviour
     }
 
     // Сохраняем текущую карту в PlayerData
-    public void SaveMapToPlayerData(PlayerData playerData)
+    public void SaveMapToPlayerData()
     {
         List<MapNodeData> mapNodesData = new List<MapNodeData>();
 
@@ -261,7 +261,7 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        playerData.MapNodes = mapNodesData;
+        GameDataMNG.Instance.PlayerData.MapNodes = mapNodesData;
     }
 
     private List<MapNode> CreateNodesForLayer(int layerIndex, float layerY, int nodesInLayer, ref bool bossPlaced)

@@ -8,12 +8,12 @@ using UnityEngine;
 public class PlayerData
 {
     [SerializeField] private List<MapNodeData> mapNodes = new(); // Хранение нодов карты
-    [SerializeField] private int currentAvailableLayer = -1; // Текущий доступный слой
     [SerializeField] private List<NewUnitStats> playerUnits = new(); // Список юнитов игрока
+    [SerializeField] private List<NewUnitStats> unitsStorage = new(); // Список хранилища юнитов
 
     public List<MapNodeData> MapNodes { get => mapNodes; set => mapNodes = value; }
-    public int CurrentAvailableLayer { get => currentAvailableLayer; set => currentAvailableLayer = value; }
     public List<NewUnitStats> PlayerUnits { get => playerUnits; set => playerUnits = value; }
+    public List<NewUnitStats> UnitsStorage { get => unitsStorage; set => unitsStorage = value; }
 }
 
 // Сериализуемый класс для хранения данных о ноде карты

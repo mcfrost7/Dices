@@ -29,7 +29,7 @@ public class GameDataMNG : MonoBehaviour
         {
             teamMNG.NewGame();
             mapGenerator.GenerateMap();
-            mapGenerator.SaveMapToPlayerData(PlayerData);
+            mapGenerator.SaveMapToPlayerData();
             SaveGame();
         }
     }
@@ -46,7 +46,7 @@ public class GameDataMNG : MonoBehaviour
         PlayerData = SaveLoadMNG.Load();
         if (mapGenerator != null && teamMNG != null)
         {
-            teamMNG.LoadUnits();
+            teamMNG.LoadUnits(PlayerData);
             mapGenerator.LoadMapFromPlayerData(PlayerData);
         }
     }
@@ -58,11 +58,6 @@ public class GameDataMNG : MonoBehaviour
             Debug.LogWarning("Ошибка сохранения: данные отсутствуют!");
             return;
         }
-
-        teamMNG.SaveUnits();
-
-        // Сохраняем карту
-        mapGenerator.SaveMapToPlayerData(PlayerData);
         SaveLoadMNG.Save(PlayerData);
     }
 

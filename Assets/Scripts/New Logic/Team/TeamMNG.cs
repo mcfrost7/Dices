@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class TeamMNG : MonoBehaviour
 {
@@ -13,18 +14,36 @@ public class TeamMNG : MonoBehaviour
     [SerializeField] private List<BuffConfig> _buffsConfigLevel3;
     [SerializeField] private int _units_count;
 
-    private List<NewUnitStats> _newUnits = new List<NewUnitStats>();
+    private List<int> _playerUnitIDs = new List<int>(); // Хранит только ID юнитов игрока
+    private Dictionary<int, NewUnitStats> _unitsCache = new Dictionary<int, NewUnitStats>(); // Кэш для быстрого доступа
+    private int _nextUnitID = 1; // Начинаем с 1, т.к. 0 может использоваться как специальное значение
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void CreateUnits()
     {
-        _newUnits.Clear(); // Очищаем список перед генерацией
+        _playerUnitIDs.Clear(); // Очищаем список ID юнитов игрока
+        _unitsCache.Clear(); // Очищаем кэш
 
-        for (int i = 0; i < _units_count; i++) // Генерируем 5 юнита 1-го уровня
+        for (int i = 0; i < _units_count; i++) // Генерируем указанное количество юнитов 1-го уровня
         {
             NewUnitStats unitLevel1 = GenerateUnit(1);
-            _newUnits.Add(unitLevel1);
+            if (unitLevel1 != null)
+            {
+                _playerUnitIDs.Add(unitLevel1._ID); // Добавляем только ID
+            }
         }
-        SaveUnits();
+        SaveUnits(); // Сохраняем в PlayerData
     }
 
     private const int MAX_UPGRADE_COUNT = 2; // Максимальное количество улучшений
@@ -47,7 +66,6 @@ public class TeamMNG : MonoBehaviour
         // Генерация случайного количества бафов (от 0 до уровня)
         int randomBuffsCount = Mathf.Min(Random.Range(0, level + 1), buffList.Count);
         List<BuffConfig> tempBuffList = new List<BuffConfig>();
-
         List<BuffConfig> availableBuffs = new List<BuffConfig>(buffList); // Копия списка, чтобы удалять использованные бафы
 
         for (int i = 0; i < randomBuffsCount; i++)
@@ -66,6 +84,9 @@ public class TeamMNG : MonoBehaviour
             diceConfig = diceList[Random.Range(0, diceList.Count)]
         };
 
+        // Сгенерировать уникальный ID
+        int unitID = _nextUnitID++;
+
         // Создаём юнита
         NewUnitStats newUnit = new NewUnitStats(
             $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Случайное имя
@@ -76,7 +97,13 @@ public class TeamMNG : MonoBehaviour
             tempBuffList
         );
 
-        // Если уровень ниже 3, добавляем 2 варианта улучшения (не _units_count)
+        // Устанавливаем ID юнита
+        newUnit._ID = unitID;
+
+        // Добавляем юнит в кэш
+        _unitsCache[unitID] = newUnit;
+
+        // Если уровень ниже 3, добавляем варианты улучшения
         if (level < 3)
         {
             int upgradesCount = Mathf.Min(MAX_UPGRADE_COUNT, _units_count); // Ограничиваем улучшения
@@ -85,14 +112,14 @@ public class TeamMNG : MonoBehaviour
                 NewUnitStats upgradeUnit = GenerateUnit(level + 1);
                 if (upgradeUnit != null)
                 {
-                    newUnit._upgrade_list.Add(upgradeUnit);
+                    // Добавляем ID улучшенного юнита в список улучшений текущего юнита
+                    newUnit._upgrade_list.Add(upgradeUnit._ID);
                 }
             }
         }
 
         return newUnit;
     }
-
 
     // Получение списка кубиков по уровню
     private List<NewDiceConfig> GetDiceListByLevel(int level)
@@ -118,31 +145,141 @@ public class TeamMNG : MonoBehaviour
         };
     }
 
+    // Сохранение юнитов в PlayerData
     public void SaveUnits()
     {
-        GameDataMNG.Instance.PlayerData.PlayerUnits = _newUnits;
-        Debug.Log("Юниты сохранены.");
+        // Сохраняем текущие юниты игрока (только активные юниты)
+        GameDataMNG.Instance.PlayerData.PlayerUnits = _playerUnitIDs
+            .Select(id => _unitsCache[id])
+            .ToList();
+
+        // Сохраняем все юниты в хранилище
+        GameDataMNG.Instance.PlayerData.UnitsStorage = _unitsCache.Values.ToList();
+
+        Debug.Log($"Юниты сохранены. Активных юнитов: {_playerUnitIDs.Count}, Всего юнитов: {_unitsCache.Count}");
     }
 
-    public void LoadUnits()
+    // Загрузка юнитов из PlayerData
+    public void LoadUnits(PlayerData playerData)
     {
-        _newUnits = GameDataMNG.Instance.PlayerData.PlayerUnits ?? new List<NewUnitStats>();
+        // Очищаем текущие данные
+        _unitsCache.Clear();
+        _playerUnitIDs.Clear();
 
-        if (_newUnits.Count == 0)
+        // Загружаем все юниты из хранилища в кэш
+        if (playerData.UnitsStorage != null && playerData.UnitsStorage.Count > 0)
+        {
+            foreach (var unit in playerData.UnitsStorage)
+            {
+                _unitsCache[unit._ID] = unit;
+                // Обновляем nextUnitID, чтобы новые ID не конфликтовали
+                if (unit._ID >= _nextUnitID)
+                {
+                    _nextUnitID = unit._ID + 1;
+                }
+            }
+
+            // Загружаем ID активных юнитов игрока
+            if (playerData.PlayerUnits != null && playerData.PlayerUnits.Count > 0)
+            {
+                _playerUnitIDs = playerData.PlayerUnits.Select(u => u._ID).ToList();
+                Debug.Log($"Юниты загружены из сохранения. Активных юнитов: {_playerUnitIDs.Count}, Всего юнитов: {_unitsCache.Count}");
+            }
+            else
+            {
+                Debug.Log("Активные юниты не найдены, но есть юниты в хранилище.");
+                // Берем юниты из хранилища, если активных юнитов нет
+                SelectInitialUnits();
+            }
+        }
+        else
         {
             Debug.Log("Сохраненные юниты не найдены, создаем новых.");
             CreateUnits();
         }
+    }
+
+    // Выбор начальных юнитов из хранилища (например, при первом запуске)
+    private void SelectInitialUnits()
+    {
+        // Выбираем юнитов 1 уровня из хранилища, если они есть
+        var level1Units = _unitsCache.Values
+            .Where(u => u._level == 1)
+            .Take(_units_count)
+            .ToList();
+
+        if (level1Units.Count >= _units_count)
+        {
+            // Если достаточно юнитов 1 уровня, берем их
+            _playerUnitIDs = level1Units.Select(u => u._ID).ToList();
+        }
         else
         {
-            Debug.Log("Юниты загружены из сохранения.");
+            // Создаем новых юнитов
+            CreateUnits();
         }
     }
 
+    // Начало новой игры - сброс и создание новых юнитов
     public void NewGame()
     {
         Debug.Log("Начало новой игры: удаление старых юнитов и создание новых.");
-        _newUnits.Clear(); // Удаляем старых юнитов
+        _unitsCache.Clear();
+        _playerUnitIDs.Clear();
+        _nextUnitID = 1; // Сбрасываем счетчик ID
         CreateUnits(); // Создаем новых юнитов и сохраняем их
+    }
+
+    // Получение юнита по ID
+    public NewUnitStats GetUnitByID(int id)
+    {
+        if (_unitsCache.TryGetValue(id, out NewUnitStats unit))
+        {
+            return unit;
+        }
+        return null;
+    }
+
+    // Получение всех активных юнитов игрока
+    public List<NewUnitStats> GetPlayerUnits()
+    {
+        return _playerUnitIDs
+            .Where(id => _unitsCache.ContainsKey(id))
+            .Select(id => _unitsCache[id])
+            .ToList();
+    }
+
+    // Добавление юнита к активным юнитам игрока
+    public void AddUnitToPlayer(int unitID)
+    {
+        if (_unitsCache.ContainsKey(unitID) && !_playerUnitIDs.Contains(unitID))
+        {
+            _playerUnitIDs.Add(unitID);
+            SaveUnits();
+        }
+    }
+
+    // Удаление юнита из активных юнитов игрока
+    public void RemoveUnitFromPlayer(int unitID)
+    {
+        if (_playerUnitIDs.Contains(unitID))
+        {
+            _playerUnitIDs.Remove(unitID);
+            SaveUnits();
+        }
+    }
+
+    // Заменить юнит игрока на улучшенную версию
+    public void UpgradePlayerUnit(int oldUnitID, int newUnitID)
+    {
+        if (_playerUnitIDs.Contains(oldUnitID) && _unitsCache.ContainsKey(newUnitID))
+        {
+            int index = _playerUnitIDs.IndexOf(oldUnitID);
+            if (index >= 0)
+            {
+                _playerUnitIDs[index] = newUnitID;
+                SaveUnits();
+            }
+        }
     }
 }

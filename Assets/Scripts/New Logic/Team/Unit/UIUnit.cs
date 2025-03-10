@@ -23,4 +23,11 @@ public class UIUnit : MonoBehaviour
         _image.sprite = _buff.buffSprite;
         _text.text = _buff.buffName;
     }
+
+
+    public void InitializeUpgrade(NewUnitStats _unitNext,NewUnitStats _unitCurrent)
+    {
+        _image.sprite = _unitNext._dice.diceConfig._unitSprite;
+        _button.onClick.AddListener(() => TeamMNG.Instance.UpgradePlayerUnit(_unitCurrent._ID, _unitNext._ID));
+    }
 }

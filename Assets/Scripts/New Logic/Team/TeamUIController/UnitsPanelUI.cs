@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class UnitsPanelUI : MonoBehaviour
 {
+    public static UnitsPanelUI Instance { get; private set; }
+
     public static event Action<NewUnitStats> OnUnitSelected;
 
     [SerializeField] private UIUnit _unitOnPanelPrefab;
@@ -14,6 +16,17 @@ public class UnitsPanelUI : MonoBehaviour
 
     private NewUnitStats _currentUnit; 
     public NewUnitStats CurrentUnit { get => _currentUnit; set => _currentUnit = value; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void OnMenuLoad()
     {
@@ -29,9 +42,6 @@ public class UnitsPanelUI : MonoBehaviour
             _unitOnPanel.Initialize(unit._dice.diceConfig, ()=>OnUnitSelected.Invoke(unit));
         }
     }
-
-
-
     private void ClearPanel()
     {
         foreach (Transform child in _panel.transform)

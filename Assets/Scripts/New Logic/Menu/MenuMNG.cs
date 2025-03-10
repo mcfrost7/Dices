@@ -11,7 +11,7 @@ public class MenuMNG : MonoBehaviour
     [SerializeField] private GameObject _task;
 
     private GameObject _currentActiveWindow;
-    private bool _visibility = false;
+    private bool _taskVisibility = false;
 
     public void ShowWindow(GameObject _window)
     {
@@ -34,14 +34,14 @@ public class MenuMNG : MonoBehaviour
 
     public void CallTask()
     {
-        if (_task != null && _visibility == false)
+        if (_taskVisibility == false)
         {
             _task.transform.DOLocalMoveX(_task.transform.localPosition.x - 560, 0.8f).SetEase(Ease.InOutExpo);
         } else
         {
             _task.transform.DOLocalMoveX(_task.transform.localPosition.x + 560, 0.8f).SetEase(Ease.InOutExpo);
         }
-        _visibility = !_visibility;
+        _taskVisibility = !_taskVisibility;
     }
     
     public void ChangeVisibilityOfDownPanel(GameObject _panel)

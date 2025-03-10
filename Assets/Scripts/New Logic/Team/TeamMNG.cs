@@ -64,6 +64,66 @@ public class TeamMNG : MonoBehaviour
         }
 
         // Генерация случайного количества бафов (от 0 до уровня)
+        List<BuffConfig> tempBuffList = GenerateBuffs(level, buffList);
+        int unitID;
+        NewUnitStats newUnit;
+        CreateUnitStats(level, diceList, tempBuffList, out unitID, out newUnit);
+
+        // Добавляем юнит в кэш
+        _unitsCache[unitID] = newUnit;
+
+        AddUpgradeToUnit(level, newUnit);
+
+        return newUnit;
+    }
+
+    private void AddUpgradeToUnit(int level, NewUnitStats newUnit)
+    {
+        // Если уровень ниже 3, добавляем варианты улучшения
+        if (level < 3)
+        {
+            int upgradesCount = MAX_UPGRADE_COUNT; // Ограничиваем улучшения
+            for (int i = 0; i < upgradesCount; i++)
+            {
+                NewUnitStats upgradeUnit = GenerateUnit(level + 1);
+                if (upgradeUnit != null)
+                {
+                    // Добавляем ID улучшенного юнита в список улучшений текущего юнита
+                    newUnit._upgrade_list.Add(upgradeUnit._ID);
+                }
+            }
+        }
+    }
+
+    private void CreateUnitStats(int level, List<NewDiceConfig> diceList, List<BuffConfig> tempBuffList, out int unitID, out NewUnitStats newUnit)
+    {
+
+        // Создаём новый кубик для юнита
+        Dice dice = new Dice
+        {
+            items = new List<ItemConfig>(),
+            diceConfig = diceList[Random.Range(0, diceList.Count)]
+        };
+
+        // Сгенерировать уникальный ID
+        unitID = _nextUnitID++;
+
+        // Создаём юнита
+        newUnit = new NewUnitStats(
+            $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Случайное имя
+            Random.Range(3, 5) * level,  // Случайное здоровье
+            Random.Range(1, 3) * level,   // Случайная мораль
+            level,
+            dice,
+            tempBuffList
+        );
+
+        // Устанавливаем ID юнита
+        newUnit._ID = unitID;
+    }
+
+    private List<BuffConfig> GenerateBuffs(int level, List<BuffConfig> buffList)
+    {
         int randomBuffsCount = Mathf.Min(Random.Range(0, level + 1), buffList.Count);
         List<BuffConfig> tempBuffList = new List<BuffConfig>();
         List<BuffConfig> availableBuffs = new List<BuffConfig>(buffList); // Копия списка, чтобы удалять использованные бафы
@@ -77,48 +137,7 @@ public class TeamMNG : MonoBehaviour
             availableBuffs.RemoveAt(randomIndex); // Удаляем выбранный бафф
         }
 
-        // Создаём новый кубик для юнита
-        Dice dice = new Dice
-        {
-            items = new List<ItemConfig>(),
-            diceConfig = diceList[Random.Range(0, diceList.Count)]
-        };
-
-        // Сгенерировать уникальный ID
-        int unitID = _nextUnitID++;
-
-        // Создаём юнита
-        NewUnitStats newUnit = new NewUnitStats(
-            $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Случайное имя
-            Random.Range(3, 5) * level,  // Случайное здоровье
-            Random.Range(1, 3) * level,   // Случайная мораль
-            level,
-            dice,
-            tempBuffList
-        );
-
-        // Устанавливаем ID юнита
-        newUnit._ID = unitID;
-
-        // Добавляем юнит в кэш
-        _unitsCache[unitID] = newUnit;
-
-        // Если уровень ниже 3, добавляем варианты улучшения
-        if (level < 3)
-        {
-            int upgradesCount = Mathf.Min(MAX_UPGRADE_COUNT, _units_count); // Ограничиваем улучшения
-            for (int i = 0; i < upgradesCount; i++)
-            {
-                NewUnitStats upgradeUnit = GenerateUnit(level + 1);
-                if (upgradeUnit != null)
-                {
-                    // Добавляем ID улучшенного юнита в список улучшений текущего юнита
-                    newUnit._upgrade_list.Add(upgradeUnit._ID);
-                }
-            }
-        }
-
-        return newUnit;
+        return tempBuffList;
     }
 
     // Получение списка кубиков по уровню
@@ -272,6 +291,7 @@ public class TeamMNG : MonoBehaviour
     // Заменить юнит игрока на улучшенную версию
     public void UpgradePlayerUnit(int oldUnitID, int newUnitID)
     {
+
         if (_playerUnitIDs.Contains(oldUnitID) && _unitsCache.ContainsKey(newUnitID))
         {
             int index = _playerUnitIDs.IndexOf(oldUnitID);
@@ -279,6 +299,8 @@ public class TeamMNG : MonoBehaviour
             {
                 _playerUnitIDs[index] = newUnitID;
                 SaveUnits();
+                UnitsPanelUI.Instance.OnMenuLoad();
+                GameDataMNG.Instance.SaveGame();
             }
         }
     }

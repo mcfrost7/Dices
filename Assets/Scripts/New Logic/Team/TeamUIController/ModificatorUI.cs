@@ -36,12 +36,9 @@ public class ModificatorUI : MonoBehaviour
 
     private void ClearPanel()
     {
-        if (_panel != null)
+        foreach (Transform child in _panel.transform)
         {
-            foreach (Transform child in _panel.transform)
-            {
-                Destroy(child.gameObject);
-            }
+            Destroy(child.gameObject);
         }
         _defaultText?.SetActive(false);
     }

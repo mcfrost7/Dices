@@ -218,6 +218,20 @@ public class TeamMNG : MonoBehaviour
         }
     }
 
+    public void GenerateAndAddUnit(int level)
+    {
+        NewUnitStats newUnit = GenerateUnit(level);
+        if (newUnit != null)
+        {
+            _playerUnitIDs.Add(newUnit._ID); // Добавляем ID нового юнита в список активных
+            _unitsCache[newUnit._ID] = newUnit; // Добавляем в кэш
+            SaveUnits(); // Сохраняем изменения
+            Debug.Log($"Добавлен новый юнит ID: {newUnit._ID}, Уровень: {level}");
+            UnitsPanelUI.Instance.OnMenuLoad();
+            GameDataMNG.Instance.SaveGame();
+        }
+    }
+
     // Выбор начальных юнитов из хранилища (например, при первом запуске)
     private void SelectInitialUnits()
     {

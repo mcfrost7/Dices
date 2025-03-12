@@ -30,4 +30,9 @@ public class UIUnit : MonoBehaviour
         _image.sprite = _unitNext._dice.diceConfig._unitSprite;
         _button.onClick.AddListener(() => TeamMNG.Instance.UpgradePlayerUnit(_unitCurrent._ID, _unitNext._ID));
     }
+
+    public void CreateUnit()
+    {
+        TeamMNG.Instance.GenerateAndAddUnit(1);
+    }
 }

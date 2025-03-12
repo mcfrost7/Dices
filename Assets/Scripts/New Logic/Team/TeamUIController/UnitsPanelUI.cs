@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UnitsPanelUI : MonoBehaviour
 {
@@ -16,6 +14,8 @@ public class UnitsPanelUI : MonoBehaviour
 
     private NewUnitStats _currentUnit; 
     public NewUnitStats CurrentUnit { get => _currentUnit; set => _currentUnit = value; }
+
+    private List<NewUnitStats> playerUnits;
     private void Awake()
     {
         if (Instance == null)
@@ -30,7 +30,23 @@ public class UnitsPanelUI : MonoBehaviour
 
     public void OnMenuLoad()
     {
+        playerUnits = GameDataMNG.Instance.PlayerData.PlayerUnits;
         DrawUnitsOnPanel();
+        SetUpSceneWithLastUnit();
+         if (playerUnits.Count == 5)
+            _addButton.SetActive(false);
+        else _addButton.SetActive(true);
+
+    }
+
+    private void SetUpSceneWithLastUnit()
+    {
+        if (playerUnits.Count > 0)
+        {
+            NewUnitStats lastUnit = playerUnits[playerUnits.Count - 1];
+            CurrentUnit = lastUnit; // Обновляем текущий юнит
+            OnUnitSelected?.Invoke(lastUnit); // Вызываем событие выбора
+        }
     }
 
     private void DrawUnitsOnPanel()

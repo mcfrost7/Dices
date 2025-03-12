@@ -12,14 +12,14 @@ public class CanvasMapGenerator : MonoBehaviour
         [Header("Map Layout")]
         public RectTransform mapContainer;
         public GameObject nodePrefab;
-        public int maxNodes = 20;
+        public int numberOfLayers = 5; // Changed from maxNodes to numberOfLayers
         public int minNodesPerLayer = 3;
         public int maxNodesPerLayer = 7;
         public float layerHeight = 150f;
         public List<LocationConfig> locationConfigs;
         [Header("Randomization")]
         public float nodeHorizontalSpread = 50f;
-        public List<TileSpawnProbability> tileSpawnProbabilities; // Вероятности появления тайлов
+        public List<TileSpawnProbability> tileSpawnProbabilities;
         [Header("Appearance")]
         public Color availableNodeColor = Color.white;
         public Color visitedNodeColor = new Color(0.7f, 0.7f, 0.7f);
@@ -30,7 +30,7 @@ public class CanvasMapGenerator : MonoBehaviour
     public class TileSpawnProbability
     {
         public TileType tileType;
-        public float probability; // Вероятность от 0 до 1
+        public float probability; // Probability from 0 to 1
     }
 
     [System.Serializable]
@@ -38,55 +38,57 @@ public class CanvasMapGenerator : MonoBehaviour
     {
         public GameObject nodeObject;
         public RectTransform rectTransform;
-        public LocationConfig locationConfig; // Ссылка на конфиг локации
-        public TileType tileType; // Тип тайла
-        public Image nodeImage; // Компонент Image для отображения спрайта
-        public int layerIndex; // Индекс слоя
-        public bool isVisited; // Посещен ли нод
-        public bool isAvailable; // Доступен ли нод для посещения
-        public Button nodeButton; // Кнопка нода
+        public LocationConfig locationConfig;
+        public TileType tileType;
+        public Image nodeImage;
+        public int layerIndex;
+        public bool isVisited;
+        public bool isAvailable;
+        public Button nodeButton;
     }
 
     public MapGenerationSettings generationSettings;
     private List<List<MapNode>> layers = new List<List<MapNode>>();
-    private int currentAvailableLayer; // Текущий доступный слой для посещения
+    private int currentAvailableLayer;
 
-    // События для оповещения о кликах и состоянии карты
+    // Events to notify about clicks and map state
     public UnityEvent<TileType, MapNode> OnTileClicked;
-    public UnityEvent<int> OnLayerCompleted; // Вызывается, когда слой завершен
+    public UnityEvent<int> OnLayerCompleted;
 
     public void GenerateMap()
     {
         ClearExistingNodes();
         layers.Clear();
         float currentLayerY = generationSettings.mapContainer.rect.height / 2;
-        int totalNodesCreated = 0;
-        bool bossPlaced = false; // Флаг для отслеживания того, что босса уже поставили
+        bool bossPlaced = false;
 
-        for (int layerIndex = 0; totalNodesCreated < generationSettings.maxNodes; layerIndex++)
+        // Generate specified number of layers instead of checking total nodes
+        for (int layerIndex = 0; layerIndex < generationSettings.numberOfLayers; layerIndex++)
         {
-            int nodesInLayer = layerIndex == 0 ? 1 : DetermineNodesForLayer(totalNodesCreated); // 1 узел на первом слое
+            int nodesInLayer = layerIndex == 0 ? 1 : Random.Range(
+                generationSettings.minNodesPerLayer,
+                generationSettings.maxNodesPerLayer + 1);
+
             List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced);
             layers.Add(layerNodes);
-            totalNodesCreated += nodesInLayer;
             currentLayerY -= generationSettings.layerHeight;
         }
 
-        // Установка начального доступного слоя (последний слой)
+        // Set initial available layer (last layer)
         SetInitialAvailableLayer();
     }
 
-    // Задаем начальный доступный слой (последний)
+    // Set initial available layer (last layer)
     private void SetInitialAvailableLayer()
     {
         currentAvailableLayer = layers.Count - 1;
         UpdateNodesAvailability();
     }
 
-    // Обновление доступности нодов в зависимости от текущего слоя
+    // Update node availability based on current layer
     private void UpdateNodesAvailability()
     {
-        // Блокируем все ноды
+        // Block all nodes
         foreach (var layer in layers)
         {
             foreach (var node in layer)
@@ -96,11 +98,11 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        // Если все слои посещены, выходим
+        // If all layers have been visited, exit
         if (currentAvailableLayer < 0)
             return;
 
-        // Делаем доступными только ноды в текущем слое и только если они еще не посещены
+        // Make available only nodes in current layer that haven't been visited
         foreach (var node in layers[currentAvailableLayer])
         {
             if (!node.isVisited)
@@ -111,35 +113,35 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
-    // Обновление визуального представления узла в зависимости от его состояния
+    // Update visual representation of node based on its state
     private void UpdateNodeVisuals(MapNode node)
     {
         if (node.isVisited)
         {
-            // Посещенные ноды
+            // Visited nodes
             node.nodeImage.color = generationSettings.visitedNodeColor;
             node.nodeButton.interactable = false;
         }
         else if (node.isAvailable)
         {
-            // Доступные ноды
+            // Available nodes
             node.nodeImage.color = generationSettings.availableNodeColor;
             node.nodeButton.interactable = true;
         }
         else
         {
-            // Недоступные ноды
+            // Unavailable nodes
             node.nodeImage.color = generationSettings.unavailableNodeColor;
             node.nodeButton.interactable = false;
         }
     }
 
-    // Новый метод для загрузки карты из PlayerData
+    // Load map from PlayerData
     public void LoadMapFromPlayerData(PlayerData playerData)
     {
         if (playerData.MapNodes == null || playerData.MapNodes.Count == 0)
         {
-            Debug.Log("Нет сохраненных данных о карте. Генерируем новую карту.");
+            Debug.Log("No saved map data. Generating new map.");
             GenerateMap();
             return;
         }
@@ -147,7 +149,7 @@ public class CanvasMapGenerator : MonoBehaviour
         ClearExistingNodes();
         layers.Clear();
 
-        // Группируем ноды по слоям
+        // Group nodes by layers
         var nodesByLayer = playerData.MapNodes.GroupBy(n => n.LayerIndex).OrderBy(g => g.Key);
 
         foreach (var layerGroup in nodesByLayer)
@@ -156,32 +158,32 @@ public class CanvasMapGenerator : MonoBehaviour
 
             foreach (MapNodeData nodeData in layerGroup)
             {
-                // Находим соответствующий конфиг локации по ID
+                // Find corresponding location config by ID
                 LocationConfig locationConfig = generationSettings.locationConfigs.FirstOrDefault(
                     config => config.name == nodeData.LocationConfigId);
 
                 if (locationConfig == null)
                 {
-                    Debug.LogWarning($"Конфиг локации с ID {nodeData.LocationConfigId} не найден!");
+                    Debug.LogWarning($"Location config with ID {nodeData.LocationConfigId} not found!");
                     locationConfig = generationSettings.locationConfigs.FirstOrDefault();
                 }
 
-                // Создаем игровой объект для нода
+                // Create game object for node
                 GameObject nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
                 RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTransform.anchoredPosition = nodeData.Position;
 
-                // Находим тайл с указанным типом в конфиге локации
+                // Find tile with specified type in location config
                 LocationConfig.LocationTile tileConfig = locationConfig.tiles.FirstOrDefault(
                     tile => tile.tileConfig.tileType == nodeData.TileType);
 
                 if (tileConfig == null)
                 {
-                    Debug.LogWarning($"Тайл типа {nodeData.TileType} не найден в конфиге локации {locationConfig.name}!");
+                    Debug.LogWarning($"Tile type {nodeData.TileType} not found in location config {locationConfig.name}!");
                     tileConfig = locationConfig.tiles.FirstOrDefault();
                 }
 
-                // Создаем MapNode и настраиваем его
+                // Create MapNode and configure it
                 Button nodeButton = nodeObject.GetComponent<Button>();
 
                 MapNode mapNode = new MapNode
@@ -197,16 +199,16 @@ public class CanvasMapGenerator : MonoBehaviour
                     nodeButton = nodeButton
                 };
 
-                // Устанавливаем спрайт
+                // Set sprite
                 if (tileConfig != null)
                 {
                     mapNode.nodeImage.sprite = tileConfig.tileConfig.tileSprite;
                 }
 
-                // Устанавливаем обработчик клика
+                // Set click handler
                 if (nodeButton != null)
                 {
-                    // Используем локальную переменную для захвата mapNode
+                    // Use local variable to capture mapNode
                     MapNode capturedNode = mapNode;
                     nodeButton.onClick.AddListener(() => OnNodeClick(capturedNode));
                 }
@@ -217,18 +219,18 @@ public class CanvasMapGenerator : MonoBehaviour
             layers.Add(layerNodes);
         }
 
-        // Определяем текущий доступный слой на основе сохраненных данных
+        // Determine current available layer based on saved data
         DetermineCurrentAvailableLayer();
         UpdateNodesAvailability();
     }
 
-    // Определяем текущий доступный слой на основе посещенных нодов
+    // Determine current available layer based on visited nodes
     private void DetermineCurrentAvailableLayer()
     {
-        // Перебираем слои начиная с последнего
+        // Iterate through layers starting from the last
         for (int i = layers.Count - 1; i >= 0; i--)
         {
-            // Если в слое есть хотя бы один посещенный нод, значит следующий слой доступен
+            // If there's at least one visited node in the layer, then the next layer is available
             if (layers[i].Any(node => node.isVisited))
             {
                 currentAvailableLayer = i - 1;
@@ -236,11 +238,11 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        // Если ни один нод не посещен, доступен последний слой
+        // If no node has been visited, the last layer is available
         currentAvailableLayer = layers.Count - 1;
     }
 
-    // Сохраняем текущую карту в PlayerData
+    // Save current map to PlayerData
     public void SaveMapToPlayerData()
     {
         List<MapNodeData> mapNodesData = new List<MapNodeData>();
@@ -269,7 +271,7 @@ public class CanvasMapGenerator : MonoBehaviour
         List<MapNode> layerNodes = new List<MapNode>();
         float totalWidth = generationSettings.mapContainer.rect.width;
         float spacing = totalWidth / (nodesInLayer + 1);
-        LocationConfig selectedLocationConfig = new LocationConfig();
+
         for (int i = 0; i < nodesInLayer; i++)
         {
             GameObject nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
@@ -277,8 +279,8 @@ public class CanvasMapGenerator : MonoBehaviour
             float xPosition = spacing * (i + 1) - totalWidth / 2 + Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
             nodeRectTransform.anchoredPosition = new Vector2(xPosition, layerY);
             Button nodeButton = nodeObject.GetComponent<Button>();
-
-            // Если босс еще не был установлен и это первый слой, установим его там
+            LocationConfig selectedLocationConfig = null;
+            // If boss hasn't been placed yet and this is the first layer, place it there
             if (!bossPlaced && layerIndex == 0)
             {
                 selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
@@ -313,7 +315,7 @@ public class CanvasMapGenerator : MonoBehaviour
 
                         layerNodes.Add(newNode);
                         bossPlaced = true;
-                        continue; // Переходим к следующей итерации
+                        continue; // Move to next iteration
                     }
                 }
             }
@@ -356,67 +358,67 @@ public class CanvasMapGenerator : MonoBehaviour
         return layerNodes;
     }
 
-    // Обработчик клика по ноду
+    // Node click handler
     private void OnNodeClick(MapNode node)
     {
         if (!node.isAvailable)
             return;
 
-        // Отмечаем нод как посещенный
+        // Mark node as visited
         node.isVisited = true;
         node.isAvailable = false;
 
-        // Отмечаем все ноды в текущем слое как недоступные
+        // Mark all nodes in current layer as unavailable
         foreach (var layerNode in layers[currentAvailableLayer])
         {
             layerNode.isAvailable = false;
         }
 
-        // Проверяем, все ли ноды в текущем слое посещены
+        // Check if all nodes in current layer have been visited
         bool allNodesInLayerVisited = layers[currentAvailableLayer].All(n => n.isVisited);
 
-        // Если все ноды в текущем слое посещены, переходим к следующему слою
+        // If all nodes in current layer have been visited, move to next layer
         if (!allNodesInLayerVisited)
         {
-            // Если нет, то просто блокируем все ноды на текущем слое
+            // If not, just block all nodes in current layer
             UpdateNodesAvailability();
         }
 
-        // Переход к следующему уровню (вверх, т.е. уменьшаем индекс)
+        // Move to next level (up, i.e., decrease index)
         currentAvailableLayer--;
 
-        // Если дошли до первого слоя или выше, значит карта пройдена
+        // If we've reached the first layer or above, the map is completed
         if (currentAvailableLayer < 0)
         {
-            Debug.Log("Карта полностью пройдена!");
-            // Можно вызвать событие завершения карты
+            Debug.Log("Map fully completed!");
+            // Can trigger map completion event
         }
         else
         {
-            // Иначе делаем доступным следующий слой
+            // Otherwise make next layer available
             UpdateNodesAvailability();
 
-            // Вызываем событие о завершении слоя
+            // Trigger layer completion event
             OnLayerCompleted?.Invoke(currentAvailableLayer + 1);
         }
 
-        // Вызываем событие клика по тайлу
+        // Trigger tile click event
         OnTileClicked?.Invoke(node.tileType, node);
     }
 
     private TileType GetRandomTileType()
     {
-        // Суммируем все вероятности
+        // Sum all probabilities
         float totalProbability = generationSettings.tileSpawnProbabilities.Sum(t => t.probability);
 
-        // Если сумма вероятностей равна 0, возвращаем дефолтный тайл (например, BattleTile)
+        // If sum of probabilities is 0, return default tile (e.g., BattleTile)
         if (totalProbability <= 0f)
         {
             Debug.LogWarning("All tile spawn probabilities are 0. Returning default BattleTile.");
-            return TileType.BattleTile; // Возвращаем тип по умолчанию
+            return TileType.BattleTile; // Return default type
         }
 
-        // Нормализуем вероятности, если сумма меньше 1
+        // Normalize probabilities if sum is less than 1
         if (totalProbability < 1f)
         {
             float normalizationFactor = 1f / totalProbability;
@@ -424,13 +426,13 @@ public class CanvasMapGenerator : MonoBehaviour
             {
                 item.probability *= normalizationFactor;
             }
-            totalProbability = 1f; // После нормализации сумма должна быть 1
+            totalProbability = 1f; // After normalization, sum should be 1
         }
 
-        // Получаем случайное значение, которое будет распределяться по вероятностям
+        // Get random value to be distributed by probabilities
         float randomValue = Random.Range(0f, totalProbability);
 
-        // Итерируем по всем вероятностям и выбираем нужный тайл
+        // Iterate through all probabilities and choose required tile
         foreach (TileSpawnProbability tileProb in generationSettings.tileSpawnProbabilities)
         {
             randomValue -= tileProb.probability;
@@ -440,7 +442,7 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        // Если по каким-то причинам вероятность не сработала, возвращаем дефолтный тайл
+        // If for some reason probability didn't work, return default tile
         return TileType.BattleTile;
     }
 
@@ -452,13 +454,7 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
-    private int DetermineNodesForLayer(int currentNodeCount)
-    {
-        int remainingNodes = generationSettings.maxNodes - currentNodeCount;
-        return Random.Range(generationSettings.minNodesPerLayer, Mathf.Min(generationSettings.maxNodesPerLayer, remainingNodes) + 1);
-    }
-
-    // Метод для проверки доступности узла (для внешних вызовов)
+    // Method to check node availability (for external calls)
     public bool IsNodeAvailable(Vector2 position)
     {
         foreach (var layer in layers)
@@ -474,7 +470,7 @@ public class CanvasMapGenerator : MonoBehaviour
         return false;
     }
 
-    // Метод для ручной активации следующего слоя (может быть полезно для тестирования)
+    // Method for manual activation of next layer (may be useful for testing)
     [ContextMenu("Activate Next Layer Up")]
     public void ActivateNextLayerUp()
     {

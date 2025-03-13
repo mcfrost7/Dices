@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject _settings;
     [SerializeField] private GameObject _team;
     [SerializeField] private GameObject _battle;
+    [SerializeField] private GameObject _roulette;
 
     private GameObject _currentActiveCanvas;
     private Stack<GameObject> _canvasHistory = new Stack<GameObject>();
@@ -22,6 +23,7 @@ public class UIController : MonoBehaviour
     public void ShowGlobalCanvas() => SwitchCanvas(_globalCanvas);
     public void ShowTeam() => SwitchCanvas(_team);
     public void ShowBattle() => SwitchCanvas(_battle);
+    public void ShowRoulette() => SwitchCanvas(_roulette);
 
     // Метод для показа настроек с сохранением предыдущего экрана
     public void ShowSettings()
@@ -67,6 +69,7 @@ public class UIController : MonoBehaviour
         _settings.SetActive(false);
         _team.SetActive(false);
         _battle.SetActive(false);
+        _roulette.SetActive(false);
     }
 
     // Методы для проверки активности конкретного канваса
@@ -75,4 +78,6 @@ public class UIController : MonoBehaviour
     public bool IsSettingsActive() => _settings.activeSelf;
     public bool IsTeamActive() => _team.activeSelf;
     public bool IsBattleActive() => _battle.activeSelf;
+    public bool IsRouletteActive() => _roulette.activeSelf;
+
 }

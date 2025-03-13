@@ -11,7 +11,7 @@ public class CanvasMapGenerator : MonoBehaviour
     {
         [Header("Map Layout")]
         public RectTransform mapContainer;
-        public GameObject nodePrefab;
+        public TileLogic nodePrefab;
         public int numberOfLayers = 5; // Changed from maxNodes to numberOfLayers
         public int minNodesPerLayer = 3;
         public int maxNodesPerLayer = 7;
@@ -36,15 +36,13 @@ public class CanvasMapGenerator : MonoBehaviour
     [System.Serializable]
     public class MapNode
     {
-        public GameObject nodeObject;
+        public TileLogic nodeObject;
         public RectTransform rectTransform;
         public LocationConfig locationConfig;
         public TileType tileType;
-        public Image nodeImage;
         public int layerIndex;
         public bool isVisited;
         public bool isAvailable;
-        public Button nodeButton;
     }
 
     public MapGenerationSettings generationSettings;
@@ -53,7 +51,6 @@ public class CanvasMapGenerator : MonoBehaviour
 
     // Events to notify about clicks and map state
     public UnityEvent<TileType, MapNode> OnTileClicked;
-    public UnityEvent<int> OnLayerCompleted;
 
     public void GenerateMap()
     {
@@ -119,20 +116,20 @@ public class CanvasMapGenerator : MonoBehaviour
         if (node.isVisited)
         {
             // Visited nodes
-            node.nodeImage.color = generationSettings.visitedNodeColor;
-            node.nodeButton.interactable = false;
+            node.nodeObject.Image.color = generationSettings.visitedNodeColor;
+            node.nodeObject.Button.interactable = false;
         }
         else if (node.isAvailable)
         {
             // Available nodes
-            node.nodeImage.color = generationSettings.availableNodeColor;
-            node.nodeButton.interactable = true;
+            node.nodeObject.Image.color = generationSettings.availableNodeColor;
+            node.nodeObject.Button.interactable = true;
         }
         else
         {
             // Unavailable nodes
-            node.nodeImage.color = generationSettings.unavailableNodeColor;
-            node.nodeButton.interactable = false;
+            node.nodeObject.Image.color = generationSettings.unavailableNodeColor;
+            node.nodeObject.Button.interactable = false;
         }
     }
 
@@ -169,7 +166,7 @@ public class CanvasMapGenerator : MonoBehaviour
                 }
 
                 // Create game object for node
-                GameObject nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
+                TileLogic nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
                 RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTransform.anchoredPosition = nodeData.Position;
 
@@ -183,35 +180,18 @@ public class CanvasMapGenerator : MonoBehaviour
                     tileConfig = locationConfig.tiles.FirstOrDefault();
                 }
 
-                // Create MapNode and configure it
-                Button nodeButton = nodeObject.GetComponent<Button>();
-
                 MapNode mapNode = new MapNode
                 {
                     nodeObject = nodeObject,
                     rectTransform = nodeRectTransform,
                     locationConfig = locationConfig,
                     tileType = nodeData.TileType,
-                    nodeImage = nodeObject.GetComponent<Image>(),
                     layerIndex = nodeData.LayerIndex,
                     isVisited = nodeData.IsVisited,
-                    isAvailable = nodeData.IsAvailable,
-                    nodeButton = nodeButton
+                    isAvailable = nodeData.IsAvailable
                 };
 
-                // Set sprite
-                if (tileConfig != null)
-                {
-                    mapNode.nodeImage.sprite = tileConfig.tileConfig.tileSprite;
-                }
-
-                // Set click handler
-                if (nodeButton != null)
-                {
-                    // Use local variable to capture mapNode
-                    MapNode capturedNode = mapNode;
-                    nodeButton.onClick.AddListener(() => OnNodeClick(capturedNode));
-                }
+                mapNode.nodeObject.Initialize(tileConfig.tileConfig.tileSprite, OnNodeClick, mapNode);
 
                 layerNodes.Add(mapNode);
             }
@@ -227,20 +207,22 @@ public class CanvasMapGenerator : MonoBehaviour
     // Determine current available layer based on visited nodes
     private void DetermineCurrentAvailableLayer()
     {
-        // Iterate through layers starting from the last
+        currentAvailableLayer = layers.Count - 1; // Начинаем с верхнего слоя
+
         for (int i = layers.Count - 1; i >= 0; i--)
         {
-            // If there's at least one visited node in the layer, then the next layer is available
-            if (layers[i].Any(node => node.isVisited))
+            if (layers[i].Any(node => node.isVisited)) // Если есть посещенные узлы
             {
-                currentAvailableLayer = i - 1;
-                return;
+                if (i > 0 && layers[i - 1].All(node => !node.isVisited))
+                {
+                    currentAvailableLayer = i - 1; // Назначаем следующий слой
+                    break;
+                }
             }
         }
-
-        // If no node has been visited, the last layer is available
-        currentAvailableLayer = layers.Count - 1;
     }
+
+
 
     // Save current map to PlayerData
     public void SaveMapToPlayerData()
@@ -274,11 +256,10 @@ public class CanvasMapGenerator : MonoBehaviour
 
         for (int i = 0; i < nodesInLayer; i++)
         {
-            GameObject nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
+            TileLogic nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
             RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
             float xPosition = spacing * (i + 1) - totalWidth / 2 + Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
             nodeRectTransform.anchoredPosition = new Vector2(xPosition, layerY);
-            Button nodeButton = nodeObject.GetComponent<Button>();
             LocationConfig selectedLocationConfig = null;
             // If boss hasn't been placed yet and this is the first layer, place it there
             if (!bossPlaced && layerIndex == 0)
@@ -298,20 +279,12 @@ public class CanvasMapGenerator : MonoBehaviour
                             rectTransform = nodeRectTransform,
                             locationConfig = selectedLocationConfig,
                             tileType = TileType.BossTile,
-                            nodeImage = nodeObject.GetComponent<Image>(),
                             layerIndex = layerIndex,
                             isVisited = false,
-                            isAvailable = false,
-                            nodeButton = nodeButton
+                            isAvailable = false
                         };
 
-                        newNode.nodeImage.sprite = bossTile.tileConfig.tileSprite;
-
-                        if (nodeButton != null)
-                        {
-                            MapNode capturedNode = newNode;
-                            nodeButton.onClick.AddListener(() => OnNodeClick(capturedNode));
-                        }
+                        newNode.nodeObject.Initialize(bossTile.tileConfig.tileSprite, OnNodeClick, newNode);
 
                         layerNodes.Add(newNode);
                         bossPlaced = true;
@@ -337,20 +310,11 @@ public class CanvasMapGenerator : MonoBehaviour
                 rectTransform = nodeRectTransform,
                 locationConfig = selectedLocationConfig,
                 tileType = selectedTileType,
-                nodeImage = nodeObject.GetComponent<Image>(),
                 layerIndex = layerIndex,
                 isVisited = false,
-                isAvailable = false,
-                nodeButton = nodeButton
+                isAvailable = false
             };
-
-            newTileNode.nodeImage.sprite = generatedTile.tileConfig.tileSprite;
-
-            if (nodeButton != null)
-            {
-                MapNode capturedNode = newTileNode;
-                nodeButton.onClick.AddListener(() => OnNodeClick(capturedNode));
-            }
+            newTileNode.nodeObject.Initialize(generatedTile.tileConfig.tileSprite, OnNodeClick, newTileNode);
 
             layerNodes.Add(newTileNode);
         }
@@ -359,15 +323,16 @@ public class CanvasMapGenerator : MonoBehaviour
     }
 
     // Node click handler
-    private void OnNodeClick(MapNode node)
+    public void OnNodeClick(MapNode node)
     {
+        GameDataMNG.Instance.InitializeEventHandlers();
         if (!node.isAvailable)
             return;
 
         // Mark node as visited
         node.isVisited = true;
         node.isAvailable = false;
-
+        SaveMapToPlayerData();
         // Mark all nodes in current layer as unavailable
         foreach (var layerNode in layers[currentAvailableLayer])
         {
@@ -386,7 +351,7 @@ public class CanvasMapGenerator : MonoBehaviour
 
         // Move to next level (up, i.e., decrease index)
         currentAvailableLayer--;
-
+        
         // If we've reached the first layer or above, the map is completed
         if (currentAvailableLayer < 0)
         {
@@ -397,13 +362,11 @@ public class CanvasMapGenerator : MonoBehaviour
         {
             // Otherwise make next layer available
             UpdateNodesAvailability();
-
-            // Trigger layer completion event
-            OnLayerCompleted?.Invoke(currentAvailableLayer + 1);
         }
 
         // Trigger tile click event
         OnTileClicked?.Invoke(node.tileType, node);
+        SaveMapToPlayerData();
     }
 
     private TileType GetRandomTileType()

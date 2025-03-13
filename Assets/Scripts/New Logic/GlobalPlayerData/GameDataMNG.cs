@@ -7,6 +7,7 @@ public class GameDataMNG : MonoBehaviour
 
     [SerializeField] private CanvasMapGenerator mapGenerator;
     [SerializeField] private TeamMNG teamMNG;
+    [SerializeField] private EventsController eventsController;
 
     private PlayerData playerData;
 
@@ -66,7 +67,6 @@ public class GameDataMNG : MonoBehaviour
         if (mapGenerator != null)
         {
             mapGenerator.OnTileClicked.AddListener(HandleTileClick);
-            mapGenerator.OnLayerCompleted.AddListener(HandleLayerCompleted);
         }
     }
 
@@ -77,6 +77,7 @@ public class GameDataMNG : MonoBehaviour
         switch (tileType)
         {
             case TileType.BattleTile:
+                eventsController.SetupBattle(node);
                 Debug.Log("Инициализация боя!");
                 break;
             case TileType.CampTile:
@@ -86,18 +87,13 @@ public class GameDataMNG : MonoBehaviour
                 Debug.Log("Инициализация битвы с боссом!");
                 break;
             case TileType.RouleteTile:
+                eventsController.SetupRoulete();
                 Debug.Log("Рулетка!");
                 break;
             case TileType.LootTile:
                 Debug.Log("Ресурсы!");
                 break;
         }
-        SaveGame();
-    }
-
-    private void HandleLayerCompleted(int completedLayerIndex)
-    {
-        Debug.Log($"Слой {completedLayerIndex} завершен!");
         SaveGame();
     }
 

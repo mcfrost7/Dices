@@ -18,12 +18,12 @@ MonoBehaviour:
     battleDifficulty: 0
     typesInfo: {fileID: 0}
     reward:
-      resourceAmount: 0
+      resource: []
       expAmount: 0
       item: {fileID: 0}
   lootSettings:
     reward:
-      resourceAmount: 2
+      resource: []
       expAmount: 0
       item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}
   campSettings:
@@ -32,14 +32,11 @@ MonoBehaviour:
     isReinforceAvailable: 0
     isShopAvailable: 0
   rouleteSettings:
-    reward:
-      resourceAmount: 0
-      expAmount: 0
-      item: {fileID: 0}
+    _configs: []
   bossSettings:
     battleDifficulty: 0
     typesInfo: {fileID: 0}
     reward:
-      resourceAmount: 0
+      resource: []
       expAmount: 0
       item: {fileID: 0}

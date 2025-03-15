@@ -28,7 +28,7 @@ public class RouletteView : MonoBehaviour
 
     public IEnumerator SpinToDefault()
     {
-        float duration = 0.3f;
+        float duration = 0.9f;
         float elapsedTime = 0f;
         float startRotation = _sectorParent.eulerAngles.z;
 

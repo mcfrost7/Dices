@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(NewTileConfig))]
 public class TileConfigEditor : Editor
@@ -8,65 +9,129 @@ public class TileConfigEditor : Editor
     {
         NewTileConfig config = (NewTileConfig)target;
 
-        // Отображаем спрайт и тип тайла
+        // Основные параметры
         config.tileSprite = (Sprite)EditorGUILayout.ObjectField("Sprite", config.tileSprite, typeof(Sprite), false);
         config.tileType = (TileType)EditorGUILayout.EnumPopup("Tile Type", config.tileType);
 
-        // В зависимости от типа тайла отображаем нужные параметры
+        // Переключение по типам тайлов
         switch (config.tileType)
         {
             case TileType.BattleTile:
-                if (config.battleSettings == null) config.battleSettings = new BattleSettings();
-
+                config.battleSettings ??= new BattleSettings();
                 config.battleSettings.battleDifficulty = EditorGUILayout.IntField("Battle Difficulty", config.battleSettings.battleDifficulty);
                 config.battleSettings.typesInfo = (TypesInfo)EditorGUILayout.ObjectField("Enemy Race", config.battleSettings.typesInfo, typeof(TypesInfo), false);
-
-                // Награды
-                if (config.battleSettings.reward == null) config.battleSettings.reward = new RewardConfig();
-                EditorGUILayout.LabelField("Reward Settings", EditorStyles.boldLabel);
-                config.battleSettings.reward.resourceAmount = EditorGUILayout.IntField("Resource Amount", config.battleSettings.reward.resourceAmount);
-                config.battleSettings.reward.expAmount = EditorGUILayout.IntField("Experience Amount", config.battleSettings.reward.expAmount);
-                config.battleSettings.reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", config.battleSettings.reward.item, typeof(ItemConfig), false);
+                DrawRewardSettings(ref config.battleSettings.reward, "Battle Reward");
                 break;
 
             case TileType.LootTile:
-                // Награды
-                if (config.lootSettings.reward == null) config.lootSettings.reward = new RewardConfig();
-                EditorGUILayout.LabelField("Reward Settings", EditorStyles.boldLabel);
-                config.lootSettings.reward.resourceAmount = EditorGUILayout.IntField("Resource Amount", config.lootSettings.reward.resourceAmount);
-                config.lootSettings.reward.expAmount = EditorGUILayout.IntField("Experience Amount", config.lootSettings.reward.expAmount);
-                config.lootSettings.reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", config.lootSettings.reward.item, typeof(ItemConfig), false);
+                config.lootSettings ??= new LootSettings();
+                DrawRewardSettings(ref config.lootSettings.reward, "Loot Reward");
                 break;
 
             case TileType.CampTile:
-                if (config.campSettings == null) config.campSettings = new CampSettings();
+                config.campSettings ??= new CampSettings();
                 config.campSettings.healAmount = EditorGUILayout.IntField("Heal Amount", config.campSettings.healAmount);
                 config.campSettings.isUpgradeAvailable = EditorGUILayout.Toggle("Upgrade Available", config.campSettings.isUpgradeAvailable);
-                config.campSettings.isReinforceAvailable = EditorGUILayout.Toggle("ReinforceAvailable", config.campSettings.isReinforceAvailable);
-                config.campSettings.isShopAvailable = EditorGUILayout.Toggle("ShopAvailable", config.campSettings.isShopAvailable);
+                config.campSettings.isReinforceAvailable = EditorGUILayout.Toggle("Reinforce Available", config.campSettings.isReinforceAvailable);
+                config.campSettings.isShopAvailable = EditorGUILayout.Toggle("Shop Available", config.campSettings.isShopAvailable);
                 break;
 
             case TileType.RouleteTile:
-                if (config.rouleteSettings == null) config.rouleteSettings = new RouleteSettings();
-                EditorGUILayout.LabelField("Roulete Reward Settings", EditorStyles.boldLabel);
-                config.rouleteSettings.reward.resourceAmount = EditorGUILayout.IntField("Resource Amount", config.lootSettings.reward.resourceAmount);
-                config.rouleteSettings.reward.expAmount = EditorGUILayout.IntField("Experience Amount", config.lootSettings.reward.expAmount);
-                config.lootSettings.reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", config.lootSettings.reward.item, typeof(ItemConfig), false);
+                config.rouleteSettings ??= new RouleteSettings();
+                DrawRouletteConfigList(ref config.rouleteSettings._configs, "Roulette Configs");
                 break;
 
             case TileType.BossTile:
-                if (config.bossSettings == null) config.bossSettings = new BossSettings();
-
+                config.bossSettings ??= new BossSettings();
                 config.bossSettings.battleDifficulty = EditorGUILayout.IntField("Battle Difficulty", config.bossSettings.battleDifficulty);
                 config.bossSettings.typesInfo = (TypesInfo)EditorGUILayout.ObjectField("Enemy Race", config.bossSettings.typesInfo, typeof(TypesInfo), false);
-
-                EditorGUILayout.LabelField("Boss Reward Settings", EditorStyles.boldLabel);
-                config.bossSettings.reward.resourceAmount = EditorGUILayout.IntField("Resource Amount", config.bossSettings.reward.resourceAmount);
-                config.bossSettings.reward.expAmount = EditorGUILayout.IntField("Experience Amount", config.bossSettings.reward.expAmount);
-                config.bossSettings.reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", config.bossSettings.reward.item, typeof(ItemConfig), false);
+                DrawRewardSettings(ref config.bossSettings.reward, "Boss Reward");
                 break;
         }
 
         EditorUtility.SetDirty(config); // Обновляем данные в инспекторе
+    }
+
+    /// <summary>
+    /// Метод для удобного отображения настроек наград
+    /// </summary>
+    private void DrawRewardSettings(ref RewardConfig reward, string title)
+    {
+        reward ??= new RewardConfig();
+        EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+
+        // Инициализация списка ресурсов
+        reward.resource ??= new List<ResourceData>();
+
+        // Отображение списка ресурсов
+        for (int i = 0; i < reward.resource.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            reward.resource[i].Config = (ResourceConfig)EditorGUILayout.ObjectField(
+                $"Resource {i + 1}", reward.resource[i].Config, typeof(ResourceConfig), false
+            );
+
+            reward.resource[i].Count = EditorGUILayout.IntField("Amount", reward.resource[i].Count);
+
+            if (GUILayout.Button("X", GUILayout.Width(20)))
+            {
+                reward.resource.RemoveAt(i);
+                break; // Выходим из цикла, чтобы избежать ошибок при изменении списка во время итерации
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (GUILayout.Button("Add Resource"))
+        {
+            reward.resource.Add(new ResourceData());
+        }
+
+        if (reward.resource.Count > 0 && GUILayout.Button("Delete Resource"))
+        {
+            reward.resource.RemoveAt(reward.resource.Count - 1);
+        }
+
+        // Опыт и предметы
+        reward.expAmount = EditorGUILayout.IntField("Experience Amount", reward.expAmount);
+        reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", reward.item, typeof(ItemConfig), false);
+    }
+
+    /// <summary>
+    /// Метод для отображения списка конфигураций рулетки
+    /// </summary>
+    private void DrawRouletteConfigList(ref List<RouletteConfig> configs, string title)
+    {
+        EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+
+        // Инициализация списка конфигураций
+        configs ??= new List<RouletteConfig>();
+
+        // Отображение списка конфигураций
+        for (int i = 0; i < configs.Count; i++)
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+            EditorGUILayout.LabelField($"Roulette Config {i + 1}", EditorStyles.boldLabel);
+
+            configs[i] = (RouletteConfig)EditorGUILayout.ObjectField(
+                "Config", configs[i], typeof(RouletteConfig), false
+            );
+
+            if (GUILayout.Button("Remove Config"))
+            {
+                configs.RemoveAt(i);
+                break; // Выходим из цикла, чтобы избежать ошибок при изменении списка во время итерации
+            }
+
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space();
+        }
+
+        if (GUILayout.Button("Add Roulette Config"))
+        {
+            configs.Add(null);
+        }
     }
 }

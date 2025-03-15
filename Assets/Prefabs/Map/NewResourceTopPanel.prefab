@@ -356,9 +356,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eccd6a54147d1ed4a85317c0e7ac9adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image_resource: {fileID: 0}
-  name_resource: {fileID: 0}
-  number_resource: {fileID: 0}
+  _image: {fileID: 0}
+  _name: {fileID: 0}
+  _amount: {fileID: 0}
 --- !u!1 &7940448449071829794
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,9 +370,9 @@ GameObject:
   - component: {fileID: 6625294766279070698}
   - component: {fileID: 3135313278587059137}
   - component: {fileID: 6965038015487854608}
-  - component: {fileID: 4541898474477544127}
+  - component: {fileID: -5467377319677207181}
   m_Layer: 0
-  m_Name: resType
+  m_Name: NewResourceTopPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -438,7 +438,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4541898474477544127
+--- !u!114 &-5467377319677207181
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -450,6 +450,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eccd6a54147d1ed4a85317c0e7ac9adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image_resource: {fileID: 8692130118250912859}
-  name_resource: {fileID: 2713016673280030100}
-  number_resource: {fileID: 3728754235557539028}
+  _image: {fileID: 8692130118250912859}
+  _name: {fileID: 2713016673280030100}
+  _amount: {fileID: 3728754235557539028}

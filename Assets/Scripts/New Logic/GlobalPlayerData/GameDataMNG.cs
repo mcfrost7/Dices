@@ -31,6 +31,7 @@ public class GameDataMNG : MonoBehaviour
             teamMNG.NewGame();
             mapGenerator.GenerateMap();
             mapGenerator.SaveMapToPlayerData();
+            ResourcesMNG.Instance.SetupResources();
             SaveGame();
         }
     }
@@ -49,6 +50,7 @@ public class GameDataMNG : MonoBehaviour
         {
             teamMNG.LoadUnits(PlayerData);
             mapGenerator.LoadMapFromPlayerData(PlayerData);
+            ResourcesMNG.Instance.SetupResources();
         }
     }
 
@@ -70,30 +72,10 @@ public class GameDataMNG : MonoBehaviour
         }
     }
 
-    private void HandleTileClick(TileType tileType, CanvasMapGenerator.MapNode node)
+    private void HandleTileClick(CanvasMapGenerator.MapNode node)
     {
-        Debug.Log($"Выбран тайл типа: {tileType}");
-
-        switch (tileType)
-        {
-            case TileType.BattleTile:
-                eventsController.SetupBattle(node);
-                Debug.Log("Инициализация боя!");
-                break;
-            case TileType.CampTile:
-                Debug.Log("Посещён фортпост!");
-                break;
-            case TileType.BossTile:
-                Debug.Log("Инициализация битвы с боссом!");
-                break;
-            case TileType.RouleteTile:
-                eventsController.SetupRoulete();
-                Debug.Log("Рулетка!");
-                break;
-            case TileType.LootTile:
-                Debug.Log("Ресурсы!");
-                break;
-        }
+        Debug.Log($"Выбран тайл типа: {node.tileType}");
+        eventsController.HandleEvent(node.tileType, node.tileConfig);
         SaveGame();
     }
 

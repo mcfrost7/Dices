@@ -37,8 +37,8 @@ public class Roulette
     {
         _winningAngle = UnityEngine.Random.Range(0, 360);
         yield return _view.Spin(UnityEngine.Random.Range(_config.MinSpinCount, _config.MaxSpinCount), _winningAngle, _config.SpinDuration, _config.SpinCurve);
-        yield return new WaitForSeconds(_config.ShowDuration);
-        yield return _view.SpinToDefault();
+        //yield return new WaitForSeconds(_config.ShowDuration);
+        //yield return _view.SpinToDefault();
     }
 
     public SectorConfig GetConfigByAngle()

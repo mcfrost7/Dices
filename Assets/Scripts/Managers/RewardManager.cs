@@ -4,7 +4,7 @@ public class RewardManager : MonoBehaviour
 {
     public void AddAllReward(RewardConfig reward)
     {
-        ResourceReward(reward.resourceAmount);
+        //ResourceReward(reward.resource);
         ExperienceReward(reward.expAmount);
     }
 

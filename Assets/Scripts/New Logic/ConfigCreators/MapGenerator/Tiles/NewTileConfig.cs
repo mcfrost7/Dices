@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewTileConfig", menuName = "Configs/NewTileConfig")]
@@ -42,7 +43,7 @@ public class CampSettings
 [System.Serializable]
 public class RouleteSettings
 {
-    public RewardConfig reward;  
+    public List<RouletteConfig> _configs;
 }
 
 // **Настройки для BossTile**

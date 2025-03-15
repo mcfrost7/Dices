@@ -23,7 +23,7 @@ public class UIControllerResources : MonoBehaviour
         GameObject resourceInstance = Instantiate(resourse_prefab);
         // Устанавливаем родителя (panel_main)
         resourceInstance.transform.SetParent(panel_main.transform, false);
-        ResourcesTypeSetup resourceSetup = resourceInstance.GetComponent<ResourcesTypeSetup>();
+        ResourcesPrefabSetup resourceSetup = resourceInstance.GetComponent<ResourcesPrefabSetup>();
 
         if (resourceSetup != null)
         {
@@ -57,7 +57,7 @@ public class UIControllerResources : MonoBehaviour
             // Обновляем отображение ресурса, если оно существует
             if (resourceInstance != null)
             {
-                ResourcesTypeSetup resourceSetup = resourceInstance.GetComponent<ResourcesTypeSetup>();
+                ResourcesPrefabSetup resourceSetup = resourceInstance.GetComponent<ResourcesPrefabSetup>();
                 if (resourceSetup != null)
                 {
                     resourceSetup.Setup(resource.Icon, resource.Name, resource.Amount); // Обновляем UI

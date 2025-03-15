@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class UIController : MonoBehaviour
 {
+    public static UIController Instance { get; private set; }
+
     [SerializeField] private GameObject _menu;
     [SerializeField] private GameObject _globalCanvas;
     [SerializeField] private GameObject _settings;
@@ -15,7 +17,14 @@ public class UIController : MonoBehaviour
 
     private void Awake()
     {
-        // По умолчанию активируем меню и деактивируем остальные канвасы
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
         ShowMenu();
     }
 

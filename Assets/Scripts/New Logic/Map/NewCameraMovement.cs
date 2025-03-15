@@ -12,7 +12,6 @@ public class NewCameraMovement : MonoBehaviour
 
     private Camera cam;
     [SerializeField] private GameObject plane;
-    [SerializeField] private UIController uiController; // Ссылка на UIController
 
     private bool canMoveAndZoom = true;
     private Vector3 lastMouseWorldPosition;
@@ -27,7 +26,7 @@ public class NewCameraMovement : MonoBehaviour
 
     void Update()
     {
-        if (uiController != null && uiController.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
+        if (UIController.Instance.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
         {
             canMoveAndZoom = true;
         }

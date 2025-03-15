@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public class RewardConfig
 {
-    public int resourceAmount;
+    public List<ResourceData> resource;
     public int expAmount;
     public ItemConfig item;
 }

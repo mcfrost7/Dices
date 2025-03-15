@@ -7,39 +7,36 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    [SerializeField] private List<MapNodeData> mapNodes = new(); // Хранение нодов карты
-    [SerializeField] private List<NewUnitStats> playerUnits = new(); // Список юнитов игрока
-    [SerializeField] private List<NewUnitStats> unitsStorage = new(); // Список хранилища юнитов
+    [SerializeField] private List<MapNodeData> _mapNodes = new(); // Хранение нодов карты
+    [SerializeField] private List<NewUnitStats> _playerUnits = new(); // Список юнитов игрока
+    [SerializeField] private List<NewUnitStats> _unitsStorage = new(); // Список хранилища юнитов
+    [SerializeField] private List<ItemConfig> _items = new(); // Список предметов игрока
+    [SerializeField] private List<ResourceData> _resources = new(); // Список ресурсов
 
-    public List<MapNodeData> MapNodes { get => mapNodes; set => mapNodes = value; }
-    public List<NewUnitStats> PlayerUnits { get => playerUnits; set => playerUnits = value; }
-    public List<NewUnitStats> UnitsStorage { get => unitsStorage; set => unitsStorage = value; }
+    public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
+    public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
+    public List<NewUnitStats> UnitsStorage { get => _unitsStorage; set => _unitsStorage = value; }
+    public List<ItemConfig> Items { get => _items; set => _items = value; }
+    public List<ResourceData> Resources { get => _resources; set => _resources = value; }
 }
 
 // Сериализуемый класс для хранения данных о ноде карты
 [Serializable]
 public class MapNodeData
 {
-    [SerializeField] private Vector2 position; // Позиция нода
-    [SerializeField] private TileType tileType; // Тип тайла
-    [SerializeField] private int layerIndex; // Индекс слоя
-    [SerializeField] private string locationConfigId; // ID конфигурации локации
-    [SerializeField] private bool isVisited = false; // Флаг посещения
-    [SerializeField] private bool isAvailable = false; // Флаг доступности для посещения
+    public Vector2 Position;
+    public TileType TileType;
+    public int LayerIndex;
+    public string LocationConfigId;
+    public string TileConfigId; // Добавлено для сохранения идентификатора конфига тайла
+    public bool IsVisited;
+    public bool IsAvailable;
 
-    public Vector2 Position { get => position; set => position = value; }
-    public TileType TileType { get => tileType; set => tileType = value; }
-    public int LayerIndex { get => layerIndex; set => layerIndex = value; }
-    public string LocationConfigId { get => locationConfigId; set => locationConfigId = value; }
-    public bool IsVisited { get => isVisited; set => isVisited = value; }
-    public bool IsAvailable { get => isAvailable; set => isAvailable = value; }
-
-    // Конструктор для удобства создания
     public MapNodeData(Vector2 position, TileType tileType, int layerIndex, string locationConfigId)
     {
-        this.position = position;
-        this.tileType = tileType;
-        this.layerIndex = layerIndex;
-        this.locationConfigId = locationConfigId;
+        Position = position;
+        TileType = tileType;
+        LayerIndex = layerIndex;
+        LocationConfigId = locationConfigId;
     }
 }

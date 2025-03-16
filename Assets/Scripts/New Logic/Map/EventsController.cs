@@ -1,11 +1,13 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+
 public class EventsController : MonoBehaviour
 {
     [SerializeField] private RouletteScreen _roulette;
     [SerializeField] private UIController _uiController;
-    private Dictionary<TileType, System.Action<NewTileConfig>> _eventHandlers;
+
+    private Dictionary<TileType, IEventHandler> _eventHandlers;
 
     private void Awake()
     {
@@ -14,13 +16,13 @@ public class EventsController : MonoBehaviour
 
     private void InitializeEventHandlers()
     {
-        _eventHandlers = new Dictionary<TileType, System.Action<NewTileConfig>>
+        _eventHandlers = new Dictionary<TileType, IEventHandler>
         {
-            { TileType.BattleTile, SetupBattle },
-            { TileType.CampTile, SetupCamp },
-            { TileType.BossTile, SetupBossBattle },
-            { TileType.RouleteTile, SetupRoulette },
-            { TileType.LootTile, SetupResources }
+            { TileType.BattleTile, new BattleEventHandler() },
+            { TileType.CampTile, new CampEventHandler() },
+            { TileType.BossTile, new BossEventHandler() },
+            { TileType.RouleteTile, new RouletteEventHandler(_roulette, _uiController) },
+            { TileType.LootTile, new ResourceEventHandler() }
         };
     }
 
@@ -28,33 +30,11 @@ public class EventsController : MonoBehaviour
     {
         if (_eventHandlers.TryGetValue(tileType, out var handler))
         {
-            handler(config);
+            handler.HandleEvent(config);
         }
         else
         {
             Debug.LogWarning($"No handler found for tile type: {tileType}");
         }
-    }
-
-    public void SetupBattle(NewTileConfig config)
-    {
-    }
-
-    public void SetupResources(NewTileConfig config)
-    {
-    }
-
-    public void SetupRoulette(NewTileConfig config)
-    {
-        _roulette.SetupRoulette(config.rouleteSettings._configs);
-        UIController.Instance.ShowRoulette();
-    }
-
-    public void SetupCamp(NewTileConfig config)
-    {
-    }
-
-    public void SetupBossBattle(NewTileConfig config)
-    {
     }
 }

@@ -1,9 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
-using System;
 using System.Linq;
+using UnityEngine;
 
 public class SaveLoadMNG : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class SaveLoadMNG : MonoBehaviour
         {
             if (_instance == null)
             {
-                GameObject go = new GameObject("SaveLoadMNG");
+                GameObject go = new GameObject("SaveLoadManager");
                 _instance = go.AddComponent<SaveLoadMNG>();
                 DontDestroyOnLoad(go);
             }
@@ -39,48 +38,59 @@ public class SaveLoadMNG : MonoBehaviour
     {
         try
         {
-            // Создаем копию данных, чтобы не модифицировать оригинал
+            // Create a copy of data to avoid modifying the original
             PlayerData dataCopy = PrepareDataForSave(data);
 
             string jsonData = JsonUtility.ToJson(dataCopy, true);
             File.WriteAllText(SavePath, jsonData);
-            Debug.Log($"Данные успешно сохранены в {SavePath}");
+            Debug.Log($"Data successfully saved to {SavePath}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Ошибка при сохранении данных: {e.Message}");
+            Debug.LogError($"Error saving data: {e.Message}");
             Debug.LogException(e);
         }
     }
 
-    // Подготовка данных к сериализации
+    // Prepare data for serialization
     private PlayerData PrepareDataForSave(PlayerData data)
     {
-        // Создаем копию объекта PlayerData
         PlayerData dataCopy = new PlayerData();
 
-        // Копируем ноды карты
+        // Copy map nodes
         if (data.MapNodes != null)
         {
             dataCopy.MapNodes = new List<MapNodeData>(data.MapNodes);
         }
 
-        // Обрабатываем юниты игрока
+        // Process player units
         if (data.PlayerUnits != null)
         {
             dataCopy.PlayerUnits = data.PlayerUnits.Select(unit => CloneUnitWithoutCircularReferences(unit)).ToList();
         }
 
-        // Обрабатываем хранилище юнитов
+        // Process storage units
         if (data.UnitsStorage != null)
         {
             dataCopy.UnitsStorage = data.UnitsStorage.Select(unit => CloneUnitWithoutCircularReferences(unit)).ToList();
         }
 
+        // Convert resources to serializable format
+        if (data.Resources != null)
+        {
+            dataCopy.ResourcesData = data.Resources.Select(r => r.ToSerializable()).ToList();
+        }
+
+        // Copy items
+        if (data.Items != null)
+        {
+            dataCopy.Items = new List<ItemConfig>(data.Items);
+        }
+
         return dataCopy;
     }
 
-    // Создание клона юнита без циклических ссылок
+    // Create a clone of unit without circular references
     private NewUnitStats CloneUnitWithoutCircularReferences(NewUnitStats unit)
     {
         if (unit == null) return null;
@@ -94,11 +104,11 @@ public class SaveLoadMNG : MonoBehaviour
             CloneBuffList(unit._buffs)
         );
 
-        // Копируем ID
+        // Copy ID and experience
         clone._ID = unit._ID;
         clone._current_exp = unit._current_exp;
 
-        // Копируем список ID улучшений
+        // Copy upgrade ID list
         if (unit._upgrade_list != null)
         {
             clone._upgrade_list = new List<int>(unit._upgrade_list);
@@ -107,7 +117,7 @@ public class SaveLoadMNG : MonoBehaviour
         return clone;
     }
 
-    // Клонирование кубика
+    // Clone dice object
     private Dice CloneDice(Dice dice)
     {
         if (dice == null) return null;
@@ -125,7 +135,7 @@ public class SaveLoadMNG : MonoBehaviour
         return clone;
     }
 
-    // Клонирование списка баффов
+    // Clone buff list
     private List<BuffConfig> CloneBuffList(List<BuffConfig> buffs)
     {
         if (buffs == null) return null;
@@ -140,34 +150,34 @@ public class SaveLoadMNG : MonoBehaviour
             {
                 string jsonData = File.ReadAllText(SavePath);
                 PlayerData data = JsonUtility.FromJson<PlayerData>(jsonData);
-                Debug.Log("Данные успешно загружены");
+                Debug.Log("Data successfully loaded");
 
-                // Восстанавливаем ссылки между объектами после загрузки
+                // Restore object references after loading
                 RestoreReferencesAfterLoad(data);
 
                 return data;
             }
             else
             {
-                Debug.Log("Файл сохранения не найден. Создаём новые данные.");
+                Debug.Log("Save file not found. Creating new data.");
                 return CreateNewPlayerData();
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Ошибка при загрузке данных: {e.Message}");
+            Debug.LogError($"Error loading data: {e.Message}");
             Debug.LogException(e);
             return CreateNewPlayerData();
         }
     }
 
-    // Восстановление ссылок между объектами после загрузки
+    // Restore object references after loading
     private void RestoreReferencesAfterLoad(PlayerData data)
     {
-        // Создаем словарь для быстрого доступа к юнитам по ID
+        // Create dictionary for quick access to units by ID
         Dictionary<int, NewUnitStats> unitsById = new Dictionary<int, NewUnitStats>();
 
-        // Сначала добавляем все юниты из хранилища в словарь
+        // First add all units from storage to dictionary
         if (data.UnitsStorage != null)
         {
             foreach (var unit in data.UnitsStorage)
@@ -179,7 +189,7 @@ public class SaveLoadMNG : MonoBehaviour
             }
         }
 
-        // Затем добавляем юниты игрока, если они еще не в словаре
+        // Then add player units if they're not already in the dictionary
         if (data.PlayerUnits != null)
         {
             foreach (var unit in data.PlayerUnits)
@@ -191,9 +201,32 @@ public class SaveLoadMNG : MonoBehaviour
             }
         }
 
-        // Теперь, когда у нас есть словарь всех юнитов, мы можем восстановить ссылки
-        // между юнитами, используя их ID. Эта часть может быть адаптирована 
-        // в зависимости от того, как вы планируете использовать ID в структуре данных.
+        // Restore resources from serialized data
+        if (data.ResourcesData != null && data.ResourcesData.Count > 0)
+        {
+            data.Resources = new List<ResourceData>();
+
+            // Find all resource configs in the project
+            ResourceConfig[] allConfigs = Resources.FindObjectsOfTypeAll<ResourceConfig>();
+
+            foreach (var serResource in data.ResourcesData)
+            {
+                // Find matching config by name
+                ResourceConfig matchingConfig = allConfigs.FirstOrDefault(c => c.ResourceName == serResource.ConfigID);
+
+                if (matchingConfig != null)
+                {
+                    data.Resources.Add(new ResourceData(matchingConfig, serResource.Count));
+                }
+                else
+                {
+                    Debug.LogWarning($"Could not find resource config with name {serResource.ConfigID}");
+                }
+            }
+        }
+
+        // Clear ResourcesData after it's been processed
+        data.ResourcesData = null;
     }
 
     private PlayerData CreateNewPlayerData()
@@ -201,31 +234,28 @@ public class SaveLoadMNG : MonoBehaviour
         return new PlayerData();
     }
 
-    // Метод для быстрого доступа к сохранению
+    // Static methods for quick access
     public static void Save(PlayerData data)
     {
         Instance.SaveData(data);
     }
 
-    // Метод для быстрого доступа к загрузке
     public static PlayerData Load()
     {
         return Instance.LoadData();
     }
 
-    // Метод для проверки наличия сохранения
     public static bool SaveExists()
     {
         return File.Exists(Instance.SavePath);
     }
 
-    // Метод для удаления сохранения
     public static void DeleteSave()
     {
         if (SaveExists())
         {
             File.Delete(Instance.SavePath);
-            Debug.Log("Сохранение удалено");
+            Debug.Log("Save file deleted");
         }
     }
 }

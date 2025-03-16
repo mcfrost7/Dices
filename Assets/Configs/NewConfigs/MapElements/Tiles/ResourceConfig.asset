@@ -23,9 +23,11 @@ MonoBehaviour:
       item: {fileID: 0}
   lootSettings:
     reward:
-      resource: []
+      resource:
+      - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
+        _count: 1
       expAmount: 0
-      item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}
+      item: {fileID: 0}
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0

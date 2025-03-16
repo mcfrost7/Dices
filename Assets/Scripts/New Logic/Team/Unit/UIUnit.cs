@@ -30,6 +30,14 @@ public class UIUnit : MonoBehaviour
 
     public void CreateUnit()
     {
-        TeamMNG.Instance.GenerateAndAddUnit(1);
+        if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, 1))
+        {
+            TeamMNG.Instance.GenerateAndAddUnit(1);
+        }
+        else
+        {
+            Debug.Log("Недостаточно ресурса SignalTransmitter для создания юнита!");
+        }
     }
+
 }

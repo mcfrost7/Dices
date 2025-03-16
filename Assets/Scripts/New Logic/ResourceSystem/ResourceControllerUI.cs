@@ -24,37 +24,53 @@ public class ResourceControllerUI : MonoBehaviour
 
     public void CreateResourcesTopPanel()
     {
+        ClearPanel();
         foreach (ResourceConfig resource in _resources)
         {
-            // Найти соответствующий ресурс в PlayerData
             ResourceData playerResource = GameDataMNG.Instance.PlayerData.Resources.Find(r => r.Config == resource);
-
-            // Получить количество ресурса (если он есть у игрока, иначе 0)
             int resourceCount = playerResource != null ? playerResource.Count : 0;
 
-            // Создать UI-элемент для ресурса
             ResourcesPrefabSetup resourceOnPanel = Instantiate(_prefab, _spawnPanel.transform);
-
-            // Настроить отображение ресурса
             resourceOnPanel.Setup(resource.Icon, resource.ResourceName, resourceCount);
         }
     }
 
     public void UpdateResourcesTopPanel()
     {
+        // Rebuild resource lookup dictionary from local resource storage
+        Dictionary<string, int> resourceAmounts = new Dictionary<string, int>();
+        foreach (ResourceData resource in ResourcesMNG.Instance.Resources)
+        {
+            resourceAmounts[resource.Config.ResourceName] = resource.Count;
+        }
+
+        // Update existing UI elements
         foreach (Transform child in _spawnPanel.transform)
         {
             ResourcesPrefabSetup resourceUI = child.GetComponent<ResourcesPrefabSetup>();
             if (resourceUI == null) continue;
 
-            // Найти соответствующий ресурс в PlayerData
-            ResourceData playerResource = GameDataMNG.Instance.PlayerData.Resources.Find(r => r.Config.ResourceName == resourceUI.name);
+            // Get name from the TextMeshProUGUI component
+            string resourceName = resourceUI.Name.text;
 
-            // Получить актуальное количество ресурса
-            int resourceCount = playerResource != null ? playerResource.Count : 0;
+            // Find matching resource by name
+            if (resourceAmounts.TryGetValue(resourceName, out int count))
+            {
+                resourceUI.UpdateAmount(count);
+            }
+            else
+            {
+                resourceUI.UpdateAmount(0);
+            }
+        }
+    }
 
-            // Обновить отображение ресурса
-            resourceUI.UpdateAmount(resourceCount);
+
+    private void ClearPanel()
+    {
+        foreach (Transform child in _spawnPanel.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 

@@ -52,8 +52,15 @@ public class CanvasMapGenerator : MonoBehaviour
     private List<List<MapNode>> layers = new List<List<MapNode>>();
     private int currentAvailableLayer;
 
-    public UnityEvent< MapNode> OnTileClicked;
+    // Событие для кликов по тайлам
+    public UnityEvent<MapNode> OnTileClicked;
 
+    private void Start()
+    {
+        OnTileClicked.AddListener(HandleTileClicked);
+    }
+
+    // Генерация карты
     public void GenerateMap()
     {
         ClearExistingNodes();
@@ -63,8 +70,7 @@ public class CanvasMapGenerator : MonoBehaviour
 
         for (int layerIndex = 0; layerIndex < generationSettings.numberOfLayers; layerIndex++)
         {
-            int nodesInLayer = layerIndex == 0 ? 1 :
-                Random.Range(generationSettings.minNodesPerLayer, generationSettings.maxNodesPerLayer + 1);
+            int nodesInLayer = layerIndex == 0 ? 1 : Random.Range(generationSettings.minNodesPerLayer, generationSettings.maxNodesPerLayer + 1);
 
             List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced);
             layers.Add(layerNodes);
@@ -74,12 +80,14 @@ public class CanvasMapGenerator : MonoBehaviour
         SetInitialAvailableLayer();
     }
 
+    // Устанавливаем начальный доступный слой
     private void SetInitialAvailableLayer()
     {
         currentAvailableLayer = layers.Count - 1;
         UpdateNodesAvailability();
     }
 
+    // Обновляем доступность узлов
     private void UpdateNodesAvailability()
     {
         foreach (var layer in layers)
@@ -91,8 +99,7 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        if (currentAvailableLayer < 0)
-            return;
+        if (currentAvailableLayer < 0) return;
 
         foreach (var node in layers[currentAvailableLayer])
         {
@@ -104,6 +111,7 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
+    // Обновляем визуальные изменения узлов
     private void UpdateNodeVisuals(MapNode node)
     {
         if (node.isVisited)
@@ -123,6 +131,7 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
+    // Загружаем карту из сохраненных данных
     public void LoadMapFromPlayerData(PlayerData playerData)
     {
         if (playerData.MapNodes == null || playerData.MapNodes.Count == 0)
@@ -143,8 +152,7 @@ public class CanvasMapGenerator : MonoBehaviour
 
             foreach (MapNodeData nodeData in layerGroup)
             {
-                LocationConfig locationConfig = generationSettings.locationConfigs.FirstOrDefault(
-                    config => config.name == nodeData.LocationConfigId) ?? generationSettings.locationConfigs.FirstOrDefault();
+                LocationConfig locationConfig = generationSettings.locationConfigs.FirstOrDefault(config => config.name == nodeData.LocationConfigId) ?? generationSettings.locationConfigs.FirstOrDefault();
 
                 if (locationConfig == null)
                 {
@@ -156,8 +164,7 @@ public class CanvasMapGenerator : MonoBehaviour
                 RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTransform.anchoredPosition = nodeData.Position;
 
-                LocationConfig.LocationTile tileConfig = locationConfig.tiles.FirstOrDefault(
-                    tile => tile.tileConfig.tileType == nodeData.TileType) ?? locationConfig.tiles.FirstOrDefault();
+                LocationConfig.LocationTile tileConfig = locationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == nodeData.TileType) ?? locationConfig.tiles.FirstOrDefault();
 
                 if (tileConfig == null)
                 {
@@ -177,7 +184,7 @@ public class CanvasMapGenerator : MonoBehaviour
                     isAvailable = nodeData.IsAvailable
                 };
 
-                mapNode.nodeObject.Initialize(tileConfig.tileConfig.tileSprite, OnNodeClick, mapNode);
+                nodeObject.Initialize(tileConfig.tileConfig.tileSprite, OnNodeClick, mapNode);
                 layerNodes.Add(mapNode);
             }
 
@@ -205,6 +212,7 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
+    // Сохраняем карту в данные игрока
     public void SaveMapToPlayerData()
     {
         List<MapNodeData> mapNodesData = new List<MapNodeData>();
@@ -213,12 +221,7 @@ public class CanvasMapGenerator : MonoBehaviour
         {
             foreach (MapNode node in layers[layerIndex])
             {
-                MapNodeData nodeData = new MapNodeData(
-                    node.rectTransform.anchoredPosition,
-                    node.tileType,
-                    layerIndex,
-                    node.locationConfig.name);
-
+                MapNodeData nodeData = new MapNodeData(node.rectTransform.anchoredPosition, node.tileType, layerIndex, node.locationConfig.name);
                 nodeData.IsVisited = node.isVisited;
                 nodeData.IsAvailable = node.isAvailable;
                 nodeData.TileConfigId = node.tileConfig.name;
@@ -229,6 +232,7 @@ public class CanvasMapGenerator : MonoBehaviour
         GameDataMNG.Instance.PlayerData.MapNodes = mapNodesData;
     }
 
+    // Создаем узлы для слоя
     private List<MapNode> CreateNodesForLayer(int layerIndex, float layerY, int nodesInLayer, ref bool bossPlaced)
     {
         List<MapNode> layerNodes = new List<MapNode>();
@@ -239,21 +243,18 @@ public class CanvasMapGenerator : MonoBehaviour
         {
             TileLogic nodeObject = Instantiate(generationSettings.nodePrefab, generationSettings.mapContainer);
             RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
-            float xPosition = spacing * (i + 1) - totalWidth / 2 +
-                Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
+            float xPosition = spacing * (i + 1) - totalWidth / 2 + Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
             nodeRectTransform.anchoredPosition = new Vector2(xPosition, layerY);
             LocationConfig selectedLocationConfig = null;
 
             // Handle boss placement on the first layer
             if (!bossPlaced && layerIndex == 0)
             {
-                selectedLocationConfig = generationSettings.locationConfigs[
-                    Random.Range(0, generationSettings.locationConfigs.Count)];
+                selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
 
                 if (selectedLocationConfig != null)
                 {
-                    LocationConfig.LocationTile bossTile = selectedLocationConfig.tiles
-                        .FirstOrDefault(tile => tile.tileConfig.tileType == TileType.BossTile);
+                    LocationConfig.LocationTile bossTile = selectedLocationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == TileType.BossTile);
 
                     if (bossTile != null)
                     {
@@ -279,11 +280,9 @@ public class CanvasMapGenerator : MonoBehaviour
 
             // Create regular tile
             TileType selectedTileType = GetRandomTileType();
-            selectedLocationConfig = generationSettings.locationConfigs[
-                Random.Range(0, generationSettings.locationConfigs.Count)];
+            selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
 
-            LocationConfig.LocationTile generatedTile = selectedLocationConfig.tiles
-                .FirstOrDefault(tile => tile.tileConfig.tileType == selectedTileType);
+            LocationConfig.LocationTile generatedTile = selectedLocationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == selectedTileType);
 
             if (generatedTile == null)
             {
@@ -310,15 +309,12 @@ public class CanvasMapGenerator : MonoBehaviour
         return layerNodes;
     }
 
-    public void OnNodeClick(MapNode node)
+    private void HandleTileClicked(MapNode node)
     {
-        GameDataMNG.Instance.InitializeEventHandlers();
-        if (!node.isAvailable)
-            return;
+        if (!node.isAvailable) return;
 
         node.isVisited = true;
         node.isAvailable = false;
-        SaveMapToPlayerData();
 
         foreach (var layerNode in layers[currentAvailableLayer])
         {
@@ -342,10 +338,18 @@ public class CanvasMapGenerator : MonoBehaviour
             UpdateNodesAvailability();
         }
 
-        OnTileClicked?.Invoke(node);
+        // Сохранение карты
         SaveMapToPlayerData();
+        GameDataMNG.Instance.HandleTileClick(node);
     }
 
+    // Обработчик клика по узлу
+    public void OnNodeClick(MapNode node)
+    {
+        OnTileClicked?.Invoke(node);
+    }
+
+    // Получаем случайный тип тайла на основе вероятности
     private TileType GetRandomTileType()
     {
         float totalProbability = generationSettings.tileSpawnProbabilities.Sum(t => t.probability);
@@ -377,45 +381,15 @@ public class CanvasMapGenerator : MonoBehaviour
             }
         }
 
-        return TileType.BattleTile;
+        return TileType.BattleTile; // Default
     }
 
+    // Очищаем старые узлы карты
     private void ClearExistingNodes()
     {
         foreach (Transform child in generationSettings.mapContainer)
         {
             Destroy(child.gameObject);
         }
-    }
-
-    public bool IsNodeAvailable(Vector2 position)
-    {
-        foreach (var layer in layers)
-        {
-            foreach (var node in layer)
-            {
-                if (Vector2.Distance(node.rectTransform.anchoredPosition, position) < 10f)
-                {
-                    return node.isAvailable;
-                }
-            }
-        }
-        return false;
-    }
-
-    [ContextMenu("Activate Next Layer Up")]
-    public void ActivateNextLayerUp()
-    {
-        if (currentAvailableLayer > 0)
-        {
-            currentAvailableLayer--;
-            UpdateNodesAvailability();
-        }
-    }
-
-    [ContextMenu("Generate Map")]
-    public void EditorGenerateMap()
-    {
-        GenerateMap();
     }
 }

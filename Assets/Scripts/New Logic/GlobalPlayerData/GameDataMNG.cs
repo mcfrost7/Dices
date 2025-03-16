@@ -10,6 +10,7 @@ public class GameDataMNG : MonoBehaviour
     [SerializeField] private EventsController eventsController;
 
     private PlayerData playerData;
+    public NewTileConfig CurrentTile { get; private set; }
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class GameDataMNG : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
     }
 
     public void StartNewGame()
@@ -51,6 +53,8 @@ public class GameDataMNG : MonoBehaviour
             teamMNG.LoadUnits(PlayerData);
             mapGenerator.LoadMapFromPlayerData(PlayerData);
             ResourcesMNG.Instance.SetupResources();
+            ResourcesMNG.Instance.LoadResources(PlayerData);
+
         }
     }
 
@@ -64,17 +68,11 @@ public class GameDataMNG : MonoBehaviour
         SaveLoadMNG.Save(PlayerData);
     }
 
-    public void InitializeEventHandlers()
-    {
-        if (mapGenerator != null)
-        {
-            mapGenerator.OnTileClicked.AddListener(HandleTileClick);
-        }
-    }
 
-    private void HandleTileClick(CanvasMapGenerator.MapNode node)
+    public void HandleTileClick(CanvasMapGenerator.MapNode node)
     {
         Debug.Log($"Выбран тайл типа: {node.tileType}");
+        GameDataMNG.Instance.CurrentTile = node.tileConfig;
         eventsController.HandleEvent(node.tileType, node.tileConfig);
         SaveGame();
     }

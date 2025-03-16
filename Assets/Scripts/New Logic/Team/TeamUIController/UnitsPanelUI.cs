@@ -33,10 +33,13 @@ public class UnitsPanelUI : MonoBehaviour
         playerUnits = GameDataMNG.Instance.PlayerData.PlayerUnits;
         DrawUnitsOnPanel();
         SetUpSceneWithLastUnit();
-         if (playerUnits.Count == 5)
-            _addButton.SetActive(false);
-        else _addButton.SetActive(true);
-
+        UpdateAddButtonVisibility();
+    }
+    private void UpdateAddButtonVisibility()
+    {
+        if (GameDataMNG.Instance.CurrentTile.campSettings.isReinforceAvailable == true)
+            _addButton.SetActive(playerUnits.Count < 5);
+        else _addButton.SetActive(false);
     }
 
     private void SetUpSceneWithLastUnit()
@@ -69,4 +72,9 @@ public class UnitsPanelUI : MonoBehaviour
         }   
     }
 
+
+    public void CampSetup()
+    {
+        _addButton.SetActive(true);
+    }
 }

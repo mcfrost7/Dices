@@ -1,26 +1,29 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
 public class PlayerData
 {
-    [SerializeField] private List<MapNodeData> _mapNodes = new(); // Хранение нодов карты
-    [SerializeField] private List<NewUnitStats> _playerUnits = new(); // Список юнитов игрока
-    [SerializeField] private List<NewUnitStats> _unitsStorage = new(); // Список хранилища юнитов
-    [SerializeField] private List<ItemConfig> _items = new(); // Список предметов игрока
-    [SerializeField] private List<ResourceData> _resources = new(); // Список ресурсов
+    [SerializeField] private List<MapNodeData> _mapNodes = new();
+    [SerializeField] private List<NewUnitStats> _playerUnits = new();
+    [SerializeField] private List<NewUnitStats> _unitsStorage = new();
+    [SerializeField] private List<ItemConfig> _items = new();
+    [SerializeField] private List<SerializableResourceData> _resourcesData = new(); // Changed to SerializableResourceData
 
+    // Fixed property syntax (removed * symbols)
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
     public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
     public List<NewUnitStats> UnitsStorage { get => _unitsStorage; set => _unitsStorage = value; }
     public List<ItemConfig> Items { get => _items; set => _items = value; }
-    public List<ResourceData> Resources { get => _resources; set => _resources = value; }
+    public List<SerializableResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
+
+    // For runtime use, not serialized
+    [NonSerialized]
+    public List<ResourceData> Resources = new();
 }
 
-// Сериализуемый класс для хранения данных о ноде карты
 [Serializable]
 public class MapNodeData
 {
@@ -28,9 +31,11 @@ public class MapNodeData
     public TileType TileType;
     public int LayerIndex;
     public string LocationConfigId;
-    public string TileConfigId; // Добавлено для сохранения идентификатора конфига тайла
+    public string TileConfigId;
     public bool IsVisited;
     public bool IsAvailable;
+
+    public MapNodeData() { } // Default constructor for serialization
 
     public MapNodeData(Vector2 position, TileType tileType, int layerIndex, string locationConfigId)
     {

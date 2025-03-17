@@ -8,6 +8,7 @@ public class NewUnitStats
     public int _ID;
     public string _name;
     public int _health;
+    public int _current_health;
     public int _moral;
     public int _current_exp;
     public int _level;
@@ -20,6 +21,7 @@ public class NewUnitStats
     {
         _name = name;
         _health = health;
+        _current_health = health;
         _moral = moral;
         _current_exp = 0;
         _level = level;

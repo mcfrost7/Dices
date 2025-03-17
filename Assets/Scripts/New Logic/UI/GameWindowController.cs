@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameWindowController : MonoBehaviour
 {
     public static GameWindowController Instance { get; private set; }
+    public Button Button { get => _button; set => _button = value; }
 
     [SerializeField] private GameObject _panel;
     [SerializeField] private Button _button;
@@ -23,13 +24,13 @@ public class GameWindowController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        _button.onClick.AddListener(()=>CallPanel(-1));
-        _button.onClick.AddListener(()=>UIController.Instance.GoBack());
+        Button.onClick.AddListener(()=>CallPanel(-1));
     }
     
     public void CallPanel(int direction)
     {
         _panel.transform.DOLocalMoveY(_panel.transform.localPosition.y - 960*direction, 1f).SetEase(Ease.InOutExpo);
+
     }
 
     public void SetupRouletteInfo(SectorConfig _reward)

@@ -26,7 +26,7 @@ public class NewCameraMovement : MonoBehaviour
 
     void Update()
     {
-        if (UIController.Instance.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
+        if (GlobalWindowController.Instance.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
         {
             canMoveAndZoom = true;
         }

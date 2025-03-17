@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class UIController : MonoBehaviour
+public class GlobalWindowController : MonoBehaviour
 {
-    public static UIController Instance { get; private set; }
+    public static GlobalWindowController Instance { get; private set; }
 
     [SerializeField] private GameObject _menu;
     [SerializeField] private GameObject _globalCanvas;

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 public class EventsController : MonoBehaviour
 {
     [SerializeField] private RouletteScreen _roulette;
-    [SerializeField] private UIController _uiController;
+    [SerializeField] private GlobalWindowController _uiController;
 
     private Dictionary<TileType, IEventHandler> _eventHandlers;
 

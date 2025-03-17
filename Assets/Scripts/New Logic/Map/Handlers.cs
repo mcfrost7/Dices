@@ -16,9 +16,9 @@ public class BattleEventHandler : IEventHandler
 public class RouletteEventHandler : IEventHandler
 {
     private RouletteScreen _roulette;
-    private UIController _uiController;
+    private GlobalWindowController _uiController;
 
-    public RouletteEventHandler(RouletteScreen roulette, UIController uiController)
+    public RouletteEventHandler(RouletteScreen roulette, GlobalWindowController uiController)
     {
         _roulette = roulette;
         _uiController = uiController;
@@ -45,6 +45,7 @@ public class CampEventHandler : IEventHandler
     public void HandleEvent(NewTileConfig config)
     {
         UnitsPanelUI.Instance.CampSetup();
+        CampPanel.Instance.SetupInfo(config);
     }
 }
 public class BossEventHandler : IEventHandler

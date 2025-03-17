@@ -36,10 +36,10 @@ public class MenuMNG : MonoBehaviour
     {
         if (_taskVisibility == false)
         {
-            _task.transform.DOLocalMoveX(_task.transform.localPosition.x - 560, 0.8f).SetEase(Ease.InOutExpo);
+            _task.transform.DOLocalMoveX(_task.transform.localPosition.x - 500, 0.8f).SetEase(Ease.InOutExpo);
         } else
         {
-            _task.transform.DOLocalMoveX(_task.transform.localPosition.x + 560, 0.8f).SetEase(Ease.InOutExpo);
+            _task.transform.DOLocalMoveX(_task.transform.localPosition.x + 500, 0.8f).SetEase(Ease.InOutExpo);
         }
         _taskVisibility = !_taskVisibility;
     }

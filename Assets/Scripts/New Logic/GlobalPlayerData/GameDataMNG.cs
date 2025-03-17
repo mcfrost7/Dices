@@ -10,7 +10,7 @@ public class GameDataMNG : MonoBehaviour
     [SerializeField] private EventsController eventsController;
 
     private PlayerData playerData;
-    public NewTileConfig CurrentTile { get; private set; }
+    public NewTileConfig CurrentTile { get; private set; } 
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class GameDataMNG : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
+        CurrentTile = null;
     }
 
     public void StartNewGame()
@@ -73,6 +73,7 @@ public class GameDataMNG : MonoBehaviour
     {
         Debug.Log($"Выбран тайл типа: {node.tileType}");
         GameDataMNG.Instance.CurrentTile = node.tileConfig;
+        TileUIController.Instance.ChangeUIOnTileClick();
         eventsController.HandleEvent(node.tileType, node.tileConfig);
         SaveGame();
     }

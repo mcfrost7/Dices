@@ -37,8 +37,12 @@ public class UnitsPanelUI : MonoBehaviour
     }
     private void UpdateAddButtonVisibility()
     {
-        if (GameDataMNG.Instance.CurrentTile.campSettings.isReinforceAvailable == true)
-            _addButton.SetActive(playerUnits.Count < 5);
+        if (GameDataMNG.Instance.CurrentTile != null)
+        {
+            if (GameDataMNG.Instance.CurrentTile.campSettings.isReinforceAvailable == true)
+                _addButton.SetActive(playerUnits.Count < 5);
+            else _addButton.SetActive(false);
+        }
         else _addButton.SetActive(false);
     }
 

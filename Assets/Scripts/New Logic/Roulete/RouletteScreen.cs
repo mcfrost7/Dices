@@ -36,6 +36,7 @@ public class RouletteScreen : MonoBehaviour
         _spinButtton.interactable = false;
         yield return StartCoroutine(roulette.SpinRoulette());
         GameWindowController.Instance.CallPanel(1);
+
         GameWindowController.Instance.SetupRouletteInfo(roulette.GetConfigByAngle());
     }
 

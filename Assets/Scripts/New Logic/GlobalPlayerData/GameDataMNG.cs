@@ -73,8 +73,8 @@ public class GameDataMNG : MonoBehaviour
     {
         Debug.Log($"Выбран тайл типа: {node.tileType}");
         GameDataMNG.Instance.CurrentTile = node.tileConfig;
-        TileUIController.Instance.ChangeUIOnTileClick();
         eventsController.HandleEvent(node.tileType, node.tileConfig);
+        TileUIController.Instance.ChangeUIOnTileClick();
         SaveGame();
     }
 

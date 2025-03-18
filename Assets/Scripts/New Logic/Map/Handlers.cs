@@ -8,8 +8,8 @@ public class BattleEventHandler : IEventHandler
 {
     public void HandleEvent(NewTileConfig config)
     {
-        Debug.Log("Handling Battle Event");
-        // Логика битвы
+        GlobalWindowController.Instance.ShowBattle();
+        BattleController.Instance.InitializeBattle(config, false);
     }
 }
 
@@ -52,5 +52,7 @@ public class BossEventHandler : IEventHandler
 {
     public void HandleEvent(NewTileConfig config)
     {
+        GlobalWindowController.Instance.ShowBattle();
+        BattleController.Instance.InitializeBattle(config, true);
     }
 }

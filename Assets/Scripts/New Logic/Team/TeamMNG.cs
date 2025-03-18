@@ -17,7 +17,7 @@ public class TeamMNG : MonoBehaviour
     private List<int> _playerUnitIDs = new List<int>(); // Хранит только ID юнитов игрока
     private Dictionary<int, NewUnitStats> _unitsCache = new Dictionary<int, NewUnitStats>(); // Кэш для быстрого доступа
     private int _nextUnitID = 1; // Начинаем с 1, т.к. 0 может использоваться как специальное значение
-
+    private const int MAX_UPGRADE_COUNT = 2; // Максимальное количество улучшений
     private void Awake()
     {
         if (Instance == null)
@@ -45,8 +45,6 @@ public class TeamMNG : MonoBehaviour
         }
         SaveUnits(); // Сохраняем в PlayerData
     }
-
-    private const int MAX_UPGRADE_COUNT = 2; // Максимальное количество улучшений
 
     private NewUnitStats GenerateUnit(int level)
     {

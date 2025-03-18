@@ -18,7 +18,7 @@ public class NewTileConfig : ScriptableObject
 public class BattleSettings
 {
     public int battleDifficulty;  // Сложность боя
-    public TypesInfo typesInfo; // раса врагов
+    public TileEnemies tileEnemies; // раса врагов
     public RewardConfig reward; // награда
 }
 

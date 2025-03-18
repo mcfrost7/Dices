@@ -19,7 +19,7 @@ public class TileConfigEditor : Editor
             case TileType.BattleTile:
                 config.battleSettings ??= new BattleSettings();
                 config.battleSettings.battleDifficulty = EditorGUILayout.IntField("Battle Difficulty", config.battleSettings.battleDifficulty);
-                config.battleSettings.typesInfo = (TypesInfo)EditorGUILayout.ObjectField("Enemy Race", config.battleSettings.typesInfo, typeof(TypesInfo), false);
+                config.battleSettings.tileEnemies = (TileEnemies)EditorGUILayout.ObjectField("Enemy Race", config.battleSettings.tileEnemies, typeof(TileEnemies), false);
                 DrawRewardSettings(ref config.battleSettings.reward, "Battle Reward");
                 break;
 

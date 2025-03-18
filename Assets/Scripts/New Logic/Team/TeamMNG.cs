@@ -98,10 +98,10 @@ public class TeamMNG : MonoBehaviour
 
         // Создаём новый кубик для юнита
         Dice dice = new Dice
-        {
-            items = new List<ItemConfig>(),
-            diceConfig = diceList[Random.Range(0, diceList.Count)]
-        };
+        (
+            diceList[Random.Range(0, diceList.Count)],
+            new List<ItemConfig>()
+        );
 
         // Сгенерировать уникальный ID
         unitID = _nextUnitID++;

@@ -13,6 +13,8 @@ public class BattleController : MonoBehaviour
     // References to important battle components
     [SerializeField] private Transform _playerUnitsContainer;
     [SerializeField] private Transform _enemyUnitsContainer;
+    [SerializeField] private BattleUnit _unitprefab;
+    [SerializeField] private BattleUnit _enemyprefab;
 
     private void Awake()
     {
@@ -72,39 +74,22 @@ public class BattleController : MonoBehaviour
 
     private void SpawnPlayerUnits()
     {
-        // Get active units from player's squad/party
-        // This will depend on how you store your player units
-
-        // Example:
-        // foreach (var unitData in PlayerParty.ActiveUnits)
-        // {
-        //     GameObject unitObj = Instantiate(unitPrefab, _playerUnitsContainer);
-        //     UnitBehaviour unit = unitObj.GetComponent<UnitBehaviour>();
-        //     unit.Setup(unitData);
-        // }
+        List<NewUnitStats> newUnitStats = TeamMNG.Instance.GetPlayerUnits();
+        foreach (var unitData in newUnitStats)
+        {
+            BattleUnit unitObj = Instantiate(_unitprefab, _playerUnitsContainer);
+            unitObj.SetupUnit(unitData);
+        }
     }
 
     private void SpawnEnemyUnits(NewTileConfig config)
     {
-        // Spawn enemies based on config
-        // Different logic for boss battles
-
-        if (_isBossBattle)
+        EnemyCreator creator = new EnemyCreator();
+        List<NewUnitStats> enemies = creator.CreateEnemy(config);
+        foreach (var unitData in enemies)
         {
-            // Spawn boss
-            // GameObject bossObj = Instantiate(bossPrefab, _enemyUnitsContainer);
-            // BossBehaviour boss = bossObj.GetComponent<BossBehaviour>();
-            // boss.Setup(config.bossSettings);
-        }
-        else
-        {
-            // Spawn regular enemies
-            // foreach (var enemyData in config.enemySettings.enemies)
-            // {
-            //     GameObject enemyObj = Instantiate(enemyPrefab, _enemyUnitsContainer);
-            //     EnemyBehaviour enemy = enemyObj.GetComponent<EnemyBehaviour>();
-            //     enemy.Setup(enemyData);
-            // }
+            BattleUnit unitObj = Instantiate(_enemyprefab, _enemyUnitsContainer);
+            unitObj.SetupEnemy(unitData);
         }
     }
 
@@ -131,16 +116,16 @@ public class BattleController : MonoBehaviour
         _battleFsm.AddState(loseState);
 
         // Set initial state
-        _battleFsm.SetState<FsmStateIntention>();
+        //_battleFsm.SetState<FsmStateIntention>();
     }
 
     // Called when player wins
     public void OnBattleWin()
     {
         // Handle victory rewards from config
-        if (_currentBattleConfig != null && _currentBattleConfig.lootSettings != null)
+        if (_currentBattleConfig != null && _currentBattleConfig.battleSettings != null)
         {
-            ResourcesMNG.Instance.AddResources(_currentBattleConfig.lootSettings.reward.resource);
+            ResourcesMNG.Instance.AddResources(_currentBattleConfig.battleSettings.reward.resource);
         }
 
         // Return to map or next event

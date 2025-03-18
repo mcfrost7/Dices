@@ -16,7 +16,7 @@ MonoBehaviour:
   tileSprite: {fileID: 21300000, guid: b222b69fc88a8cd4e84615451e832468, type: 3}
   battleSettings:
     battleDifficulty: 2
-    typesInfo: {fileID: 11400000, guid: e7a044d0065ebc34eb38fcc84945bd46, type: 2}
+    tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}
     reward:
       resource: []
       expAmount: 2

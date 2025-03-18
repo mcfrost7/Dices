@@ -62,7 +62,7 @@ public class UnitsPanelUI : MonoBehaviour
         foreach (NewUnitStats unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
         {
             UIUnit _unitOnPanel = Instantiate(_unitOnPanelPrefab, _panel.transform);
-            _unitOnPanel.Initialize(unit._dice.diceConfig, ()=>OnUnitSelected.Invoke(unit));
+            _unitOnPanel.Initialize(unit._dice._diceConfig, ()=>OnUnitSelected.Invoke(unit));
         }
     }
     private void ClearPanel()

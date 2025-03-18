@@ -28,4 +28,12 @@ public class NewUnitStats
         _dice = dice;
         _buffs = buffs;
     }
+
+    public NewUnitStats(int health,Dice dice)
+    {
+        _health = health;
+        _current_health = health;
+        _dice=dice;
+    }
+
 }

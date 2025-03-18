@@ -23,7 +23,7 @@ public class EquipmentUI : MonoBehaviour
             for (int i = 0; i < _diceSides.Count; i++)
             {
                 _diceSides[i].GetComponentInChildren<TextMeshProUGUI>().enabled = false;
-                _diceSides[i].GetComponent<Image>().sprite = _clickedUnit._dice.diceConfig.sides[i].sprite;
+                _diceSides[i].GetComponent<Image>().sprite = _clickedUnit._dice._diceConfig.sides[i].sprite;
 
                 // Получаем значение с учетом баффов
                 int finalPower = CalculateSidePowerWithBuffs(_clickedUnit, i);
@@ -44,10 +44,10 @@ public class EquipmentUI : MonoBehaviour
             for (int i = 0; i < _itemSides.Count; i++)
             {
                 _itemSides[i].GetComponent<Image>().enabled = false;
-                if (_clickedUnit._dice.items.Count > 0)
+                if (_clickedUnit._dice._items.Count > 0)
                 {
                     _itemSides[i].SetActive(true);
-                    _itemSides[i].GetComponent<Image>().sprite = _clickedUnit._dice.items[i].icon;
+                    _itemSides[i].GetComponent<Image>().sprite = _clickedUnit._dice._items[i].icon;
                 }
             }
         }
@@ -56,14 +56,14 @@ public class EquipmentUI : MonoBehaviour
     public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, int sideIndex)
     {
         // Проверка на корректность индекса
-        if (sideIndex < 0 || sideIndex >= clickedUnit._dice.diceConfig.sides.Count)
+        if (sideIndex < 0 || sideIndex >= clickedUnit._dice._diceConfig.sides.Count)
         {
             Debug.LogError("Side index out of range");
             return 0;
         }
 
         // Базовая сила стороны
-        int basePower = clickedUnit._dice.diceConfig.sides[sideIndex].power;
+        int basePower = clickedUnit._dice._diceConfig.sides[sideIndex].power;
 
         // Если базовая сила -1, это означает специальную сторону без числового значения
         if (basePower == -1)
@@ -72,7 +72,7 @@ public class EquipmentUI : MonoBehaviour
         }
 
         // Получаем тип стороны куба
-        ActionType sideType = clickedUnit._dice.diceConfig.sides[sideIndex].actionType;
+        ActionType sideType = clickedUnit._dice._diceConfig.sides[sideIndex].actionType;
 
         // Суммарный бонус от баффов
         int buffBonus = 0;

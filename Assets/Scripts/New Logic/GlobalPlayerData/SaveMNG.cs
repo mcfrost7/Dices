@@ -122,14 +122,10 @@ public class SaveLoadMNG : MonoBehaviour
     {
         if (dice == null) return null;
 
-        Dice clone = new Dice
+        Dice clone = new Dice(dice._diceConfig);
+        if (dice._items != null)
         {
-            diceConfig = dice.diceConfig
-        };
-
-        if (dice.items != null)
-        {
-            clone.items = new List<ItemConfig>(dice.items);
+            clone._items = new List<ItemConfig>(dice._items);
         }
 
         return clone;

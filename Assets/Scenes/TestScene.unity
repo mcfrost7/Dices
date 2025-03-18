@@ -8189,6 +8189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerUnitsContainer: {fileID: 1130547392}
   _enemyUnitsContainer: {fileID: 1148594470}
+  _unitprefab: {fileID: 4204253857651652540, guid: 8149f5983d2041e49a98d205e2eec83a, type: 3}
+  _enemyprefab: {fileID: 2300534883145566151, guid: 795cf10d5292c024c9a5d17566cbc518, type: 3}
 --- !u!1 &1461181495
 GameObject:
   m_ObjectHideFlags: 0
@@ -13462,7 +13464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2052844921
 RectTransform:
   m_ObjectHideFlags: 0

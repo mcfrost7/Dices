@@ -13,12 +13,12 @@ public class FsmStateIntention : FsmState
         Debug.Log("Entering Intention state");
         _stateTimer = 0f;
         _intentionsSelected = false;
+        if (BattleEnemyAI.Instance.CreateIntention())
+        {
+            OnIntentionsConfirmed();
+            BattleUI.Instance.ShowIntention(BattleEnemyAI.Instance.EnemyIntentions);
+        }
 
-        // Enable UI for intention selection
-        BattleUI.Instance.ShowIntentionPanel();
-
-        // For each player unit, show intention options
-        // This depends on your specific implementation
     }
 
     public override void Update()
@@ -49,7 +49,7 @@ public class FsmStateIntention : FsmState
     {
         Debug.Log("Exiting Intention state");
         // Hide intention UI
-        BattleUI.Instance.HideIntentionPanel();
+        //BattleUI.Instance.HideIntentionPanel();
     }
 
     // Called by UI when player confirms intentions

@@ -29,8 +29,9 @@ public class NewUnitStats
         _buffs = buffs;
     }
 
-    public NewUnitStats(int health,Dice dice)
+    public NewUnitStats(int id, int health,Dice dice)
     {
+        _ID = id;
         _health = health;
         _current_health = health;
         _dice=dice;

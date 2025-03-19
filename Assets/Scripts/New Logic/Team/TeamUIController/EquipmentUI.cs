@@ -12,12 +12,12 @@ public class EquipmentUI : MonoBehaviour
 
     private void Start()
     {
-        UnitsPanelUI.OnUnitSelected += SetUpInfo;
+        UnitsPanelUI.OnUnitSelected += SetupInfo;
     }
 
-    private void SetUpInfo(NewUnitStats _clickedUnit)
+    private void SetupInfo(NewUnitStats _clickedUnit)
     {
-        SetUpItems(_clickedUnit);
+        SetupItems(_clickedUnit);
         if (_diceSides.Count > 0)
         {
             for (int i = 0; i < _diceSides.Count; i++)
@@ -37,7 +37,7 @@ public class EquipmentUI : MonoBehaviour
         }
     }
 
-    private void SetUpItems(NewUnitStats _clickedUnit)
+    private void SetupItems(NewUnitStats _clickedUnit)
     {
         if (_itemSides.Count > 0)
         {

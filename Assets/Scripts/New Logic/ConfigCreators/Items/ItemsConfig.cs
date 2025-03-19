@@ -7,7 +7,6 @@ public class ItemConfig : ScriptableObject
 {
     public string itemName;
     public Sprite icon;
-    public int attackBonus;
-    public int defenseBonus;
-    public int healthBonus;
+    public int power;
+    public ActionType actionType;
 }

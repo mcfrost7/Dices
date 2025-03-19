@@ -12,7 +12,7 @@ public class EnemyCreator
         List<NewDiceConfig> possibleEnemies = GetPossibleEnemies(battleSettings.tileEnemies);
         for (int i = 0; i < enemyCount; i++)
         {
-            NewUnitStats enemy = GenerateEnemy(possibleEnemies, battleSettings.battleDifficulty);
+            NewUnitStats enemy = GenerateEnemy(possibleEnemies, battleSettings.battleDifficulty, i);
             if (enemy != null)
             {
                 enemies.Add(enemy);
@@ -38,7 +38,7 @@ public class EnemyCreator
         return tileEnemies != null ? tileEnemies.newDiceConfigs : new List<NewDiceConfig>();
     }
 
-    private NewUnitStats GenerateEnemy(List<NewDiceConfig> possibleEnemies, int difficulty)
+    private NewUnitStats GenerateEnemy(List<NewDiceConfig> possibleEnemies, int difficulty, int id)
     {
         if (possibleEnemies.Count == 0)
         {
@@ -51,7 +51,7 @@ public class EnemyCreator
         int generatedHealth = GenerateHealth(enemyDice.sides, difficulty);
         // Создаём NewUnitStats на основе NewDiceConfig
         Dice dice = new Dice(enemyDice);
-        return new NewUnitStats(generatedHealth, dice);
+        return new NewUnitStats(id,generatedHealth, dice);
     }
 
     private int GenerateHealth(List<DiceSide> diceSides, int difficulty)

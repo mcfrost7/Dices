@@ -6,15 +6,26 @@ public class BattleController : MonoBehaviour
 {
     private FSM _battleFsm;
     public static BattleController Instance { get; private set; }
+    public List<NewUnitStats> PlayerUnits { get => playerUnits; set => playerUnits = value; }
+    public List<NewUnitStats> EnemyUnits { get => enemyUnits; set => enemyUnits = value; }
+    public List<BattleUnit> UnitsObj { get => unitsObj; set => unitsObj = value; }
+    public List<BattleUnit> EnemiesObj { get => enemiesObj; set => enemiesObj = value; }
 
     private NewTileConfig _currentBattleConfig;
     private bool _isBossBattle = false;
+    private List<NewUnitStats> playerUnits;
+    private List<NewUnitStats> enemyUnits;
+    private List<BattleUnit> unitsObj;
+    private List<BattleUnit> enemiesObj;
+
 
     // References to important battle components
     [SerializeField] private Transform _playerUnitsContainer;
     [SerializeField] private Transform _enemyUnitsContainer;
     [SerializeField] private BattleUnit _unitprefab;
     [SerializeField] private BattleUnit _enemyprefab;
+
+
 
     private void Awake()
     {
@@ -74,22 +85,26 @@ public class BattleController : MonoBehaviour
 
     private void SpawnPlayerUnits()
     {
-        List<NewUnitStats> newUnitStats = TeamMNG.Instance.GetPlayerUnits();
-        foreach (var unitData in newUnitStats)
+        PlayerUnits = TeamMNG.Instance.GetPlayerUnits();
+        UnitsObj = new List<BattleUnit>();
+        foreach (var unitData in PlayerUnits)
         {
             BattleUnit unitObj = Instantiate(_unitprefab, _playerUnitsContainer);
             unitObj.SetupUnit(unitData);
+            UnitsObj.Add(unitObj);
         }
     }
 
     private void SpawnEnemyUnits(NewTileConfig config)
     {
         EnemyCreator creator = new EnemyCreator();
-        List<NewUnitStats> enemies = creator.CreateEnemy(config);
-        foreach (var unitData in enemies)
+        EnemyUnits = creator.CreateEnemy(config);
+        EnemiesObj = new List<BattleUnit>();
+        foreach (var unitData in EnemyUnits)
         {
             BattleUnit unitObj = Instantiate(_enemyprefab, _enemyUnitsContainer);
             unitObj.SetupEnemy(unitData);
+            EnemiesObj.Add(unitObj);
         }
     }
 
@@ -116,7 +131,7 @@ public class BattleController : MonoBehaviour
         _battleFsm.AddState(loseState);
 
         // Set initial state
-        //_battleFsm.SetState<FsmStateIntention>();
+        _battleFsm.SetState<FsmStateIntention>();
     }
 
     // Called when player wins

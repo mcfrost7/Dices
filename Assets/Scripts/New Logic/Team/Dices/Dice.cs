@@ -25,4 +25,9 @@ public class Dice
     {
         return _currentSide;
     }
+
+    public void SetCurrentSide(DiceSide side)
+    {
+        _currentSide = side;
+    }
 }

@@ -60,13 +60,15 @@ public class FsmStateIntention : FsmState
 
     private bool CheckAllPlayersDead()
     {
-        // Check if all player units are defeated
+        if (BattleController.Instance.UnitsObj.Count == 0)
+            return true;
         return false; // Replace with actual logic
     }
 
     private bool CheckAllEnemiesDead()
     {
-        // Check if all enemy units are defeated
+        if (BattleController.Instance.EnemiesObj.Count == 0)
+            return true;
         return false; // Replace with actual logic
     }
 }

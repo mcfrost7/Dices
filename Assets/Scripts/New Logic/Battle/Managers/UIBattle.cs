@@ -63,7 +63,6 @@ public class BattleUI : MonoBehaviour
         return null;
     }
 
-    public void HideIntention() { }
     public bool AreIntentionsConfirmed() { return false; }
 
     public void ShowDiceRolling() { }

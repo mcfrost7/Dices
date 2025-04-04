@@ -20,22 +20,24 @@ public class BattleUnit : MonoBehaviour
     public NewUnitStats UnitData { get => unitData; set => unitData = value; }
     public RectTransform LinePoint { get => _linePoint; set => _linePoint = value; }
     public RectTransform Arrow { get => _arrow; set => _arrow = value; }
+    public Image DiceImage { get => _diceImage; set => _diceImage = value; }
+    public Button ActionTrigger { get => _actionTrigger; set => _actionTrigger = value; }
 
     public void SetupUnit(NewUnitStats newUnitStats)
     {
         _healthText.text = newUnitStats._current_health.ToString() + "/" + newUnitStats._health.ToString();
         _moralText.text = newUnitStats._moral.ToString();
         _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
-        _diceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
-        _actionTrigger.enabled = false;
+        DiceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
+        ActionTrigger.enabled = false;
         UnitData = newUnitStats;
     }
     public void SetupEnemy(NewUnitStats newUnitStats)
     {
         _healthText.text = newUnitStats._current_health.ToString() + "/" + newUnitStats._health.ToString();
         _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
-        _diceImage.sprite = newUnitStats._dice._diceConfig.sides[Random.Range(0, 6)].sprite;
-        _actionTrigger.enabled = false;
+        DiceImage.sprite = newUnitStats._dice._diceConfig.sides[Random.Range(0, 6)].sprite;
+        ActionTrigger.enabled = false;
         UnitData = newUnitStats;
     }
 }

@@ -59,7 +59,8 @@ MonoBehaviour:
   _unitImage: {fileID: 4691739219618603056}
   _diceImage: {fileID: 8219644834288875277}
   _actionTrigger: {fileID: 2331529275310623213}
-  _linePoint: {fileID: 5355112159383874010}
+  _linePoint: {fileID: 2674026451822083006}
+  _arrow: {fileID: 0}
 --- !u!1 &597656113722399664
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,7 +748,7 @@ RectTransform:
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1, y: 1}
-  m_Pivot: {x: 1, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5383486589442162627
 GameObject:
   m_ObjectHideFlags: 0

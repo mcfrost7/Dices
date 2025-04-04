@@ -23,6 +23,19 @@ public class BattleEnemyAI : MonoBehaviour
     private Dictionary<NewUnitStats, NewUnitStats> enemyIntentions = new Dictionary<NewUnitStats, NewUnitStats>();
     public bool CreateIntention()
     {
+        // Убедимся, что словарь существует и пуст
+        if (EnemyIntentions == null)
+        {
+            EnemyIntentions = new Dictionary<NewUnitStats, NewUnitStats>();
+        }
+        else
+        {
+            EnemyIntentions = new Dictionary<NewUnitStats, NewUnitStats>();
+        }
+
+        // Дополнительный лог для отладки
+        Debug.Log($"CreateIntention: Начало создания намерений, противников: {BattleController.Instance.EnemyUnits.Count}");
+
         foreach (var enemy in BattleController.Instance.EnemyUnits)
         {
             NewUnitStats target = ChooseTarget(enemy, BattleController.Instance.PlayerUnits);
@@ -30,8 +43,14 @@ public class BattleEnemyAI : MonoBehaviour
             {
                 EnemyIntentions[enemy] = target; // Записываем цель в словарь
             }
+            else
+            {
+                Debug.LogWarning($"CreateIntention: Противник {enemy._name} не смог выбрать цель");
+            }
         }
-        return true;
+
+        Debug.Log($"CreateIntention: Завершено создание намерений, всего: {EnemyIntentions.Count}");
+        return EnemyIntentions.Count > 0;
     }
     private NewUnitStats ChooseTarget(NewUnitStats enemy, List<NewUnitStats> playerUnits)
     {

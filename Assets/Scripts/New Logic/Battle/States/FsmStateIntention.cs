@@ -15,8 +15,8 @@ public class FsmStateIntention : FsmState
         _intentionsSelected = false;
         if (BattleEnemyAI.Instance.CreateIntention())
         {
+            BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
             OnIntentionsConfirmed();
-            BattleUI.Instance.ShowIntention(BattleEnemyAI.Instance.EnemyIntentions);
         }
 
     }

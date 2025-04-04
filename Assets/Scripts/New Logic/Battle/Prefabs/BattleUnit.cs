@@ -11,12 +11,15 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] private Image _unitImage;
     [SerializeField] private Image _diceImage;
     [SerializeField] private Button _actionTrigger;
-    [SerializeField] private GameObject _linePoint;
+    [SerializeField] private RectTransform _linePoint;
+    [SerializeField] private RectTransform _arrow;
+
 
     private NewUnitStats unitData;
 
     public NewUnitStats UnitData { get => unitData; set => unitData = value; }
-    public GameObject LinePoint { get => _linePoint; set => _linePoint = value; }
+    public RectTransform LinePoint { get => _linePoint; set => _linePoint = value; }
+    public RectTransform Arrow { get => _arrow; set => _arrow = value; }
 
     public void SetupUnit(NewUnitStats newUnitStats)
     {

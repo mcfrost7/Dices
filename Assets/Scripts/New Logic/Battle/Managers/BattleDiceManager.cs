@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -153,6 +154,7 @@ public class BattleDiceManager : MonoBehaviour
         Image diceImage = unit.DiceImage;
         Dice dice = unit.UnitData._dice;
         NewDiceConfig diceConfig = dice._diceConfig;
+        TextMeshProUGUI power = unit.PowerText;
 
         if (diceConfig == null || diceConfig.sides == null || diceConfig.sides.Count == 0)
         {
@@ -174,6 +176,7 @@ public class BattleDiceManager : MonoBehaviour
         while (elapsed < duration)
         {
             diceImage.sprite = sides[currentSideIndex].sprite;
+            power.text = unit.CalculateSidePowerWithBuffs(unit.UnitData, sides[currentSideIndex]).ToString();
             currentSideIndex = (currentSideIndex + 1) % sides.Count;
             yield return new WaitForSeconds(1f / animationSpeed);
             elapsed += 1f / animationSpeed;
@@ -186,6 +189,7 @@ public class BattleDiceManager : MonoBehaviour
 
         int randomSideIndex = Random.Range(0, sides.Count);
         DiceSide finalSide = sides[randomSideIndex];
+        power.text = unit.CalculateSidePowerWithBuffs(unit.UnitData, finalSide).ToString();
         diceImage.sprite = finalSide.sprite;
         dice.SetCurrentSide(finalSide);
 

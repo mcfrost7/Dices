@@ -4,5 +4,7 @@ public enum ActionType
     Attack,
     Defense,
     Heal,
-    LifeSteal
+    LifeSteal,
+    Moral,
+    HP
 }

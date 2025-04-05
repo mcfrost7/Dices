@@ -4,8 +4,7 @@ using UnityEngine;
 public class FsmStateReroll : FsmState
 {
     private float _stateTimer = 0f;
-    private float _maxRerollTime = 10f; // Max time allowed for reroll decision
-    private bool _rerollsConfirmed = false;
+
 
     public FsmStateReroll(FSM fsm) : base(fsm) { }
 
@@ -13,10 +12,7 @@ public class FsmStateReroll : FsmState
     {
         Debug.Log("Entering Reroll state");
         _stateTimer = 0f;
-        _rerollsConfirmed = false;
-
-        // Show reroll UI
-        BattleUI.Instance.ShowRerollPanel();
+        BattleRerolls.Instance.InitRerolls();
     }
 
     public override void Update()
@@ -36,11 +32,6 @@ public class FsmStateReroll : FsmState
             return;
         }
 
-        // Move to next state when rerolls are confirmed or time runs out
-        if (_rerollsConfirmed || _stateTimer >= _maxRerollTime || BattleUI.Instance.AreRerollsConfirmed())
-        {
-            Fsm.SetState<FsmStateAction>();
-        }
     }
 
     public override void Exit()
@@ -51,12 +42,6 @@ public class FsmStateReroll : FsmState
 
         // Execute any pending rerolls
        // BattleDiceManager.Instance.ExecuteRerolls();
-    }
-
-    // Called by UI when player confirms rerolls
-    public void OnRerollsConfirmed()
-    {
-        _rerollsConfirmed = true;
     }
 
     private bool CheckAllPlayersDead()

@@ -25,8 +25,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void RollAllDice()
     {
-        Debug.Log($"Rolling dice for {BattleController.Instance.UnitsObj.Count} player units and {BattleController.Instance.EnemiesObj.Count} enemy units");
-
+        DisableAllUnitSelections();
         int totalRolls = BattleController.Instance.UnitsObj.Count + BattleController.Instance.EnemiesObj.Count;
         int completedRolls = 0;
 
@@ -37,6 +36,7 @@ public class BattleDiceManager : MonoBehaviour
             if (completedRolls >= totalRolls && OnAllRollsComplete != null)
             {
                 Debug.Log("All rolls complete, invoking callback");
+                EnablePlayerUnitSelections(); // Enable unit selections when all rolls are complete
                 OnAllRollsComplete.Invoke();
             }
         };
@@ -78,10 +78,10 @@ public class BattleDiceManager : MonoBehaviour
 
     public void ExecuteRerolls()
     {
+        DisableAllUnitSelections();
         List<BattleUnit> selectedUnits = GetSelectedUnitsForReroll();
         List<BattleUnit> unitsToReroll = new List<BattleUnit>();
 
-        Debug.Log($"Selected units to keep: {selectedUnits.Count}");
 
         foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
         {
@@ -114,6 +114,7 @@ public class BattleDiceManager : MonoBehaviour
             if (completedRerolls >= totalRerolls && OnAllRerollsComplete != null)
             {
                 Debug.Log("All rerolls complete, invoking callback");
+                EnablePlayerUnitSelections(); // Enable unit selections when all rerolls are complete
                 OnAllRerollsComplete.Invoke();
             }
         };
@@ -132,10 +133,24 @@ public class BattleDiceManager : MonoBehaviour
             }
         }
     }
+    public void HandleUnitSelectionChanged(BattleUnit unit)
+    {
+        // You can add additional logic here if needed
+        Debug.Log($"Unit {unit.name} selection changed: {unit.IsSelected}");
+    }
 
     private List<BattleUnit> GetSelectedUnitsForReroll()
     {
         List<BattleUnit> selectedUnits = new List<BattleUnit>();
+
+        foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
+        {
+            if (unit != null && unit.IsSelected)
+            {
+                selectedUnits.Add(unit);
+            }
+        }
+
         return selectedUnits;
     }
 
@@ -193,14 +208,31 @@ public class BattleDiceManager : MonoBehaviour
         diceImage.sprite = finalSide.sprite;
         dice.SetCurrentSide(finalSide);
 
-        if (BattleController.Instance.UnitsObj.Contains(unit) && unit.ActionTrigger != null)
-        {
-            unit.ActionTrigger.enabled = true;
-        }
-
         if (onComplete != null)
         {
             onComplete();
+        }
+    }
+
+    public void DisableAllUnitSelections()
+    {
+        foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
+        {
+            if (unit != null && unit.ActionTrigger != null)
+            {
+                unit.ActionTrigger.enabled = false;
+            }
+        }
+    }
+
+    public void EnablePlayerUnitSelections()
+    {
+        foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
+        {
+            if (unit != null && unit.ActionTrigger != null)
+            {
+                unit.ActionTrigger.enabled = true;
+            }
         }
     }
 }

@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BattleUI : MonoBehaviour
 {
+
+    [SerializeField] private TextMeshProUGUI _currentRolls;
     private void Awake()
     {
         if (Instance == null)
@@ -18,6 +21,8 @@ public class BattleUI : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+
     public static BattleUI Instance { get; private set; }
 
     public void ShowIntentionDelayed(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions)
@@ -63,14 +68,11 @@ public class BattleUI : MonoBehaviour
         return null;
     }
 
-    public bool AreIntentionsConfirmed() { return false; }
 
-    public void ShowDiceRolling() { }
-    public void ShowDiceResults() { }
-
-    public void ShowRerollPanel() { }
-    public void HideRerollPanel() { }
-    public bool AreRerollsConfirmed() { return false; }
+    public void ChangeMaxRerollText(int rerolls)
+    {
+        _currentRolls.text = rerolls.ToString() ;
+    }
 
     public void ShowActionPanel() { }
     public void HideActionPanel() { }

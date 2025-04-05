@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee8da9568ef163b4cb404d2deb9fe0f8, type: 3}
   m_Name: AttackBuff
   m_EditorClassIdentifier: 
-  buffType: 01000000
+  buffType: 0
   buffPower: 1
   buffName: "\u0411\u043E\u0435\u0432\u0430\u044F \u044F\u0440\u043E\u0441\u0442\u044C"
   buffSprite: {fileID: 21300000, guid: 037be2c734516ee4ba067aa638e085f2, type: 3}

@@ -12,6 +12,8 @@ public class FsmStateRolling : FsmState
         _stateTimer = 0f;
         BattleDiceManager.Instance.OnAllRollsComplete += OnRollsComplete;
         BattleDiceManager.Instance.RollAllDice();
+        BattleUI.Instance.ChangeMaxRerollText(RerollCalculator.CalculateRerolls(BattleController.Instance.PlayerUnits));
+        
     }
 
     public override void Exit()

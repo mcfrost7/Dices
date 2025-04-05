@@ -80,7 +80,7 @@ public class EquipmentUI : MonoBehaviour
         foreach (BuffConfig buff in clickedUnit._buffs)
         {
             // Проверяем, содержит ли бафф соответствующий тип действия
-            if (buff.buffType.Contains(sideType))
+            if (buff.buffType == sideType)
             {
                 buffBonus += buff.buffPower;
             }

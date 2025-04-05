@@ -45,11 +45,11 @@ public class ConsidirationController
 
         foreach (var buff in unit._buffs)
         {
-            if (buff.buffType.Contains(ActionType.Attack) || buff.buffType.Contains(ActionType.LifeSteal))
+            if (buff.buffType == ActionType.Attack || buff.buffType == ActionType.LifeSteal)
             {
                 buffBonus += buff.buffPower * 2; // Атакующие баффы увеличивают приоритет
             }
-            else if (buff.buffType.Contains(ActionType.Defense) || buff.buffType.Contains(ActionType.Heal))
+            else if (buff.buffType ==  ActionType.Defense || buff.buffType == ActionType.Heal)
             {
                 buffPenalty += buff.buffPower * 3; // Защитные баффы снижают приоритет
             }

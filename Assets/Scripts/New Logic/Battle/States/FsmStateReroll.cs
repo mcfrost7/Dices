@@ -13,7 +13,8 @@ public class FsmStateReroll : FsmState
         Debug.Log("Entering Reroll state");
         _stateTimer = 0f;
         BattleRerolls.Instance.InitRerolls();
-        
+        BattleDiceManager.Instance.OnAllRerollsComplete += OnRerollsComplete;
+
     }
 
     public override void Update()
@@ -32,14 +33,22 @@ public class FsmStateReroll : FsmState
             Fsm.SetState<FsmStateWin>();
             return;
         }
-        if (BattleRerolls.Instance.AvailableRerolls == 0)
+        if (BattleRerolls.Instance.AvailableRerolls == 0 )
         {
             Fsm.SetState<FsmStateAction>();
         }
     }
+    private void OnRerollsComplete()
+    {
+        Debug.Log("All rerolls completed in FSM state");
+
+        // Здесь можно переходить в следующий стейт или оставить только для Enable UI и логики
+        BattleDiceManager.Instance.EnablePlayerUnitSelections();
+    }
 
     public override void Exit()
     {
+        BattleDiceManager.Instance.OnAllRerollsComplete -= OnRerollsComplete;
         Debug.Log("Exiting Reroll state");
 
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,6 +47,8 @@ public class BattleRerolls : MonoBehaviour
         BattleDiceManager.Instance.ExecuteRerolls();
         AvailableRerolls--;
         BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
+        foreach (var unit in BattleController.Instance.UnitsObj)
+            unit.SetSelectionState(false);
     }
 
     private void OnEndlButtonPressed()

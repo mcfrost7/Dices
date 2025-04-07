@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class BattleDiceManager : MonoBehaviour
 {
+       public event System.Action<BattleUnit> UnitSelected;
     private void Awake()
     {
         if (Instance == null)
@@ -102,6 +103,7 @@ public class BattleDiceManager : MonoBehaviour
             Debug.Log("No rerolls needed, completing immediately");
             if (OnAllRerollsComplete != null)
             {
+
                 OnAllRerollsComplete.Invoke();
             }
             return;
@@ -114,7 +116,8 @@ public class BattleDiceManager : MonoBehaviour
             if (completedRerolls >= totalRerolls && OnAllRerollsComplete != null)
             {
                 Debug.Log("All rerolls complete, invoking callback");
-                EnablePlayerUnitSelections(); // Enable unit selections when all rerolls are complete
+                EnablePlayerUnitSelections();
+                // Enable unit selections when all rerolls are complete
                 OnAllRerollsComplete.Invoke();
             }
         };
@@ -132,6 +135,7 @@ public class BattleDiceManager : MonoBehaviour
                 onSingleRerollComplete();
             }
         }
+        
     }
     public void HandleUnitSelectionChanged(BattleUnit unit)
     {
@@ -216,7 +220,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void DisableAllUnitSelections()
     {
-        BattleRerolls.Instance.RerollButton.enabled = false;
+        SetRerollButtonsActive(false);
         foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
         {
             if (unit != null && unit.ActionTrigger != null)
@@ -228,7 +232,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void EnablePlayerUnitSelections()
     {
-        BattleRerolls.Instance.RerollButton.enabled = true;
+        SetRerollButtonsActive(true);
         foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
         {
             if (unit != null && unit.ActionTrigger != null)
@@ -236,5 +240,11 @@ public class BattleDiceManager : MonoBehaviour
                 unit.ActionTrigger.enabled = true;
             }
         }
+    }
+
+    private static void SetRerollButtonsActive(bool _state)
+    {
+        BattleRerolls.Instance.RerollButton.enabled = _state;
+        BattleRerolls.Instance.EndRerolls.enabled = _state;
     }
 }

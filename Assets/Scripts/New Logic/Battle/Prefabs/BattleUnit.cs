@@ -95,16 +95,9 @@ public class BattleUnit : MonoBehaviour
     public void ToggleSelection()
     {
         isSelected = !isSelected;
-
-        // Update visual feedback
         if (_selectionIndicator != null)
         {
             _selectionIndicator.gameObject.SetActive(isSelected);
-        }
-        else
-        {
-            // Visual feedback with outline or color change if no indicator exists
-            _unitImage.color = isSelected ? new Color(1f, 0.8f, 0.8f) : Color.white;
         }
         BattleDiceManager.Instance.HandleUnitSelectionChanged(this);
 

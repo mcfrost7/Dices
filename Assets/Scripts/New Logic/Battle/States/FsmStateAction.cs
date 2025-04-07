@@ -6,7 +6,7 @@ public class FsmStateAction : FsmState
 {
     private float _stateTimer = 0f;
     private bool _actionsComplete = false;
-
+    private BattleUnit _currentSelectedUnit = null;
     public FsmStateAction(FSM fsm) : base(fsm) { }
 
     public override void Enter()
@@ -15,6 +15,12 @@ public class FsmStateAction : FsmState
         _stateTimer = 0f;
         _actionsComplete = false;
         BattleActionManager.Instance.ActionComplete += OnActionsComplete;
+
+        // Setup UI for player actions
+        BattleActionManager.Instance.EndAction.gameObject.SetActive(true);
+        BattleDiceManager.Instance.EnablePlayerUnitSelections();
+        // Subscribe to unit selection events
+        BattleDiceManager.Instance.UnitSelected += OnUnitSelected;
     }
 
     public override void Update()
@@ -45,6 +51,36 @@ public class FsmStateAction : FsmState
     {
         Debug.Log("Exiting Action state");
         BattleActionManager.Instance.ActionComplete -= OnActionsComplete;
+        BattleDiceManager.Instance.UnitSelected -= OnUnitSelected;
+
+        // Clear any selections
+        if (_currentSelectedUnit != null)
+        {
+            _currentSelectedUnit.SetSelectionState(false);
+            _currentSelectedUnit = null;
+        }
+    }
+        private void OnUnitSelected(BattleUnit unit)
+    {
+        // If we already had a selected unit, deselect it
+        if (_currentSelectedUnit != null && _currentSelectedUnit != unit)
+        {
+            _currentSelectedUnit.SetSelectionState(false);
+        }
+        
+        // Update our reference to the currently selected unit
+        _currentSelectedUnit = unit.IsSelected ? unit : null;
+        
+        if (_currentSelectedUnit != null)
+        {
+            // A unit is selected, set it as the active unit in BattleActionManager
+            BattleActionManager.Instance.SetSelectedUnit(_currentSelectedUnit);
+        }
+        else
+        {
+            // No unit is selected
+            BattleActionManager.Instance.DeselectUnit();
+        }
     }
 
     // Called by UI when player completes their actions

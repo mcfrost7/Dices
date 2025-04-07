@@ -9,17 +9,14 @@ public class DiceSide
     public int power;
     public int duration;
     public Sprite sprite;
+    public ActionSide ActionSide;
 
-    public DiceSide(ActionType actionType, int power, int duration)
-    {
-        this.actionType = actionType;
-        this.power = power;
-        this.duration = duration;
-        this.sprite = LoadSprite(actionType);
-    }
+}
 
-    private Sprite LoadSprite(ActionType type)
-    {
-        return Resources.Load<Sprite>($"Sprites/{type.ToString()}");
-    }
+
+public enum ActionSide
+{
+    None,
+    Enemy,
+    Ally
 }

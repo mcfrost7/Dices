@@ -1,16 +1,23 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public static class RerollCalculator
 {
     public static int CalculateRerolls(List<NewUnitStats> units)
     {
-        int total = 0;
+        if (units == null || units.Count == 0)
+            return 0;
+
+        float total = 0;
 
         foreach (var unit in units)
             total += GetModifiedMorale(unit);
 
-        return total / units.Count;
+        float average = total / units.Count;
+
+        return Mathf.RoundToInt(average);
     }
+
 
     private static int GetModifiedMorale(NewUnitStats unit)
     {

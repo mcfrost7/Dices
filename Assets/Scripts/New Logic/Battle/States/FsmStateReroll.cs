@@ -14,7 +14,7 @@ public class FsmStateReroll : FsmState
         _stateTimer = 0f;
         BattleRerolls.Instance.InitRerolls();
         BattleDiceManager.Instance.OnAllRerollsComplete += OnRerollsComplete;
-
+        BattleDiceManager.Instance.AllowMultipleSelections = true;
     }
 
     public override void Update()

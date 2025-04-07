@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BattleDiceManager : MonoBehaviour
 {
-       public event System.Action<BattleUnit> UnitSelected;
+    public event System.Action<BattleUnit> UnitSelected;
     private void Awake()
     {
         if (Instance == null)
@@ -23,7 +23,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public event System.Action OnAllRollsComplete;
     public event System.Action OnAllRerollsComplete;
-
+    public bool AllowMultipleSelections { get; set; } = true;
     public void RollAllDice()
     {
         DisableAllUnitSelections();
@@ -79,6 +79,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void ExecuteRerolls()
     {
+
         DisableAllUnitSelections();
         List<BattleUnit> selectedUnits = GetSelectedUnitsForReroll();
         List<BattleUnit> unitsToReroll = new List<BattleUnit>();
@@ -139,9 +140,31 @@ public class BattleDiceManager : MonoBehaviour
     }
     public void HandleUnitSelectionChanged(BattleUnit unit)
     {
-        // You can add additional logic here if needed
         Debug.Log($"Unit {unit.name} selection changed: {unit.IsSelected}");
+
+        bool allowMultiple = AllowMultipleSelections;
+
+        if (unit.IsSelected)
+        {
+            if (!allowMultiple)
+            {
+                foreach (BattleUnit otherUnit in BattleController.Instance.UnitsObj)
+                {
+                    if (otherUnit != unit && otherUnit.IsSelected)
+                    {
+                        otherUnit.SetSelectionState(false);
+                    }
+                }
+            }
+
+            UnitSelected?.Invoke(unit);
+        }
+        else
+        {
+            UnitSelected?.Invoke(null);
+        }
     }
+
 
     private List<BattleUnit> GetSelectedUnitsForReroll()
     {
@@ -246,5 +269,10 @@ public class BattleDiceManager : MonoBehaviour
     {
         BattleRerolls.Instance.RerollButton.enabled = _state;
         BattleRerolls.Instance.EndRerolls.enabled = _state;
+    }
+
+    public void NotifyUnitSelected(BattleUnit unit)
+    {
+        UnitSelected?.Invoke(unit);
     }
 }

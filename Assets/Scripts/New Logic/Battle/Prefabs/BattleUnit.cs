@@ -68,47 +68,64 @@ public class BattleUnit : MonoBehaviour
 
     public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, DiceSide diceSide)
     {
-        // Базовая сила стороны
         int basePower = diceSide.power;
-        // Если базовая сила -1, это означает специальную сторону без числового значения
         if (basePower == -1)
         {
             return -1;
         }
-        // Получаем тип стороны куба
         ActionType sideType = diceSide.actionType;
-        // Суммарный бонус от баффов
         int buffBonus = 0;
         foreach (BuffConfig buff in clickedUnit._buffs)
         {
-            // Проверяем, содержит ли бафф соответствующий тип действия
             if (buff.buffType == sideType)
             {
                 buffBonus += buff.buffPower;
             }
         }
-        // Возвращаем итоговое значение (базовая сила + бонус от баффов)
         return basePower + buffBonus;
     }
 
-    // Toggle unit selection on button click
     public void ToggleSelection()
     {
-        isSelected = !isSelected;
-        if (_selectionIndicator != null)
+        bool allowMultiple = BattleDiceManager.Instance.AllowMultipleSelections;
+
+        if (!allowMultiple)
         {
-            _selectionIndicator.gameObject.SetActive(isSelected);
+            foreach (var unit in BattleController.Instance.UnitsObj)
+            {
+                if (unit != this && unit.IsSelected)
+                {
+                    unit.SetSelectionState(false);
+                }
+            }
+
+            isSelected = !isSelected;
         }
+        else
+        {
+            isSelected = !isSelected;
+        }
+
+        _selectionIndicator?.gameObject.SetActive(isSelected);
         BattleDiceManager.Instance.HandleUnitSelectionChanged(this);
 
+        if (allowMultiple && isSelected)
+        {
+            BattleDiceManager.Instance.NotifyUnitSelected(this);
+        }
     }
 
-    // Method to force selection state (useful for clearing selections)
+
     public void SetSelectionState(bool selected)
     {
         if (isSelected != selected)
         {
-            ToggleSelection();
+            isSelected = selected;
+            if (_selectionIndicator != null)
+            {
+                _selectionIndicator.gameObject.SetActive(isSelected);
+            }
         }
     }
+
 }

@@ -14,12 +14,10 @@ public class FsmStateAction : FsmState
         Debug.Log("Entering Action state");
         _stateTimer = 0f;
         _actionsComplete = false;
-        BattleActionManager.Instance.ActionComplete += OnActionsComplete;
 
-        // Setup UI for player actions
+        BattleActionManager.Instance.ActionComplete += OnActionsComplete;
         BattleActionManager.Instance.EndAction.gameObject.SetActive(true);
         BattleDiceManager.Instance.EnablePlayerUnitSelections();
-        // Subscribe to unit selection events
         BattleDiceManager.Instance.UnitSelected += OnUnitSelected;
     }
 
@@ -49,18 +47,18 @@ public class FsmStateAction : FsmState
 
     public override void Exit()
     {
-        Debug.Log("Exiting Action state");
         BattleActionManager.Instance.ActionComplete -= OnActionsComplete;
         BattleDiceManager.Instance.UnitSelected -= OnUnitSelected;
+        BattleDiceManager.Instance.AllowMultipleSelections = true; // возвращаем мультивыделение
 
-        // Clear any selections
         if (_currentSelectedUnit != null)
         {
             _currentSelectedUnit.SetSelectionState(false);
             _currentSelectedUnit = null;
         }
     }
-        private void OnUnitSelected(BattleUnit unit)
+
+    private void OnUnitSelected(BattleUnit unit)
     {
         // If we already had a selected unit, deselect it
         if (_currentSelectedUnit != null && _currentSelectedUnit != unit)

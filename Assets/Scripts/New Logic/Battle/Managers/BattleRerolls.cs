@@ -5,8 +5,12 @@ using UnityEngine.UI;
 public class BattleRerolls : MonoBehaviour
 {
     public static BattleRerolls Instance { get; private set; }
+    public int AvailableRerolls { get => _availableRerolls; set => _availableRerolls = value; }
+    public Button EndRerolls { get => _endRerolls; set => _endRerolls = value; }
+    public Button RerollButton { get => _rerollButton; set => _rerollButton = value; }
 
     [SerializeField] private Button _rerollButton;
+    [SerializeField] private Button _endRerolls;
 
     private int _availableRerolls;
 
@@ -20,26 +24,35 @@ public class BattleRerolls : MonoBehaviour
             return;
         }
 
-        _rerollButton.onClick.AddListener(OnRerollButtonPressed);
+        RerollButton.onClick.AddListener(OnRerollButtonPressed);
+        EndRerolls.onClick.AddListener(OnEndlButtonPressed);
     }
 
     public void InitRerolls()
     {
+        _endRerolls.enabled = true;
         var unitStats = new List<NewUnitStats>();
         foreach (var unit in BattleController.Instance.UnitsObj)
             unitStats.Add(unit.UnitData);
 
-        _availableRerolls = RerollCalculator.CalculateRerolls(unitStats);
-        BattleUI.Instance.ChangeMaxRerollText(_availableRerolls);
+        AvailableRerolls = RerollCalculator.CalculateRerolls(unitStats);
+        BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
     }
 
     private void OnRerollButtonPressed()
     {
-        if (_availableRerolls <= 0)
+        if (AvailableRerolls <= 0)
             return;
-
         BattleDiceManager.Instance.ExecuteRerolls();
-        _availableRerolls--;
-        BattleUI.Instance.ChangeMaxRerollText(_availableRerolls);
+        AvailableRerolls--;
+        BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
+    }
+
+    private void OnEndlButtonPressed()
+    {
+        BattleActionManager.Instance.EndAction.gameObject.SetActive(true); 
+        AvailableRerolls = 0;
+        BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
+        EndRerolls.gameObject.SetActive(false);
     }
 }

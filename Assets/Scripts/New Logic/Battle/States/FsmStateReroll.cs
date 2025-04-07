@@ -13,6 +13,7 @@ public class FsmStateReroll : FsmState
         Debug.Log("Entering Reroll state");
         _stateTimer = 0f;
         BattleRerolls.Instance.InitRerolls();
+        
     }
 
     public override void Update()
@@ -31,28 +32,29 @@ public class FsmStateReroll : FsmState
             Fsm.SetState<FsmStateWin>();
             return;
         }
-
+        if (BattleRerolls.Instance.AvailableRerolls == 0)
+        {
+            Fsm.SetState<FsmStateAction>();
+        }
     }
 
     public override void Exit()
     {
         Debug.Log("Exiting Reroll state");
-        // Hide reroll UI
-        //BattleUI.Instance.HideRerollPanel();
 
-        // Execute any pending rerolls
-       // BattleDiceManager.Instance.ExecuteRerolls();
     }
 
     private bool CheckAllPlayersDead()
     {
-        // Check if all player units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.UnitsObj.Count == 0)
+            return true;
+        return false;
     }
 
     private bool CheckAllEnemiesDead()
     {
-        // Check if all enemy units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.EnemiesObj.Count == 0)
+            return true;
+        return false;
     }
 }

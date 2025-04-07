@@ -14,12 +14,7 @@ public class FsmStateAction : FsmState
         Debug.Log("Entering Action state");
         _stateTimer = 0f;
         _actionsComplete = false;
-
-        // Show action UI
-        BattleUI.Instance.ShowActionPanel();
-
-        // Calculate available actions based on dice results
-        BattleActionManager.Instance.CalculateAvailableActions();
+        BattleActionManager.Instance.ActionComplete += OnActionsComplete;
     }
 
     public override void Update()
@@ -49,8 +44,7 @@ public class FsmStateAction : FsmState
     public override void Exit()
     {
         Debug.Log("Exiting Action state");
-        // Hide action UI
-       // BattleUI.Instance.HideActionPanel();
+        BattleActionManager.Instance.ActionComplete -= OnActionsComplete;
     }
 
     // Called by UI when player completes their actions
@@ -61,13 +55,15 @@ public class FsmStateAction : FsmState
 
     private bool CheckAllPlayersDead()
     {
-        // Check if all player units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.UnitsObj.Count == 0)
+            return true;
+        return false;
     }
 
     private bool CheckAllEnemiesDead()
     {
-        // Check if all enemy units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.EnemiesObj.Count == 0)
+            return true;
+        return false;
     }
 }

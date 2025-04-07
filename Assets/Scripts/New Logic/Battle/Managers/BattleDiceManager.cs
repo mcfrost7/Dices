@@ -216,6 +216,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void DisableAllUnitSelections()
     {
+        BattleRerolls.Instance.RerollButton.enabled = false;
         foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
         {
             if (unit != null && unit.ActionTrigger != null)
@@ -227,6 +228,7 @@ public class BattleDiceManager : MonoBehaviour
 
     public void EnablePlayerUnitSelections()
     {
+        BattleRerolls.Instance.RerollButton.enabled = true;
         foreach (BattleUnit unit in BattleController.Instance.UnitsObj)
         {
             if (unit != null && unit.ActionTrigger != null)

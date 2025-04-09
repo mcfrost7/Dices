@@ -41,13 +41,12 @@ public class FsmStateReroll : FsmState
     private void OnRerollsComplete()
     {
         Debug.Log("All rerolls completed in FSM state");
-
-        // Здесь можно переходить в следующий стейт или оставить только для Enable UI и логики
         BattleDiceManager.Instance.EnablePlayerUnitSelections();
     }
 
     public override void Exit()
     {
+        BattleRerolls.Instance.DeselectPlayerUnits();
         BattleDiceManager.Instance.OnAllRerollsComplete -= OnRerollsComplete;
         Debug.Log("Exiting Reroll state");
 

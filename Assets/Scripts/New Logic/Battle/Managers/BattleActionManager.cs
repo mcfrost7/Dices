@@ -39,6 +39,17 @@ public class BattleActionManager : MonoBehaviour
         }
     }
 
+    public void EnableEnemyUnitSelection()
+    {
+        foreach (BattleUnit unit in BattleController.Instance.EnemiesObj)
+        {
+            if (unit != null && unit.ActionTrigger != null)
+            {
+                unit.ActionTrigger.enabled = true;
+            }
+        }
+    }
+
     public void SetSelectedUnit(BattleUnit unit)
     {
         _selectedUnit = unit;
@@ -129,15 +140,9 @@ public class BattleActionManager : MonoBehaviour
                 break;
         }
 
-        // Update the UI of the target
-        if (BattleController.Instance.UnitsObj.Contains(target))
-        {
-            target.SetupUnit(target.UnitData);
-        }
-        else
-        {
-            target.SetupEnemy(target.UnitData);
-        }
+        source.DisableUnitAfterAction();
+        source.RefreshUnitUI();
+        target.RefreshUnitUI();
 
         // Clear selection after action
         DeselectUnit();
@@ -158,6 +163,7 @@ public class BattleActionManager : MonoBehaviour
             else if (BattleController.Instance.EnemiesObj.Contains(target))
             {
                 BattleController.Instance.EnemiesObj.Remove(target);
+                BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
             }
 
             // Destroy the game object
@@ -188,16 +194,18 @@ public class BattleActionManager : MonoBehaviour
         _endAction.gameObject.SetActive(false);
         BattleRerolls.Instance.EndRerolls.gameObject.SetActive(true);
         BattleRerolls.Instance.EndRerolls.enabled = false;
+        foreach (var unit in BattleController.Instance.UnitsObj)
+        {
+            unit.EnableUnitForNewTurn();
+        }
     }
 
     public void DeselectUnit()
     {
         if (_selectedUnit != null)
         {
-            _selectedUnit.SetSelectionState(false);
             _selectedUnit = null;
         }
-
         _targetUnit = null;
         _isWaitingForTarget = false;
         HideActionFeedback();

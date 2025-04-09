@@ -18,6 +18,7 @@ public class FsmStateAction : FsmState
         BattleActionManager.Instance.ActionComplete += OnActionsComplete;
         BattleActionManager.Instance.EndAction.gameObject.SetActive(true);
         BattleDiceManager.Instance.EnablePlayerUnitSelections();
+        BattleActionManager.Instance.EnableEnemyUnitSelection();
         BattleDiceManager.Instance.UnitSelected += OnUnitSelected;
     }
 
@@ -49,6 +50,7 @@ public class FsmStateAction : FsmState
     {
         BattleActionManager.Instance.ActionComplete -= OnActionsComplete;
         BattleDiceManager.Instance.UnitSelected -= OnUnitSelected;
+        BattleUI.Instance.HideActionPanel();
         BattleDiceManager.Instance.AllowMultipleSelections = true; // возвращаем мультивыделение
 
         if (_currentSelectedUnit != null)

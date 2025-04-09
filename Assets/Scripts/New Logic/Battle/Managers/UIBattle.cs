@@ -25,6 +25,13 @@ public class BattleUI : MonoBehaviour
 
     public static BattleUI Instance { get; private set; }
 
+
+    public void StartBattleUISetup()
+    {
+        BattleActionManager.Instance.HideActionFeedback();
+        BattleActionManager.Instance.EndActionButton();
+
+    }
     public void ShowIntentionDelayed(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions)
     {
         StartCoroutine(DelayedShow(enemyIntentions));
@@ -75,7 +82,10 @@ public class BattleUI : MonoBehaviour
     }
 
     public void ShowActionPanel() { }
-    public void HideActionPanel() { }
+    public void HideActionPanel() 
+    {
+        BattleActionManager.Instance.HideActionFeedback();
+    }
     public bool AreActionsComplete() { return false; }
 
     public void ShowVictoryScreen() { }

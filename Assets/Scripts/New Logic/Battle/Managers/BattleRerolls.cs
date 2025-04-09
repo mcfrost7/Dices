@@ -47,6 +47,11 @@ public class BattleRerolls : MonoBehaviour
         BattleDiceManager.Instance.ExecuteRerolls();
         AvailableRerolls--;
         BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
+        DeselectPlayerUnits();
+    }
+
+    public void DeselectPlayerUnits()
+    {
         foreach (var unit in BattleController.Instance.UnitsObj)
             unit.SetSelectionState(false);
     }

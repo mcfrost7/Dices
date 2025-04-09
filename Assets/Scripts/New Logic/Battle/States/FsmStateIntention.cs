@@ -13,6 +13,7 @@ public class FsmStateIntention : FsmState
         Debug.Log("Entering Intention state");
         _stateTimer = 0f;
         _intentionsSelected = false;
+        BattleUI.Instance.StartBattleUISetup();
         if (BattleEnemyAI.Instance.CreateIntention())
         {
             BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);

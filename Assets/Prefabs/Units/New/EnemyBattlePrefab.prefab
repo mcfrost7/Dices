@@ -667,6 +667,7 @@ MonoBehaviour:
   _actionTrigger: {fileID: 6554232862306879397}
   _linePoint: {fileID: 7124964477942809775}
   _arrow: {fileID: 1658993643985061521}
+  _selectionIndicator: {fileID: 0}
 --- !u!1 &6499981981738996160
 GameObject:
   m_ObjectHideFlags: 0

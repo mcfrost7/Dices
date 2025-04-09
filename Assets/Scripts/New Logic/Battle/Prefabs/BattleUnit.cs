@@ -20,7 +20,7 @@ public class BattleUnit : MonoBehaviour
 
     private NewUnitStats unitData;
     private bool isSelected = false;
-
+    private bool isEnemy = false;
     public NewUnitStats UnitData { get => unitData; set => unitData = value; }
     public RectTransform LinePoint { get => _linePoint; set => _linePoint = value; }
     public RectTransform Arrow { get => _arrow; set => _arrow = value; }
@@ -28,42 +28,58 @@ public class BattleUnit : MonoBehaviour
     public Button ActionTrigger { get => _actionTrigger; set => _actionTrigger = value; }
     public TextMeshProUGUI PowerText { get => _powerText; set => _powerText = value; }
     public bool IsSelected { get => isSelected; }
-
+    public bool IsEnemy { get => isEnemy; set => isEnemy = value; }
 
     private void Awake()
     {
-        // Add click listener to button
-        _actionTrigger.onClick.AddListener(ToggleSelection);
+        _actionTrigger.onClick.RemoveAllListeners();
+        _actionTrigger.onClick.AddListener(OnActionTriggerClicked);
 
-        // Initialize selection indicator if it exists
         if (_selectionIndicator != null)
         {
             _selectionIndicator.gameObject.SetActive(false);
         }
     }
 
+    private void OnActionTriggerClicked()
+    {
+        if (isEnemy)
+        {
+            ToggleEnemySelection();
+        }
+        else
+        {
+            ToggleSelection();
+        }
+    }
+
     public void SetupUnit(NewUnitStats newUnitStats)
     {
-        _healthText.text = newUnitStats._current_health.ToString() + "/" + newUnitStats._health.ToString();
+        IsEnemy = false;
+        SetupCommon(newUnitStats);
         _moralText.text = newUnitStats._moral.ToString();
         _powerText.text = CalculateSidePowerWithBuffs(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
-        _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
-        DiceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
         ActionTrigger.enabled = true; // Enable button for selection
-        UnitData = newUnitStats;
     }
 
     public void SetupEnemy(NewUnitStats newUnitStats)
     {
-        _healthText.text = newUnitStats._current_health.ToString() + "/" + newUnitStats._health.ToString();
-        _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
+        IsEnemy = true;
         int randSide = Random.Range(0, 6);
         DiceSide diceSide = newUnitStats._dice._diceConfig.sides[randSide];
         newUnitStats._dice.SetCurrentSide(diceSide);
-        DiceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
+        SetupCommon(newUnitStats);
         _powerText.text = newUnitStats._dice.GetCurrentSide().power.ToString();
         ActionTrigger.enabled = false;
+    }
+
+    private void SetupCommon(NewUnitStats newUnitStats)
+    {
+        _healthText.text = $"{newUnitStats._current_health}/{newUnitStats._health}";
+        _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
+        DiceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
         UnitData = newUnitStats;
+        UpdateHealthVisuals();
     }
 
     public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, DiceSide diceSide)
@@ -115,6 +131,10 @@ public class BattleUnit : MonoBehaviour
         }
     }
 
+    public void ToggleEnemySelection()
+    {
+        BattleActionManager.Instance.SetTargetUnit(this);
+    }
 
     public void SetSelectionState(bool selected)
     {
@@ -125,6 +145,110 @@ public class BattleUnit : MonoBehaviour
             {
                 _selectionIndicator.gameObject.SetActive(isSelected);
             }
+        }
+    }
+
+    // Добавьте эти методы в класс BattleUnit
+
+    public void RefreshUnitUI()
+    {
+        if (UnitData == null) return;
+
+        // Обновляем здоровье
+        _healthText.text = $"{UnitData._current_health}/{UnitData._health}";
+
+        // Для своих юнитов обновляем мораль и силу с учетом баффов
+        if (!IsEnemy)
+        {
+            _moralText.text = UnitData._moral.ToString();
+            _powerText.text = CalculateSidePowerWithBuffs(UnitData, UnitData._dice.GetCurrentSide()).ToString();
+        }
+        else
+        {
+            // Для врагов просто обновляем силу текущей стороны кубика
+            _powerText.text = UnitData._dice.GetCurrentSide().power.ToString();
+        }
+
+        // Обновляем изображение кубика
+        DiceImage.sprite = UnitData._dice.GetCurrentSide().sprite;
+
+        // Визуальная обратная связь при низком здоровье
+        UpdateHealthVisuals();
+    }
+
+
+    private void UpdateHealthVisuals()
+    {
+        float healthPercentage = (float)UnitData._current_health / UnitData._health;
+
+        // Меняем цвет текста здоровья в зависимости от % здоровья
+        if (healthPercentage < 0.4f)
+        {
+            _healthText.color = Color.red;
+        }
+        else if (healthPercentage < 0.7f)
+        {
+            _healthText.color = Color.yellow;
+        }
+        else
+        {
+            _healthText.color = Color.green;
+        }
+    }
+    public void DisableUnitAfterAction()
+    {
+        // Выключаем интерактивность
+        ActionTrigger.enabled = false;
+
+        // Убираем выделение
+        SetSelectionState(false);
+
+        // Затемняем изображение
+        if (_unitImage != null)
+        {
+            _unitImage.color = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+        }
+
+        // Затемняем кубик
+        if (DiceImage != null)
+        {
+            DiceImage.color = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+        }
+    }
+
+    public void EnableUnitForNewTurn()
+    {
+        // Включаем интерактивность
+        ActionTrigger.enabled = true;
+
+        // Возвращаем нормальные цвета
+        if (_unitImage != null)
+        {
+            _unitImage.color = Color.white;
+        }
+
+        if (DiceImage != null)
+        {
+            DiceImage.color = Color.white;
+        }
+
+        // Обновляем UI
+        RefreshUnitUI();
+    }
+
+    public void RefreshDiceUI()
+    {
+        if (UnitData == null) return;
+
+        DiceImage.sprite = UnitData._dice.GetCurrentSide().sprite;
+
+        if (!IsEnemy)
+        {
+            _powerText.text = CalculateSidePowerWithBuffs(UnitData, UnitData._dice.GetCurrentSide()).ToString();
+        }
+        else
+        {
+            _powerText.text = UnitData._dice.GetCurrentSide().power.ToString();
         }
     }
 

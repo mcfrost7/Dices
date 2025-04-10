@@ -32,17 +32,17 @@ public class BattleUI : MonoBehaviour
         BattleActionManager.Instance.EndActionButton();
 
     }
-    public void ShowIntentionDelayed(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions)
+    public void ShowIntentionDelayed(Dictionary<BattleUnit, BattleUnit> enemyIntentions)
     {
         StartCoroutine(DelayedShow(enemyIntentions));
     }
 
-    private IEnumerator DelayedShow(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions)
+    private IEnumerator DelayedShow(Dictionary<BattleUnit, BattleUnit> enemyIntentions)
     {
         yield return null; // подождать 1 кадр
         ShowIntention(enemyIntentions);
     }
-    public void ShowIntention(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions)
+    public void ShowIntention(Dictionary<BattleUnit, BattleUnit> enemyIntentions)
     {
         Camera cam = Camera.main;
         Canvas.ForceUpdateCanvases();
@@ -62,16 +62,20 @@ public class BattleUI : MonoBehaviour
             //enemyObj.Arrow.GetComponent<RectTransform>().sizeDelta = new Vector2(length.magnitude, 5f);
         }
     }
-    private static BattleUnit GetTargetObject(Dictionary<NewUnitStats, NewUnitStats> enemyIntentions, BattleUnit enemyObj)
+    private static BattleUnit GetTargetObject(Dictionary<BattleUnit, BattleUnit> enemyIntentions, BattleUnit enemyObj)
     {
-        NewUnitStats enemyUnitStats = enemyObj.UnitData;
-        if (enemyIntentions.TryGetValue(enemyUnitStats, out NewUnitStats targetUnitStats))
+        if (enemyIntentions == null || enemyObj == null)
         {
-            BattleUnit enemyTarget = BattleController.Instance.UnitsObj
-                 .Find(unit => unit.GetComponent<BattleUnit>().UnitData == targetUnitStats)
-     ?.GetComponent<BattleUnit>();
-            return enemyTarget;
+            return null;
         }
+        if (enemyIntentions.TryGetValue(enemyObj, out BattleUnit targetUnit))
+        {
+            if (targetUnit != null && BattleController.Instance.UnitsObj.Contains(targetUnit))
+            {
+                return targetUnit;
+            }
+        }
+
         return null;
     }
 

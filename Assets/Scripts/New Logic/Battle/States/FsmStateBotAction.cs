@@ -14,7 +14,6 @@ public class FsmStateBotAction : FsmState
         Debug.Log("Entering Bot Action state");
         _stateTimer = 0f;
 
-        // Trigger enemy/bot actions
         BattleEnemyAI.Instance.ExecuteActions();
     }
 

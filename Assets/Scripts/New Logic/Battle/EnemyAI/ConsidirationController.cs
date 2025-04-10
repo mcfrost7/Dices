@@ -3,13 +3,13 @@ using System.Linq;
 
 public class ConsidirationController
 {
-    public Dictionary<NewUnitStats, float> EvaluatePlayerUnits(List<NewUnitStats> playerUnits)
+    public Dictionary<BattleUnit, float> EvaluatePlayerUnits(List<BattleUnit> playerUnits)
     {
-        Dictionary<NewUnitStats, float> unitScores = new Dictionary<NewUnitStats, float>();
+        Dictionary<BattleUnit, float> unitScores = new Dictionary<BattleUnit, float>();
 
         foreach (var unit in playerUnits)
         {
-            float score = CalculateUnitValue(unit);
+            float score = CalculateUnitValue(unit.UnitData);
             unitScores[unit] = score;
         }
 

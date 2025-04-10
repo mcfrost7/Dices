@@ -62,28 +62,30 @@ public class FsmStateAction : FsmState
 
     private void OnUnitSelected(BattleUnit unit)
     {
-        // If we already had a selected unit, deselect it
         if (_currentSelectedUnit != null && _currentSelectedUnit != unit)
         {
-            _currentSelectedUnit.SetSelectionState(false);
+            BattleActionManager.Instance.SetTargetUnit(unit);
+
+            if (!BattleActionManager.Instance.IsWaitingForTarget)
+            {
+                _currentSelectedUnit = null;
+            }
+
+            return;
         }
-        
-        // Update our reference to the currently selected unit
+
         _currentSelectedUnit = unit.IsSelected ? unit : null;
-        
+
         if (_currentSelectedUnit != null)
         {
-            // A unit is selected, set it as the active unit in BattleActionManager
             BattleActionManager.Instance.SetSelectedUnit(_currentSelectedUnit);
         }
         else
         {
-            // No unit is selected
             BattleActionManager.Instance.DeselectUnit();
         }
     }
 
-    // Called by UI when player completes their actions
     public void OnActionsComplete()
     {
         _actionsComplete = true;

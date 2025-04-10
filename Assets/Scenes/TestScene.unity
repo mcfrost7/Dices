@@ -4992,6 +4992,7 @@ GameObject:
   - component: {fileID: 794209150}
   - component: {fileID: 794209149}
   - component: {fileID: 794209154}
+  - component: {fileID: 794209155}
   m_Layer: 0
   m_Name: StateMachine
   m_TagString: Untagged
@@ -5092,6 +5093,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rerollButton: {fileID: 649415417}
   _endRerolls: {fileID: 2022921796}
+--- !u!114 &794209155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794209147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d022fde64c416be47868b94695758cff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &821280053
 GameObject:
   m_ObjectHideFlags: 0

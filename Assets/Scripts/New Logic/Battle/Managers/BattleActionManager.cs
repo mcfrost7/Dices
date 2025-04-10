@@ -18,6 +18,7 @@ public class BattleActionManager : MonoBehaviour
     public event System.Action ActionComplete;
     public static BattleActionManager Instance { get; private set; }
     public Button EndAction { get => _endAction; set => _endAction = value; }
+    public bool IsWaitingForTarget { get => _isWaitingForTarget; }
 
     private void Awake()
     {
@@ -52,11 +53,17 @@ public class BattleActionManager : MonoBehaviour
 
     public void SetSelectedUnit(BattleUnit unit)
     {
+        // Не позволяем выбирать использованного юнита как исполнителя
+        if (unit.IsUsed)
+        {
+            ShowActionFeedback("Этот юнит уже действовал в этом ходу");
+            return;
+        }
+
         _selectedUnit = unit;
         _isWaitingForTarget = true;
 
-        // Enable target selection UI feedback
-        ShowActionFeedback("Select a target for this action");
+        ShowActionFeedback("Выберите цель для действия");
     }
 
     public void SetTargetUnit(BattleUnit unit)
@@ -66,7 +73,7 @@ public class BattleActionManager : MonoBehaviour
 
         _targetUnit = unit;
 
-        // Check if action is valid for this target
+        // Проверяем валидность цели
         if (IsValidTarget(_selectedUnit, _targetUnit))
         {
             ExecuteAction(_selectedUnit, _targetUnit);
@@ -75,9 +82,32 @@ public class BattleActionManager : MonoBehaviour
         }
         else
         {
-            // Show feedback that target is invalid
-            ShowActionFeedback("Invalid target for this action type!");
+            // Показываем сообщение о неправильной цели
+            ShowActionFeedback("Недопустимая цель для этого действия!");
+
+            // Используем существующий метод для сброса всех выделений
+            DeselectUnit();
         }
+    }
+
+    public void ExecuteAction(BattleUnit source, BattleUnit target)
+    {
+        if (source == null || target == null)
+            return;
+
+        DiceSide currentSide = source.UnitData._dice.GetCurrentSide();
+        int power = source.CalculateSidePowerWithBuffs(source.UnitData, currentSide);
+        int duration = source.UnitData._dice.GetCurrentSide().duration;
+
+        // Получаем нужное действие и выполняем его
+        IBattleAction action = BattleActionFactory.Instance.GetAction(currentSide.actionType);
+        action.Execute(source, target, power,duration);
+
+        source.DisableUnitAfterAction();
+        source.RefreshUnitUI();
+        target.RefreshUnitUI();
+        DeselectUnit();
+        CheckForDefeat(target);
     }
 
     private bool IsValidTarget(BattleUnit source, BattleUnit target)
@@ -85,70 +115,9 @@ public class BattleActionManager : MonoBehaviour
         if (source == null || target == null || source.UnitData == null || target.UnitData == null)
             return false;
 
-        ActionSide actionType = source.UnitData._dice.GetCurrentSide().ActionSide;
-
-        // Check if source is player unit
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-
-        switch (actionType)
-        {
-            case ActionSide.Enemy:
-                // Can only target enemies
-                return isSourcePlayer != isTargetPlayer;
-
-            case ActionSide.Ally:
-                // Can only target allies or self
-                return isSourcePlayer == isTargetPlayer;
-
-            case ActionSide.None:
-                // Can target anyone
-                return true;
-
-            default:
-                return false;
-        }
-    }
-
-    private void ExecuteAction(BattleUnit source, BattleUnit target)
-    {
-        if (source == null || target == null)
-            return;
-
-        DiceSide currentSide = source.UnitData._dice.GetCurrentSide();
-        int power = source.CalculateSidePowerWithBuffs(source.UnitData, currentSide);
-
-        // Apply the action effects based on the dice side
-        switch (currentSide.actionType)
-        {
-            case ActionType.Attack:
-                // Deal damage to enemy
-                target.UnitData._current_health -= power;
-                break;
-
-            case ActionType.Heal:
-                // Heal ally or self
-                target.UnitData._current_health = Mathf.Min(
-                    target.UnitData._current_health + power,
-                    target.UnitData._health
-                );
-                break;
-
-            case ActionType.None:
-                // Generic action - default to damage
-                target.UnitData._current_health -= power;
-                break;
-        }
-
-        source.DisableUnitAfterAction();
-        source.RefreshUnitUI();
-        target.RefreshUnitUI();
-
-        // Clear selection after action
-        DeselectUnit();
-
-        // Check if unit is defeated
-        CheckForDefeat(target);
+        ActionType actionType = source.UnitData._dice.GetCurrentSide().actionType;
+        IBattleAction action = BattleActionFactory.Instance.GetAction(actionType);
+        return action.IsValidTarget(source, target);
     }
 
     private void CheckForDefeat(BattleUnit target)
@@ -159,6 +128,7 @@ public class BattleActionManager : MonoBehaviour
             if (BattleController.Instance.UnitsObj.Contains(target))
             {
                 BattleController.Instance.UnitsObj.Remove(target);
+                TeamMNG.Instance.RemoveUnitFromPlayer(target.UnitData._ID);
             }
             else if (BattleController.Instance.EnemiesObj.Contains(target))
             {
@@ -198,15 +168,24 @@ public class BattleActionManager : MonoBehaviour
         {
             unit.EnableUnitForNewTurn();
         }
+        foreach (var unit in BattleController.Instance.EnemiesObj)
+        {
+            unit.EnableUnitForNewTurn();
+        }
     }
 
     public void DeselectUnit()
     {
         if (_selectedUnit != null)
         {
+            _selectedUnit.SetSelectionState(false);
             _selectedUnit = null;
         }
-        _targetUnit = null;
+        if (_targetUnit != null)
+        {
+            _targetUnit.SetSelectionState(false);
+            _targetUnit = null;
+        }
         _isWaitingForTarget = false;
         HideActionFeedback();
     }

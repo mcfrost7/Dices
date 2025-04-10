@@ -10,6 +10,7 @@ public class NewUnitStats
     public int _health;
     public int _current_health;
     public int _moral;
+    public int _current_defense;
     public int _current_exp;
     public int _level;
     public List<int> _upgrade_list = new List<int>();
@@ -24,6 +25,7 @@ public class NewUnitStats
         _current_health = health;
         _moral = moral;
         _current_exp = 0;
+        _current_defense = 0;
         _level = level;
         _dice = dice;
         _buffs = buffs;
@@ -34,6 +36,7 @@ public class NewUnitStats
         _ID = id;
         _health = health;
         _current_health = health;
+        _current_defense=0;
         _dice=dice;
     }
 

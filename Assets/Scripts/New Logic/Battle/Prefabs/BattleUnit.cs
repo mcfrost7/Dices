@@ -8,6 +8,7 @@ public class BattleUnit : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _healthText;
     [SerializeField] private TextMeshProUGUI _moralText;
+    [SerializeField] private TextMeshProUGUI _defenseText;
     [SerializeField] private TextMeshProUGUI _powerText;
     [SerializeField] private Image _unitImage;
     [SerializeField] private Image _diceImage;
@@ -16,29 +17,26 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] private RectTransform _arrow;
 
     // Add visual indicator for selection
-    [SerializeField] private Image _selectionIndicator;
+    [SerializeField] private GameObject _selectionIndicator;
 
     private NewUnitStats unitData;
     private bool isSelected = false;
     private bool isEnemy = false;
+    private bool isUsed = false;
     public NewUnitStats UnitData { get => unitData; set => unitData = value; }
     public RectTransform LinePoint { get => _linePoint; set => _linePoint = value; }
     public RectTransform Arrow { get => _arrow; set => _arrow = value; }
     public Image DiceImage { get => _diceImage; set => _diceImage = value; }
     public Button ActionTrigger { get => _actionTrigger; set => _actionTrigger = value; }
     public TextMeshProUGUI PowerText { get => _powerText; set => _powerText = value; }
-    public bool IsSelected { get => isSelected; }
     public bool IsEnemy { get => isEnemy; set => isEnemy = value; }
+    public bool IsUsed { get => isUsed; set => isUsed = value; }
+    public bool IsSelected { get => isSelected; set => isSelected = value; }
 
     private void Awake()
     {
         _actionTrigger.onClick.RemoveAllListeners();
         _actionTrigger.onClick.AddListener(OnActionTriggerClicked);
-
-        if (_selectionIndicator != null)
-        {
-            _selectionIndicator.gameObject.SetActive(false);
-        }
     }
 
     private void OnActionTriggerClicked()
@@ -55,11 +53,12 @@ public class BattleUnit : MonoBehaviour
 
     public void SetupUnit(NewUnitStats newUnitStats)
     {
+        IsSelected = false;
+        IsUsed = false;
         IsEnemy = false;
         SetupCommon(newUnitStats);
         _moralText.text = newUnitStats._moral.ToString();
         _powerText.text = CalculateSidePowerWithBuffs(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
-        ActionTrigger.enabled = true; // Enable button for selection
     }
 
     public void SetupEnemy(NewUnitStats newUnitStats)
@@ -70,7 +69,6 @@ public class BattleUnit : MonoBehaviour
         newUnitStats._dice.SetCurrentSide(diceSide);
         SetupCommon(newUnitStats);
         _powerText.text = newUnitStats._dice.GetCurrentSide().power.ToString();
-        ActionTrigger.enabled = false;
     }
 
     private void SetupCommon(NewUnitStats newUnitStats)
@@ -79,7 +77,8 @@ public class BattleUnit : MonoBehaviour
         _unitImage.sprite = newUnitStats._dice._diceConfig._unitSprite;
         DiceImage.sprite = newUnitStats._dice.GetCurrentSide().sprite;
         UnitData = newUnitStats;
-        UpdateHealthVisuals();
+        UnitData._current_defense = 0;
+        SetSelectionState(IsSelected);
     }
 
     public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, DiceSide diceSide)
@@ -103,6 +102,10 @@ public class BattleUnit : MonoBehaviour
 
     public void ToggleSelection()
     {
+        if (IsUsed && !BattleDiceManager.Instance.AllowMultipleSelections)
+        {
+            return;
+        }
         bool allowMultiple = BattleDiceManager.Instance.AllowMultipleSelections;
 
         if (!allowMultiple)
@@ -115,17 +118,17 @@ public class BattleUnit : MonoBehaviour
                 }
             }
 
-            isSelected = !isSelected;
+            IsSelected = !IsSelected;
         }
         else
         {
-            isSelected = !isSelected;
+            IsSelected = !IsSelected;
         }
 
-        _selectionIndicator?.gameObject.SetActive(isSelected);
+        _selectionIndicator?.SetActive(IsSelected);
         BattleDiceManager.Instance.HandleUnitSelectionChanged(this);
 
-        if (allowMultiple && isSelected)
+        if (allowMultiple && IsSelected)
         {
             BattleDiceManager.Instance.NotifyUnitSelected(this);
         }
@@ -138,26 +141,23 @@ public class BattleUnit : MonoBehaviour
 
     public void SetSelectionState(bool selected)
     {
-        if (isSelected != selected)
+        if (IsSelected != selected)
         {
-            isSelected = selected;
+            IsSelected = selected;
             if (_selectionIndicator != null)
             {
-                _selectionIndicator.gameObject.SetActive(isSelected);
+                _selectionIndicator.SetActive(selected);
             }
         }
     }
 
-    // Добавьте эти методы в класс BattleUnit
 
     public void RefreshUnitUI()
     {
         if (UnitData == null) return;
 
-        // Обновляем здоровье
         _healthText.text = $"{UnitData._current_health}/{UnitData._health}";
 
-        // Для своих юнитов обновляем мораль и силу с учетом баффов
         if (!IsEnemy)
         {
             _moralText.text = UnitData._moral.ToString();
@@ -165,18 +165,32 @@ public class BattleUnit : MonoBehaviour
         }
         else
         {
-            // Для врагов просто обновляем силу текущей стороны кубика
             _powerText.text = UnitData._dice.GetCurrentSide().power.ToString();
         }
 
-        // Обновляем изображение кубика
         DiceImage.sprite = UnitData._dice.GetCurrentSide().sprite;
-
-        // Визуальная обратная связь при низком здоровье
         UpdateHealthVisuals();
+        UpdateDefenseUI();
     }
+    public void UpdateDefenseUI()
+    {
+        if (_defenseText == null) return;
 
+        if (UnitData._current_defense > 0)
+        {
+            _defenseText.gameObject.SetActive(true);
+            _defenseText.text = UnitData._current_defense.ToString();
 
+            // Визуальные эффекты для щита
+            _defenseText.color = UnitData._current_defense >= UnitData._current_defense ?
+                Color.cyan : // Максимальный щит
+                new Color(0.5f, 0.8f, 1f); // Обычный щит
+        }
+        else
+        {
+            _defenseText.gameObject.SetActive(false);
+        }
+    }
     private void UpdateHealthVisuals()
     {
         float healthPercentage = (float)UnitData._current_health / UnitData._health;
@@ -197,19 +211,12 @@ public class BattleUnit : MonoBehaviour
     }
     public void DisableUnitAfterAction()
     {
-        // Выключаем интерактивность
-        ActionTrigger.enabled = false;
-
-        // Убираем выделение
+        IsUsed = true; ;
         SetSelectionState(false);
-
-        // Затемняем изображение
         if (_unitImage != null)
         {
             _unitImage.color = new Color(0.5f, 0.5f, 0.5f, 0.7f);
         }
-
-        // Затемняем кубик
         if (DiceImage != null)
         {
             DiceImage.color = new Color(0.5f, 0.5f, 0.5f, 0.7f);
@@ -218,10 +225,10 @@ public class BattleUnit : MonoBehaviour
 
     public void EnableUnitForNewTurn()
     {
-        // Включаем интерактивность
         ActionTrigger.enabled = true;
-
-        // Возвращаем нормальные цвета
+        isUsed = false;
+        if  ( _selectionIndicator != null )
+            _selectionIndicator.SetActive(false);
         if (_unitImage != null)
         {
             _unitImage.color = Color.white;
@@ -232,7 +239,6 @@ public class BattleUnit : MonoBehaviour
             DiceImage.color = Color.white;
         }
 
-        // Обновляем UI
         RefreshUnitUI();
     }
 

@@ -39,7 +39,6 @@ public class FsmStateIntention : FsmState
             return;
         }
 
-        // When intention phase is complete, move to next state
         if (_intentionsSelected)
         {
             Fsm.SetState<FsmStateRolling>();
@@ -49,11 +48,8 @@ public class FsmStateIntention : FsmState
     public override void Exit()
     {
         Debug.Log("Exiting Intention state");
-        // Hide intention UI
-        //BattleUI.Instance.HideIntentionPanel();
     }
 
-    // Called by UI when player confirms intentions
     public void OnIntentionsConfirmed()
     {
         _intentionsSelected = true;
@@ -63,13 +59,13 @@ public class FsmStateIntention : FsmState
     {
         if (BattleController.Instance.UnitsObj.Count == 0)
             return true;
-        return false; // Replace with actual logic
+        return false; 
     }
 
     private bool CheckAllEnemiesDead()
     {
         if (BattleController.Instance.EnemiesObj.Count == 0)
             return true;
-        return false; // Replace with actual logic
+        return false; 
     }
 }

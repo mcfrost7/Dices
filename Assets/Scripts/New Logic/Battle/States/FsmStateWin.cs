@@ -10,8 +10,8 @@ public class FsmStateWin : FsmState
     public override void Enter()
     {
         Debug.Log("Victory! Player has won the battle.");
-        BattleUI.Instance.ShowVictoryScreen();
         BattleController.Instance.OnBattleWin();
+        BattleUI.Instance.ShowVictoryScreen();
         Fsm.StopMachine();
     }
 

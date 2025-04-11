@@ -13,23 +13,20 @@ public class NewTileConfig : ScriptableObject
     public BossSettings bossSettings;
 }
 
-// **Настройки для BattleTile**
 [System.Serializable]
 public class BattleSettings
 {
-    public int battleDifficulty;  // Сложность боя
-    public TileEnemies tileEnemies; // раса врагов
-    public RewardConfig reward; // награда
+    public int battleDifficulty; 
+    public TileEnemies tileEnemies;
+    public RewardConfig reward = null;
 }
 
-// **Настройки для LootTile**
 [System.Serializable]
 public class LootSettings
 {
-    public RewardConfig reward;
+    public RewardConfig reward = null;
 }
 
-// **Настройки для CampTile**
 [System.Serializable]
 public class CampSettings
 {
@@ -39,18 +36,16 @@ public class CampSettings
     public bool isShopAvailable;
 }
 
-// **Настройки для RouleteTile**
 [System.Serializable]
 public class RouleteSettings
 {
     public List<RouletteConfig> _configs;
 }
 
-// **Настройки для BossTile**
 [System.Serializable]
 public class BossSettings
 {
-    public int battleDifficulty;  // Сложность боя
-    public TileEnemies tileEnemies; // раса врагов
-    public RewardConfig reward; // награда
+    public int battleDifficulty;
+    public TileEnemies tileEnemies;
+    public RewardConfig reward = null;
 }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d33361d4d28c1d142a52ddfa6c916b25, type: 3}
-  m_Name: BattleConfig
+  m_Name: Battle 1
   m_EditorClassIdentifier: 
   tileType: 0
   tileSprite: {fileID: 21300000, guid: 037be2c734516ee4ba067aa638e085f2, type: 3}
@@ -20,12 +20,12 @@ MonoBehaviour:
     reward:
       resource: []
       expAmount: 1
-      item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}
+      item: []
   lootSettings:
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      item: []
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0
@@ -35,8 +35,8 @@ MonoBehaviour:
     _configs: []
   bossSettings:
     battleDifficulty: 0
-    typesInfo: {fileID: 0}
+    tileEnemies: {fileID: 0}
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      item: []

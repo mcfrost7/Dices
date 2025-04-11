@@ -16,18 +16,18 @@ MonoBehaviour:
   tileSprite: {fileID: 21300000, guid: 1db050881fde816418b4d2d4c4456d0f, type: 3}
   battleSettings:
     battleDifficulty: 0
-    typesInfo: {fileID: 0}
+    tileEnemies: {fileID: 0}
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      item: []
   lootSettings:
     reward:
       resource:
       - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
         _count: 1
       expAmount: 0
-      item: {fileID: 0}
+      item: []
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0
@@ -37,8 +37,8 @@ MonoBehaviour:
     _configs: []
   bossSettings:
     battleDifficulty: 0
-    typesInfo: {fileID: 0}
+    tileEnemies: {fileID: 0}
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      item: []

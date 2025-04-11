@@ -12,7 +12,7 @@ public class BattleController : MonoBehaviour
     public List<BattleUnit> EnemiesObj { get => enemiesObj; set => enemiesObj = value; }
 
     private NewTileConfig _currentBattleConfig;
-    private bool _isBossBattle = false;
+    private bool _isBossBattle;
     private List<NewUnitStats> playerUnits;
     private List<NewUnitStats> enemyUnits;
     private List<BattleUnit> unitsObj;
@@ -45,7 +45,7 @@ public class BattleController : MonoBehaviour
     }
 
     // Called from BattleEventHandler or BossEventHandler
-    public void InitializeBattle(NewTileConfig config, bool isBoss = false)
+    public void InitializeBattle(NewTileConfig config, bool isBoss)
     {
         _currentBattleConfig = config;
         _isBossBattle = isBoss;
@@ -123,18 +123,19 @@ public class BattleController : MonoBehaviour
         // Set initial state
         _battleFsm.SetState<FsmStateIntention>();
     }
-
-    // Called when player wins
     public void OnBattleWin()
     {
-        if (_currentBattleConfig != null && _currentBattleConfig.battleSettings != null)
+        if (_currentBattleConfig != null && !_isBossBattle)
         {
             ResourcesMNG.Instance.AddResources(_currentBattleConfig.battleSettings.reward.resource);
+        }
+        else
+        {
+            ResourcesMNG.Instance.AddResources(_currentBattleConfig.bossSettings.reward.resource);
         }
 
     }
 
-    // Called when player loses
     public void OnBattleLose()
     {
         // Handle defeat consequences

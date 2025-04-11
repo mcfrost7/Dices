@@ -57,12 +57,18 @@ public class CanvasMapGenerator : MonoBehaviour
 
     private void Start()
     {
+        // Make sure the event is initialized before adding listeners
+        if (OnTileClicked == null)
+            OnTileClicked = new UnityEvent<MapNode>();
+
         OnTileClicked.AddListener(HandleTileClicked);
     }
 
     // Генерация карты
     public void GenerateMap()
     {
+
+
         ClearExistingNodes();
         layers.Clear();
         float currentLayerY = generationSettings.mapContainer.rect.height / 2;

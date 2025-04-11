@@ -53,7 +53,7 @@ public class CanvasMapGenerator : MonoBehaviour
     private int currentAvailableLayer;
 
     // Событие для кликов по тайлам
-    public UnityEvent<MapNode> OnTileClicked;
+    private UnityEvent<MapNode> OnTileClicked;
 
     private void Start()
     {

@@ -44,7 +44,7 @@ public class TileConfigEditor : Editor
             case TileType.BossTile:
                 config.bossSettings ??= new BossSettings();
                 config.bossSettings.battleDifficulty = EditorGUILayout.IntField("Battle Difficulty", config.bossSettings.battleDifficulty);
-                config.bossSettings.typesInfo = (TypesInfo)EditorGUILayout.ObjectField("Enemy Race", config.bossSettings.typesInfo, typeof(TypesInfo), false);
+                config.bossSettings.tileEnemies = (TileEnemies)EditorGUILayout.ObjectField("Enemy Race", config.bossSettings.tileEnemies, typeof(TileEnemies), false);
                 DrawRewardSettings(ref config.bossSettings.reward, "Boss Reward");
                 break;
         }

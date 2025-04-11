@@ -28,7 +28,7 @@ public class TileUIController : MonoBehaviour
     private void UpdateUIForTileType(TileType tileType)
     {
         ChangeHealButtonAvailability(tileType);
-        if (tileType== TileType.BattleTile)
+        if (tileType == TileType.BattleTile || tileType == TileType.BossTile)
             ChangeTeamAvailability();
     }
 

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d33361d4d28c1d142a52ddfa6c916b25, type: 3}
-  m_Name: BossConfig
+  m_Name: Boss
   m_EditorClassIdentifier: 
   tileType: 4
   tileSprite: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}
   battleSettings:
     battleDifficulty: 0
-    typesInfo: {fileID: 11400000, guid: ff0ba30d28c6ef946b5d88bd5fc5c9a8, type: 2}
+    tileEnemies: {fileID: 0}
     reward:
       resource: []
-      expAmount: 5
-      item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}
+      expAmount: 0
+      item: {fileID: 0}
   lootSettings:
     reward:
       resource: []
@@ -35,8 +35,10 @@ MonoBehaviour:
     _configs: []
   bossSettings:
     battleDifficulty: 3
-    typesInfo: {fileID: 11400000, guid: ff0ba30d28c6ef946b5d88bd5fc5c9a8, type: 2}
+    tileEnemies: {fileID: 11400000, guid: dd39acbe54ae28143a2b4dc5fd545941, type: 2}
     reward:
-      resource: []
+      resource:
+      - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
+        _count: 1
       expAmount: 5
       item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}

@@ -7,12 +7,26 @@ public class EnemyCreator
     public List<NewUnitStats> CreateEnemy(NewTileConfig config)
     {
         List<NewUnitStats> enemies = new List<NewUnitStats>();
-        BattleSettings battleSettings = config.battleSettings;
-        int enemyCount = GetEnemyCount(battleSettings.battleDifficulty);
-        List<NewDiceConfig> possibleEnemies = GetPossibleEnemies(battleSettings.tileEnemies);
+        bool isBoss = config.tileType == TileType.BossTile;
+        int difficulty = 0;
+        TileEnemies tileEnemies = null;
+
+        if (isBoss)
+        {
+            difficulty = config.bossSettings.battleDifficulty;
+            tileEnemies = config.bossSettings.tileEnemies;
+        }
+        else
+        {
+            difficulty = config.battleSettings.battleDifficulty;
+            tileEnemies = config.battleSettings.tileEnemies;
+        }
+
+        int enemyCount = GetEnemyCount(difficulty);
+        List<NewDiceConfig> possibleEnemies = GetPossibleEnemies(tileEnemies);
         for (int i = 0; i < enemyCount; i++)
         {
-            NewUnitStats enemy = GenerateEnemy(possibleEnemies, battleSettings.battleDifficulty, i);
+            NewUnitStats enemy = GenerateEnemy(possibleEnemies, difficulty, i);
             if (enemy != null)
             {
                 enemies.Add(enemy);

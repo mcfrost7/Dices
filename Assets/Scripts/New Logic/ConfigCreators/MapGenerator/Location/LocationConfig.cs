@@ -8,7 +8,7 @@ public class LocationConfig : ScriptableObject
     public class LocationTile
     {
         public NewTileConfig tileConfig;
-        public Vector2Int gridPosition;
+       // public Vector2Int gridPosition;
     }
 
     public string locationName;

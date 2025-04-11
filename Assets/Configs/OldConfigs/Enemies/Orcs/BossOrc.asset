@@ -19,3 +19,15 @@ MonoBehaviour:
     sprite_level: {fileID: 0}
     level: 3
     dice: {fileID: 11400000, guid: 680b8ff3fd1fcc3418955b8c41af5842, type: 2}
+  - typeName: Boss
+    unit_side: 1
+    sprite_type: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}
+    sprite_level: {fileID: 0}
+    level: 3
+    dice: {fileID: 11400000, guid: 680b8ff3fd1fcc3418955b8c41af5842, type: 2}
+  - typeName: Boss
+    unit_side: 1
+    sprite_type: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}
+    sprite_level: {fileID: 0}
+    level: 3
+    dice: {fileID: 11400000, guid: 680b8ff3fd1fcc3418955b8c41af5842, type: 2}

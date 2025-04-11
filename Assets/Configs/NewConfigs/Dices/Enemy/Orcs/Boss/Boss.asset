@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf9bf90ce6e447d48bdda4425285f808, type: 3}
+  m_Name: Boss
+  m_EditorClassIdentifier: 
+  sides:
+  - actionType: 1
+    power: 4
+    duration: 1
+    sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
+    ActionSide: 0
+  - actionType: 1
+    power: 2
+    duration: 1
+    sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
+    ActionSide: 0
+  - actionType: 4
+    power: 4
+    duration: 1
+    sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
+    ActionSide: 1
+  - actionType: 0
+    power: 0
+    duration: 1
+    sprite: {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
+    ActionSide: 0
+  - actionType: 4
+    power: 4
+    duration: 1
+    sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
+    ActionSide: 1
+  - actionType: 0
+    power: 0
+    duration: 1
+    sprite: {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
+    ActionSide: 0
+  _unitSprite: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}

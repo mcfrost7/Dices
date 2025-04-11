@@ -100,5 +100,9 @@ public class BattleUI : MonoBehaviour
     }
 
     public void ShowDefeatScreen() { }
-    public void HideDefeatScreen() { }
+    public void HideDefeatScreen() 
+    {
+        MenuMNG.Instance.ChangeVisibilityOfDownPanel();
+        GlobalWindowController.Instance.GoBack();
+    }
 }

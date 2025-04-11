@@ -51,6 +51,6 @@ public class RouleteSettings
 public class BossSettings
 {
     public int battleDifficulty;  // Сложность боя
-    public TypesInfo typesInfo; // раса врагов
+    public TileEnemies tileEnemies; // раса врагов
     public RewardConfig reward; // награда
 }

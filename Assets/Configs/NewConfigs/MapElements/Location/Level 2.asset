@@ -15,12 +15,7 @@ MonoBehaviour:
   locationName: "\u0422\u0435\u0441\u0442"
   tiles:
   - tileConfig: {fileID: 11400000, guid: 6cbfed1db890c3943b0cf2b6f035fe92, type: 2}
-    gridPosition: {x: 0, y: 0}
   - tileConfig: {fileID: 11400000, guid: 2b7b34c89a58ece49bd058f4a3da7f6b, type: 2}
-    gridPosition: {x: 0, y: 0}
   - tileConfig: {fileID: 11400000, guid: 39e2bfe62562a274e864eb8d5bf5bc0a, type: 2}
-    gridPosition: {x: 0, y: 0}
   - tileConfig: {fileID: 11400000, guid: 26e904e3684fc7442a2b77b17eb83fe7, type: 2}
-    gridPosition: {x: 0, y: 0}
-  - tileConfig: {fileID: 11400000, guid: c623c56f7d967fb489f4382226c925bc, type: 2}
-    gridPosition: {x: 0, y: 0}
+  - tileConfig: {fileID: 11400000, guid: 434045b9604d4a6409d5b9da0e696753, type: 2}

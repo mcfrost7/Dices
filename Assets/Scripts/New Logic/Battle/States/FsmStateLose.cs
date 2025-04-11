@@ -13,29 +13,14 @@ public class FsmStateLose : FsmState
     {
         Debug.Log("Defeat! Player has lost the battle.");
         _stateTimer = 0f;
-
-        // Show defeat screen
         BattleUI.Instance.ShowDefeatScreen();
-
-        // Trigger lose callbacks
         BattleController.Instance.OnBattleLose();
-    }
-
-    public override void Update()
-    {
-        _stateTimer += Time.deltaTime;
-
-        // Automatically proceed after delay or player input
-        if (_stateTimer >= _defeatScreenDuration || Input.GetMouseButtonDown(0))
-        {
-            // Return to map or game over screen
-            //GlobalWindowController.Instance.HideBattle();
-        }
+        Fsm.StopMachine();
     }
 
     public override void Exit()
     {
         Debug.Log("Exiting defeat state");
-        //BattleUI.Instance.HideDefeatScreen();
+        BattleUI.Instance.HideDefeatScreen();
     }
 }

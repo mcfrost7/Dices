@@ -16,7 +16,7 @@ MonoBehaviour:
   - actionType: 1
     power: 2
     duration: 1
-    sprite: {fileID: 21300000, guid: 98092288af0dc244094b2bc05cf94608, type: 3}
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
     ActionSide: 1
   - actionType: 1
     power: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
   - actionType: 1
     power: 2
     duration: 1
-    sprite: {fileID: 21300000, guid: 98092288af0dc244094b2bc05cf94608, type: 3}
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
     ActionSide: 1
   - actionType: 1
     power: 1
@@ -36,11 +36,11 @@ MonoBehaviour:
   - actionType: 1
     power: 2
     duration: 1
-    sprite: {fileID: 21300000, guid: 98092288af0dc244094b2bc05cf94608, type: 3}
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
     ActionSide: 1
   - actionType: 1
     power: 3
     duration: 1
-    sprite: {fileID: 21300000, guid: 9b42247fef98db7458b6c7d889b2d89f, type: 3}
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
     ActionSide: 1
   _unitSprite: {fileID: 21300000, guid: 6fd6dc481370a1c4ebeed8791f42d653, type: 3}

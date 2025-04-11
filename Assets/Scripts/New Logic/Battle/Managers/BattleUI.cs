@@ -93,7 +93,11 @@ public class BattleUI : MonoBehaviour
     public bool AreActionsComplete() { return false; }
 
     public void ShowVictoryScreen() { }
-    public void HideVictoryScreen() { }
+    public void HideVictoryScreen() 
+    {
+        MenuMNG.Instance.ChangeVisibilityOfDownPanel();
+        GlobalWindowController.Instance.GoBack();
+    }
 
     public void ShowDefeatScreen() { }
     public void HideDefeatScreen() { }

@@ -50,13 +50,15 @@ public class FsmStateBotAction : FsmState
 
     private bool CheckAllPlayersDead()
     {
-        // Check if all player units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.UnitsObj.Count == 0)
+            return true;
+        return false;
     }
 
     private bool CheckAllEnemiesDead()
     {
-        // Check if all enemy units are defeated
-        return false; // Replace with actual logic
+        if (BattleController.Instance.EnemiesObj.Count == 0)
+            return true;
+        return false;
     }
 }

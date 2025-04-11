@@ -8,14 +8,16 @@ public class FSM
     private FsmState StateCurrent { get; set; }
 
     private Dictionary<Type, FsmState> _states = new Dictionary<Type, FsmState>();
-
+    public bool IsRunning { get; private set; } = true;
     public void AddState(FsmState fsmState)
     {
+
         _states.Add(fsmState.GetType(), fsmState);
     }
 
     public void SetState<T>() where T: FsmState
     {
+        if (!IsRunning) return;
         var type = typeof(T);
 
         if (StateCurrent != null && StateCurrent.GetType() == type)
@@ -33,9 +35,17 @@ public class FSM
         }
 
     }
-
+    public void StopMachine()
+    {
+        IsRunning = false;
+        StateCurrent?.Exit();
+        StateCurrent = null;
+    }
     public void Update()
     {
-        StateCurrent?.Update();
+        if (IsRunning)
+        {
+            StateCurrent?.Update();
+        }
     }
 }

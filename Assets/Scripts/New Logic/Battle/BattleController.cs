@@ -49,29 +49,19 @@ public class BattleController : MonoBehaviour
     {
         _currentBattleConfig = config;
         _isBossBattle = isBoss;
-
-        // Setup units based on config
         SetupBattleUnits(config);
-
-        // Initialize the FSM
         InitializeBattleFSM();
     }
 
     private void SetupBattleUnits(NewTileConfig config)
     {
-        // Clear previous units if any
         ClearBattleField();
-
-        // Spawn player units
         SpawnPlayerUnits();
-
-        // Spawn enemy units based on config
         SpawnEnemyUnits(config);
     }
 
     private void ClearBattleField()
     {
-        // Remove all previous units if any
         foreach (Transform child in _playerUnitsContainer)
         {
             Destroy(child.gameObject);
@@ -137,14 +127,11 @@ public class BattleController : MonoBehaviour
     // Called when player wins
     public void OnBattleWin()
     {
-        // Handle victory rewards from config
         if (_currentBattleConfig != null && _currentBattleConfig.battleSettings != null)
         {
             ResourcesMNG.Instance.AddResources(_currentBattleConfig.battleSettings.reward.resource);
         }
 
-        // Return to map or next event
-        GlobalWindowController.Instance.GoBack();
     }
 
     // Called when player loses

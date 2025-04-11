@@ -8,7 +8,6 @@ public class TileUIController : MonoBehaviour
     public static TileUIController Instance { get; private set; }
 
     [SerializeField] private Button _healButton;
-    [SerializeField] private Button _teamButton;
 
     private void Awake()
     {
@@ -29,7 +28,8 @@ public class TileUIController : MonoBehaviour
     private void UpdateUIForTileType(TileType tileType)
     {
         ChangeHealButtonAvailability(tileType);
-        ChangeTeamAvailability();
+        if (tileType== TileType.BattleTile)
+            ChangeTeamAvailability();
     }
 
     private void ChangeHealButtonAvailability(TileType tileType)
@@ -40,7 +40,7 @@ public class TileUIController : MonoBehaviour
     private void ChangeTeamAvailability()
     {
         bool isCanvasActive = GlobalWindowController.Instance.IsBattleActive();
-        _teamButton.gameObject.SetActive(!isCanvasActive);
+        MenuMNG.Instance.ChangeVisibilityOfDownPanel();
     }
 
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class NewCameraMovement : MonoBehaviour
@@ -16,6 +17,7 @@ public class NewCameraMovement : MonoBehaviour
     private bool canMoveAndZoom = true;
     private Vector3 lastMouseWorldPosition;
     private bool isDragging = false;
+    private bool wasActive;
 
     void Start()
     {
@@ -24,23 +26,42 @@ public class NewCameraMovement : MonoBehaviour
         SetStartPosition();
     }
 
-    void Update()
+    private void OnEnable()
     {
-        if (GlobalWindowController.Instance.IsGlobalCanvasActive()) // Проверяем, активен ли globalCanvas
-        {
+        if (GlobalWindowController.Instance != null)
+            GlobalWindowController.Instance.OnCanvasSwitched += HandleCanvasSwitched;
+    }
+
+    private void OnDisable()
+    {
+        if (GlobalWindowController.Instance != null)
+            GlobalWindowController.Instance.OnCanvasSwitched -= HandleCanvasSwitched;
+    }
+
+    private void HandleCanvasSwitched(GameObject newCanvas)
+    {
+        if (newCanvas == GlobalWindowController.Instance.GlobalCanvas)
+        { 
+            Input.ResetInputAxes();
             canMoveAndZoom = true;
         }
         else
         {
             canMoveAndZoom = false;
         }
+    }
 
+    void Update()
+    {
         if (canMoveAndZoom)
         {
             HandlePanning();
             HandleZooming();
         }
     }
+
+
+
 
     void HandlePanning()
     {

@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+
+
 
 public class GlobalWindowController : MonoBehaviour
 {
     public static GlobalWindowController Instance { get; private set; }
+    public GameObject GlobalCanvas { get => _globalCanvas; set => _globalCanvas = value; }
 
     [SerializeField] private GameObject _menu;
     [SerializeField] private GameObject _globalCanvas;
@@ -14,6 +18,7 @@ public class GlobalWindowController : MonoBehaviour
 
     private GameObject _currentActiveCanvas;
     private Stack<GameObject> _canvasHistory = new Stack<GameObject>();
+    public event Action<GameObject> OnCanvasSwitched;
 
     private void Awake()
     {
@@ -29,7 +34,7 @@ public class GlobalWindowController : MonoBehaviour
     }
 
     public void ShowMenu() => SwitchCanvas(_menu);
-    public void ShowGlobalCanvas() => SwitchCanvas(_globalCanvas);
+    public void ShowGlobalCanvas() => SwitchCanvas(GlobalCanvas);
     public void ShowTeam() => SwitchCanvas(_team);
     public void ShowBattle() => SwitchCanvas(_battle);
     public void ShowRoulette() => SwitchCanvas(_roulette);
@@ -68,13 +73,15 @@ public class GlobalWindowController : MonoBehaviour
         HideAllCanvases();
         targetCanvas.SetActive(true);
         _currentActiveCanvas = targetCanvas;
+        OnCanvasSwitched?.Invoke(_currentActiveCanvas);
     }
+
 
     // Метод для скрытия всех канвасов
     private void HideAllCanvases()
     {
         _menu.SetActive(false);
-      //  _globalCanvas.SetActive(false);
+        GlobalCanvas.SetActive(false);
         _settings.SetActive(false);
         _team.SetActive(false);
         _battle.SetActive(false);
@@ -83,7 +90,7 @@ public class GlobalWindowController : MonoBehaviour
 
     // Методы для проверки активности конкретного канваса
     public bool IsMenuActive() => _menu.activeSelf;
-    public bool IsGlobalCanvasActive() => _globalCanvas.activeSelf;
+    public bool IsGlobalCanvasActive() => GlobalCanvas.activeSelf;
     public bool IsSettingsActive() => _settings.activeSelf;
     public bool IsTeamActive() => _team.activeSelf;
     public bool IsBattleActive() => _battle.activeSelf;

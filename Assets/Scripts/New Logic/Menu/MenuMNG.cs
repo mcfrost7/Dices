@@ -9,9 +9,23 @@ public class MenuMNG : MonoBehaviour
     [SerializeField] private GameObject _InfoPanel;
     [SerializeField] private GameObject _freeze;
     [SerializeField] private GameObject _task;
+    [SerializeField] private GameObject _panel;
 
     private GameObject _currentActiveWindow;
     private bool _taskVisibility = false;
+
+    public static MenuMNG Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     public void ShowWindow(GameObject _window)
     {
@@ -44,7 +58,7 @@ public class MenuMNG : MonoBehaviour
         _taskVisibility = !_taskVisibility;
     }
     
-    public void ChangeVisibilityOfDownPanel(GameObject _panel)
+    public void ChangeVisibilityOfDownPanel()
     {
         _panel.SetActive(!_panel.activeSelf);
     }

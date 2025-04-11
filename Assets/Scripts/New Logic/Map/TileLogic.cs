@@ -14,28 +14,20 @@ public class TileLogic : MonoBehaviour
     public Button Button { get => _button; set => _button = value; }
     public TextMeshProUGUI Text { get => _text; set => _text = value; }
 
-    private UnityAction<MapNode> _clickCallback;  // Сюда передаем событие клика
-    private MapNode _nodeData;  // Данные о текущем узле
+    private UnityAction<MapNode> _clickCallback; 
+    private MapNode _nodeData; 
 
-    // Инициализация кнопки и изображения
     public void Initialize(Sprite sprite, UnityAction<MapNode> clickCallback, MapNode nodeData)
     {
-        // Устанавливаем изображение
         Image.sprite = sprite;
-
-        // Запоминаем делегат и данные о ноде
         _clickCallback = clickCallback;
         _nodeData = nodeData;
-
-        // Добавляем обработчик клика на кнопку
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(OnButtonClick);
     }
 
-    // Обработчик клика по кнопке
     private void OnButtonClick()
     {
-        // Если делегат и данные есть — вызываем обработчик
         _clickCallback?.Invoke(_nodeData);
     }
 }

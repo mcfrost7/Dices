@@ -125,23 +125,19 @@ public class BattleController : MonoBehaviour
     }
     public void OnBattleWin()
     {
-        if (_currentBattleConfig != null && !_isBossBattle)
+        RewardConfig reward = null;
+        if (_isBossBattle)
         {
-            ResourcesMNG.Instance.AddResources(_currentBattleConfig.battleSettings.reward.resource);
+            reward = _currentBattleConfig.bossSettings.reward;
         }
-        else
         {
-            ResourcesMNG.Instance.AddResources(_currentBattleConfig.bossSettings.reward.resource);
+            reward = _currentBattleConfig.battleSettings.reward;
         }
-
+        BattleReward.Instance.CalculateReward(reward);
     }
 
     public void OnBattleLose()
     {
-        // Handle defeat consequences
-
-        // Return to map or game over screen
         GlobalWindowController.Instance.GoBack();
-        // Potentially show game over or retry screen
     }
 }

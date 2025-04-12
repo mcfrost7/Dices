@@ -20,12 +20,12 @@ MonoBehaviour:
     reward:
       resource: []
       expAmount: 0
-      item: []
+      item: {fileID: 0}
   lootSettings:
     reward:
       resource: []
       expAmount: 0
-      item: []
+      item: {fileID: 0}
   campSettings:
     healAmount: 2
     isUpgradeAvailable: 1
@@ -39,4 +39,4 @@ MonoBehaviour:
     reward:
       resource: []
       expAmount: 0
-      item: []
+      item: {fileID: 0}

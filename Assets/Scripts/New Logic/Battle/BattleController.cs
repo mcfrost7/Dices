@@ -10,6 +10,8 @@ public class BattleController : MonoBehaviour
     public List<NewUnitStats> EnemyUnits { get => enemyUnits; set => enemyUnits = value; }
     public List<BattleUnit> UnitsObj { get => unitsObj; set => unitsObj = value; }
     public List<BattleUnit> EnemiesObj { get => enemiesObj; set => enemiesObj = value; }
+    public NewTileConfig CurrentBattleConfig { get => _currentBattleConfig; set => _currentBattleConfig = value; }
+    public bool IsBossBattle { get => _isBossBattle; set => _isBossBattle = value; }
 
     private NewTileConfig _currentBattleConfig;
     private bool _isBossBattle;
@@ -47,8 +49,8 @@ public class BattleController : MonoBehaviour
     // Called from BattleEventHandler or BossEventHandler
     public void InitializeBattle(NewTileConfig config, bool isBoss)
     {
-        _currentBattleConfig = config;
-        _isBossBattle = isBoss;
+        CurrentBattleConfig = config;
+        IsBossBattle = isBoss;
         SetupBattleUnits(config);
         InitializeBattleFSM();
     }
@@ -126,14 +128,15 @@ public class BattleController : MonoBehaviour
     public void OnBattleWin()
     {
         RewardConfig reward = null;
-        if (_isBossBattle)
+        if (IsBossBattle)
         {
-            reward = _currentBattleConfig.bossSettings.reward;
+            reward = CurrentBattleConfig.bossSettings.reward;
         }
         {
-            reward = _currentBattleConfig.battleSettings.reward;
+            reward = CurrentBattleConfig.battleSettings.reward;
         }
         BattleReward.Instance.CalculateReward(reward);
+        BattleUI.Instance.ShowVictoryScreen();
     }
 
     public void OnBattleLose()

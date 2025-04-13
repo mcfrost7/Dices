@@ -52,6 +52,11 @@ public class CampPanel : MonoBehaviour
         if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, 1))
         {
             _button.enabled = false;
+            HealAction healAction = new HealAction();
+            foreach (var unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
+            {
+                healAction.Heal(unit, _amount);
+            }
         }
         else
         {

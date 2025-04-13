@@ -26,8 +26,6 @@ MonoBehaviour:
       resource:
       - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
         _count: 1
-      - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
-        _count: 3
       expAmount: 0
       item: {fileID: 0}
   campSettings:

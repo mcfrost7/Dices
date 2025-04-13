@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class GameWindowController : MonoBehaviour
     [SerializeField] private GameObject _panel;
     [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _title;
 
     private void Awake()
     {
@@ -33,45 +35,106 @@ public class GameWindowController : MonoBehaviour
 
     }
 
-    public void SetupRouletteInfo(SectorConfig _reward)
+    public void SetupRouletteInfo(SectorConfig _rewardConfig)
     {
-        if (_reward == null || _reward.WinItems == null || _reward.WinItems.Count == 0)
+        Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(() => CallPanel(-1));
+        if (_rewardConfig == null || _rewardConfig.WinItems == null || _rewardConfig.WinItems.Count == 0)
         {
-            _text.text = "<size=40><b>Нет наград</b></size>";
+            _title.text = "<color=#E31837><b>ПУСТЫЕ ТРОФЕИ</b></color>";
+            _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";
             return;
         }
 
-        // Заголовок
-        string formattedText = "<size=40><b>Ваши награды:</b></size>\n\n";
+        _title.text = "<color=#8B0000><b>ДОБЫЧА ВОЙНЫ</b></color>";
 
-        foreach (var reward in _reward.WinItems)
+        StringBuilder lootText = new StringBuilder();
+        lootText.AppendLine("<color=#5A5A5A>-----------------------------</color>");
+        lootText.AppendLine();
+
+        foreach (var reward in _rewardConfig.WinItems)
         {
-            // Добавляем ресурсы
             if (reward.resource != null && reward.resource.Count > 0)
             {
-                formattedText += "<b>Ресурсы:</b>\n";
+                lootText.AppendLine("<color=#2F2F2F><b>▌ ТРОФЕИ:</b></color>");
                 foreach (var res in reward.resource)
                 {
-                    formattedText += $"- {res.Config.ResourceName}: {res.Count}\n";
+                    lootText.AppendLine($"<color=#8B0000>☠</color> {res.Config.ResourceName.ToUpper()}: <color=#B8860B>{res.Count}</color>");
                 }
             }
 
-            // Добавляем опыт
             if (reward.expAmount > 0)
             {
-                formattedText += $"<b>Опыт:</b> {reward.expAmount}\n";
+                lootText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{reward.expAmount}");
             }
 
-            // Добавляем предмет
             if (reward.item != null)
             {
-                formattedText += $"<b>Предмет:</b> {reward.item.itemName}\n";
+                lootText.AppendLine("<color=#2F2F2F><b>▌ РЕЛИКВИЯ:</b></color>");
+                lootText.AppendLine($"<color=#8B0000>⚔</color> <b>{reward.item.itemName.ToUpper()}</b>");
             }
-
-            formattedText += "\n"; // Добавляем отступ между наградами
         }
 
-        _text.text = formattedText.TrimEnd();
+        lootText.AppendLine("<color=#5A5A5A>-----------------------------</color>");
+        lootText.AppendLine("<size=32><color=#8B0000><i>«ДАЖЕ ПЕПЕЛ ВРАГА ПРИГОДИТСЯ.»</i></color></size>");
+
+        _text.text = lootText.ToString();
+        Button.onClick.AddListener(()=>GlobalWindowController.Instance.GoBack());
+    }
+
+    public void SetupWinBattleInfo(NewTileConfig _tile)
+    {
+        Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(() => CallPanel(-1));
+
+        if (_tile == null)
+        {
+            _title.text = "<color=#8B0000><b>НЕТ ДОСТОЙНОЙ ЦЕЛИ</b></color>";
+            _text.text = "<size=36><color=#5A5A5A><i>Победа без славы — как пир без мяса.</i></color></size>";
+            return;
+        }
+
+        // Заголовок (оптимизированные цвета)
+        _title.text = "<color=#8B0000><b>ВО ИМЯ ИМПЕРАТОРА!</b></color>";
+
+        StringBuilder victoryText = new StringBuilder();
+
+        // Разделитель (тёмно-серый)
+        victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        victoryText.AppendLine();
+
+        RewardConfig _rewardConfig = !BattleController.Instance.IsBossBattle
+            ? _tile.battleSettings.reward
+            : _tile.bossSettings.reward;
+
+        // Опыт (тёмное золото)
+        victoryText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{_rewardConfig.expAmount} ед. боевого духа");
+        victoryText.AppendLine();
+
+        // Ресурсы (тёмно-красные акценты)
+        if (_rewardConfig.resource != null && _rewardConfig.resource.Count > 0)
+        {
+            victoryText.AppendLine("<color=#5A5A5A><b>▌ ТРОФЕИ:</b></color>");
+            foreach (var res in _rewardConfig.resource)
+            {
+                victoryText.AppendLine($"<color=#8B0000>☠</color> {res.Config.ResourceName.ToUpper()}: <color=#B8860B>{res.Count}</color>");
+            }
+            victoryText.AppendLine();
+        }
+
+        // Предмет (тёмно-красный акцент)
+        if (_rewardConfig.item != null)
+        {
+            victoryText.AppendLine("<color=#5A5A5A><b>▌ РЕЛИКВИЯ:</b></color>");
+            victoryText.AppendLine($"<color=#8B0000>⚔</color> <b>{_rewardConfig.item.itemName.ToUpper()}</b>");
+            victoryText.AppendLine();
+        }
+
+        // Заключительная строка
+        victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        victoryText.AppendLine("<size=36><color=#8B0000><i>«КРОВЬ ВРАГОВ — ЛУЧШАЯ НАГРАДА.»</i></color></size>");
+
+        _text.text = victoryText.ToString();
     }
 
 

@@ -69,26 +69,25 @@ public class GlobalWindowController : MonoBehaviour
         {
             _canvasHistory.Push(_currentActiveCanvas);
         }
-
+        _currentActiveCanvas = targetCanvas;
         HideAllCanvases();
         targetCanvas.SetActive(true);
-        _currentActiveCanvas = targetCanvas;
         OnCanvasSwitched?.Invoke(_currentActiveCanvas);
     }
 
 
-    // Метод для скрытия всех канвасов
     private void HideAllCanvases()
     {
         _menu.SetActive(false);
-        GlobalCanvas.SetActive(false);
         _settings.SetActive(false);
         _team.SetActive(false);
         _battle.SetActive(false);
-        _roulette.SetActive(false);
+        _roulette.SetActive(false); 
+        if (_currentActiveCanvas != _roulette)
+        {
+            GlobalCanvas.SetActive(false);
+        }
     }
-
-    // Методы для проверки активности конкретного канваса
     public bool IsMenuActive() => _menu.activeSelf;
     public bool IsGlobalCanvasActive() => GlobalCanvas.activeSelf;
     public bool IsSettingsActive() => _settings.activeSelf;

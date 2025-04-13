@@ -18,7 +18,9 @@ MonoBehaviour:
     battleDifficulty: 2
     tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}
     reward:
-      resource: []
+      resource:
+      - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
+        _count: 1
       expAmount: 2
       item: {fileID: 0}
   lootSettings:

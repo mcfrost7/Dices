@@ -92,7 +92,11 @@ public class BattleUI : MonoBehaviour
     }
     public bool AreActionsComplete() { return false; }
 
-    public void ShowVictoryScreen() { }
+    public void ShowVictoryScreen()
+    {
+        GameWindowController.Instance.SetupWinBattleInfo(BattleController.Instance.CurrentBattleConfig);
+        GameWindowController.Instance.CallPanel(1);
+    }
     public void HideVictoryScreen() 
     {
         MenuMNG.Instance.ChangeVisibilityOfDownPanel();

@@ -111,10 +111,14 @@ public class HealAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        target.UnitData._current_health = Mathf.Min(
-            target.UnitData._current_health + power,
-            target.UnitData._health
-        );
+        Heal(target.UnitData,power);
+    }
+
+    public void Heal(NewUnitStats target, int power)
+    {
+        target._current_health = Mathf.Min(
+            target._current_health + power,
+            target._health);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)

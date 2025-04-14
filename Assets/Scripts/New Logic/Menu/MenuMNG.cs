@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,12 @@ public class MenuMNG : MonoBehaviour
         _window.SetActive(true);
         _freeze.SetActive(true);
         _currentActiveWindow = _window;
+    }
+
+    public void CallFreezePanel(int _direction)
+    {
+        bool _boolDirection = _direction == 1 ? true : false;
+        _freeze.SetActive(_boolDirection);
     }
 
     public void HideWindow()

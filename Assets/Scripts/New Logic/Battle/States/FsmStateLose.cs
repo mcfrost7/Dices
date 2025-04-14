@@ -11,7 +11,6 @@ public class FsmStateLose : FsmState
     {
         Debug.Log("Defeat! Player has lost the battle.");
         BattleUI.Instance.ShowDefeatScreen();
-        BattleController.Instance.OnBattleLose();
         Fsm.StopMachine();
     }
 

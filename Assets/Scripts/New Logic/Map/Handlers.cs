@@ -35,6 +35,8 @@ public class ResourceEventHandler : IEventHandler
 {
     public void HandleEvent(NewTileConfig config)
     {
+        GameWindowController.Instance.SetupResourceInfo(config.lootSettings.reward);
+        GameWindowController.Instance.CallPanel(1);
         ResourcesMNG.Instance.AddResources(config.lootSettings.reward.resource);
     }
 }
@@ -46,6 +48,8 @@ public class CampEventHandler : IEventHandler
     {
         UnitsPanelUI.Instance.CampSetup();
         CampPanel.Instance.SetupInfo(config);
+        GameWindowController.Instance.SetupCampfireTileInfo(config);
+        GameWindowController.Instance.CallPanel(1);
     }
 }
 public class BossEventHandler : IEventHandler

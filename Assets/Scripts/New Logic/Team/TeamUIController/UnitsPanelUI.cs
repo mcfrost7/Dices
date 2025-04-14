@@ -30,7 +30,7 @@ public class UnitsPanelUI : MonoBehaviour
 
     public void OnMenuLoad()
     {
-        playerUnits = GameDataMNG.Instance.PlayerData.PlayerUnits;
+        playerUnits = TeamMNG.Instance.GetPlayerUnits();
         DrawUnitsOnPanel();
         SetUpSceneWithLastUnit();
         UpdateAddButtonVisibility();

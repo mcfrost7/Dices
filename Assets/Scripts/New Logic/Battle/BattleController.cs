@@ -136,11 +136,13 @@ public class BattleController : MonoBehaviour
             reward = CurrentBattleConfig.battleSettings.reward;
         }
         BattleReward.Instance.CalculateReward(reward);
-        BattleUI.Instance.ShowVictoryScreen();
+        GameDataMNG.Instance.SaveGame();
     }
 
     public void OnBattleLose()
     {
-        GlobalWindowController.Instance.GoBack();
+        GameDataMNG.Instance.SaveGame();
+        GlobalWindowController.Instance.ShowMenu();
+
     }
 }

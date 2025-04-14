@@ -13,6 +13,7 @@ public class CampPanel : MonoBehaviour
     [SerializeField] private GameObject _panel;
     [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _textName;
 
     private bool _campVisibility = false;
 
@@ -33,7 +34,8 @@ public class CampPanel : MonoBehaviour
         if (_campVisibility == false)
         {
             _panel.transform.DOLocalMoveX(_panel.transform.localPosition.x - 500, 0.8f).SetEase(Ease.InOutExpo);
-        } else
+        }
+        else
         {
             _panel.transform.DOLocalMoveX(_panel.transform.localPosition.x + 500, 0.8f).SetEase(Ease.InOutExpo);
         }
@@ -43,7 +45,12 @@ public class CampPanel : MonoBehaviour
     public void SetupInfo(NewTileConfig config)
     {
         _button.enabled = true;
-        _text.text = "Восстановите всем юнитам " + config.campSettings.healAmount.ToString() + " ед здоровья.";
+        _textName.text = "<color=#8B0000>ПЕРЕДЫШКА В УКРЫТИИ</color>";
+        _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
+                     $"<color=#2F2F2F>Использовать полевые аптечки для восстановления <color=#B8860B>{config.campSettings.healAmount}</color> ед. здоровья каждому воину.</color>\n" +
+                     $"<color=#5A5A5A>-----------------------------</color>\n" +
+                     $"<color=#2F2F2F>Требуется: <color=#8B0000>1</color> передатчик сигнала.</color>";
+
         _button.onClick.AddListener(() => ApplyHeal(config.campSettings.healAmount));
     }
 
@@ -57,11 +64,17 @@ public class CampPanel : MonoBehaviour
             {
                 healAction.Heal(unit, _amount);
             }
+            _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
+                         $"<color=#2F2F2F>Здоровье пополнено. Отряд готов к продолжению операции.</color>\n" +
+                         $"<color=#5A5A5A>-----------------------------</color>";
         }
         else
         {
-            Debug.Log("Недостаточно ресурса SignalTransmitter для лечения юнитов!");
+            _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
+                         $"<color=#8B0000><b>ОТКАЗ</b></color>\n" +
+                         $"<color=#2F2F2F>Передатчик сигнала не обнаружен в снаряжении!</color>\n" +
+                         $"<color=#5A5A5A>-----------------------------</color>\n" +
+                         $"<color=#2F2F2F>Требуется: <color=#8B0000>1</color> передатчик сигнала.</color>";
         }
     }
-
 }

@@ -20,7 +20,7 @@ public class StatusUI : MonoBehaviour
         if (_health != null && _experience != null && _moral != null)
         {
             _health.text = _clickedUnit._current_health.ToString() + " / " + _clickedUnit._health.ToString();
-            _experience.text = _clickedUnit._current_exp.ToString();
+            _experience.text = _clickedUnit._current_exp.ToString() + " / " + _clickedUnit._level*10;
             _moral.text = _clickedUnit._moral.ToString();
         }
     }

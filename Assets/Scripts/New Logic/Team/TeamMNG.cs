@@ -274,6 +274,7 @@ public class TeamMNG : MonoBehaviour
     // Получение всех активных юнитов игрока
     public List<NewUnitStats> GetPlayerUnits()
     {
+        SaveUnits();
         return _playerUnitIDs
             .Where(id => _unitsCache.ContainsKey(id))
             .Select(id => _unitsCache[id])

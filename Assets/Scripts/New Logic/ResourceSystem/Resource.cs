@@ -5,6 +5,7 @@ using UnityEngine;
 public class SerializableResourceData
 {
     [SerializeField] public string ConfigID;
+    [SerializeField] public string Name;
     [SerializeField] public int Count;
 
     // Default constructor for serialization
@@ -14,7 +15,8 @@ public class SerializableResourceData
     {
         if (resourceData.Config != null)
         {
-            ConfigID = resourceData.Config.ResourceName;
+            ConfigID = resourceData.Config._id;
+            Name = resourceData.Config.name;
         }
         Count = resourceData.Count;
     }
@@ -25,8 +27,6 @@ public class ResourceData
 {
     [SerializeField] private ResourceConfig _config;
     [SerializeField] private int _count;
-
-    // Fix property syntax (removed * symbols)
     public ResourceConfig Config { get => _config; set => _config = value; }
     public int Count { get => _count; set => _count = value; }
 

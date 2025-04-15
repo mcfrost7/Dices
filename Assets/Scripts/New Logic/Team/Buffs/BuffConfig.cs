@@ -10,4 +10,5 @@ public class BuffConfig : ScriptableObject
     public int buffPower = 0;
     public string buffName;
     public Sprite buffSprite;
+    public int buffId;
 }

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,10 +10,10 @@ public class UIUnit : MonoBehaviour
     [SerializeField] private Image _image;
     [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _text;
-    public void Initialize(NewDiceConfig _newDiceConfig, UnityAction _callback)
+    public void Initialize(NewDiceConfig _newDiceConfig, Action onClick)
     {
         _image.sprite = _newDiceConfig._unitSprite;
-        _button.onClick.AddListener(_callback);
+        _button.onClick.AddListener(() => onClick?.Invoke());
     }
 
     public void InitializeBuffs(BuffConfig _buff)

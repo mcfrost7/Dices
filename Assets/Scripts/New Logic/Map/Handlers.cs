@@ -37,7 +37,14 @@ public class ResourceEventHandler : IEventHandler
     {
         GameWindowController.Instance.SetupResourceInfo(config.lootSettings.reward);
         GameWindowController.Instance.CallPanel(1);
-        ResourcesMNG.Instance.AddResources(config.lootSettings.reward.resource);
+        if (config.lootSettings.reward.resource != null)
+        {
+            ResourcesMNG.Instance.AddResources(config.lootSettings.reward.resource);
+        }
+        if (config.lootSettings.reward.item != null)
+        {
+            ItemMNG.Instance.AddItem(config.lootSettings.reward.item);
+        }
     }
 }
 

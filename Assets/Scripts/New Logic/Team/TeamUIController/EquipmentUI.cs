@@ -8,7 +8,7 @@ public class EquipmentUI : MonoBehaviour
 {
 
     [SerializeField] private List<GameObject> _diceSides;
-    [SerializeField] private List<GameObject> _itemSides;
+
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class EquipmentUI : MonoBehaviour
 
     private void SetupInfo(NewUnitStats _clickedUnit)
     {
-        SetupItems(_clickedUnit);
+        SetupActiveItems(_clickedUnit);
         if (_diceSides.Count > 0)
         {
             for (int i = 0; i < _diceSides.Count; i++)
@@ -37,20 +37,9 @@ public class EquipmentUI : MonoBehaviour
         }
     }
 
-    private void SetupItems(NewUnitStats _clickedUnit)
+    private void SetupActiveItems(NewUnitStats _clickedUnit)
     {
-        if (_itemSides.Count > 0)
-        {
-            for (int i = 0; i < _itemSides.Count; i++)
-            {
-                _itemSides[i].GetComponent<Image>().enabled = false;
-                if (_clickedUnit._dice._items.Count > 0)
-                {
-                    _itemSides[i].SetActive(true);
-                    _itemSides[i].GetComponent<Image>().sprite = _clickedUnit._dice._items[i].icon;
-                }
-            }
-        }
+
     }
 
     public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, int sideIndex)

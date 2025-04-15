@@ -78,24 +78,4 @@ public class GameDataMNG : MonoBehaviour
         SaveGame();
     }
 
-    [ContextMenu("Test Save")]
-    private void TestSave()
-    {
-        SaveGame();
-        Debug.Log("Тестовое сохранение выполнено");
-    }
-
-    [ContextMenu("Test Load")]
-    private void TestLoad()
-    {
-        LoadGame();
-        Debug.Log("Тестовая загрузка выполнена");
-    }
-
-    [ContextMenu("Test New Game")]
-    private void TestNewGame()
-    {
-        StartNewGame();
-        Debug.Log("Создана новая игра");
-    }
 }

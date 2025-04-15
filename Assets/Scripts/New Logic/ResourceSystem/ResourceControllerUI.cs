@@ -27,7 +27,7 @@ public class ResourceControllerUI : MonoBehaviour
         ClearPanel();
         foreach (ResourceConfig resource in _resources)
         {
-            ResourceData playerResource = GameDataMNG.Instance.PlayerData.Resources.Find(r => r.Config == resource);
+            ResourceData playerResource = GameDataMNG.Instance.PlayerData.ResourcesData.Find(r => r.Config == resource);
             int resourceCount = playerResource != null ? playerResource.Count : 0;
 
             ResourcesPrefabSetup resourceOnPanel = Instantiate(_prefab, _spawnPanel.transform);
@@ -37,14 +37,12 @@ public class ResourceControllerUI : MonoBehaviour
 
     public void UpdateResourcesTopPanel()
     {
-        // Rebuild resource lookup dictionary from local resource storage
         Dictionary<string, int> resourceAmounts = new Dictionary<string, int>();
-        foreach (ResourceData resource in ResourcesMNG.Instance.Resources)
+        foreach (var resource in ResourcesMNG.Instance.Resources)
         {
             resourceAmounts[resource.Config.ResourceName] = resource.Count;
         }
 
-        // Update existing UI elements
         foreach (Transform child in _spawnPanel.transform)
         {
             ResourcesPrefabSetup resourceUI = child.GetComponent<ResourcesPrefabSetup>();

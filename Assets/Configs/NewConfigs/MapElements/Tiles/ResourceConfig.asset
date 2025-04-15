@@ -27,7 +27,7 @@ MonoBehaviour:
       - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
         _count: 1
       expAmount: 0
-      item: {fileID: 0}
+      item: {fileID: 11400000, guid: f5026b1262c5b0a469f0e8517e5c9023, type: 2}
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0

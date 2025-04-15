@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Item 1
   m_EditorClassIdentifier: 
   itemName: "\u0411\u0440\u043E\u043D\u0435\u0431\u043E\u0439\u043D\u044B\u0435"
-  icon: {fileID: 21300000, guid: 9bc1ee61272d1884da077f602e5b26fd, type: 3}
+  icon: {fileID: 21300000, guid: 48e7b9fcac653d644a25dc887d37ba78, type: 3}
   power: 1
   actionType: 1
   sideAffect: 1

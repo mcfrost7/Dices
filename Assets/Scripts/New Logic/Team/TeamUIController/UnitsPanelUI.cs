@@ -7,6 +7,7 @@ public class UnitsPanelUI : MonoBehaviour
     public static UnitsPanelUI Instance { get; private set; }
 
     public static event Action<NewUnitStats> OnUnitSelected;
+    public static event Action SceneLoaded;
 
     [SerializeField] private UIUnit _unitOnPanelPrefab;
     [SerializeField] private GameObject _panel;
@@ -34,6 +35,7 @@ public class UnitsPanelUI : MonoBehaviour
         DrawUnitsOnPanel();
         SetUpSceneWithLastUnit();
         UpdateAddButtonVisibility();
+        SceneLoaded?.Invoke();
     }
     private void UpdateAddButtonVisibility()
     {
@@ -62,9 +64,16 @@ public class UnitsPanelUI : MonoBehaviour
         foreach (NewUnitStats unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
         {
             UIUnit _unitOnPanel = Instantiate(_unitOnPanelPrefab, _panel.transform);
-            _unitOnPanel.Initialize(unit._dice._diceConfig, ()=>OnUnitSelected.Invoke(unit));
+            _unitOnPanel.Initialize(unit._dice._diceConfig, () => OnUnitClick(unit));
         }
+
     }
+    private void OnUnitClick(NewUnitStats unit)
+    {
+        CurrentUnit = unit;
+        OnUnitSelected?.Invoke(unit);
+    }
+
     private void ClearPanel()
     {
         foreach (Transform child in _panel.transform)

@@ -24,13 +24,12 @@ public class ResourcesMNG : MonoBehaviour
 
     public void SetupResources()
     {
-        Resources = new List<ResourceData>();
+        _resources = new List<ResourceData>();
         ResourceControllerUI.Instance.CreateResourcesTopPanel();
     }
 
     public void LoadResources(PlayerData playerData)
     {
-        // Check if player data exists
         if (playerData == null)
         {
             Debug.LogWarning("Cannot load resources: Player data is null");
@@ -38,14 +37,14 @@ public class ResourcesMNG : MonoBehaviour
         }
 
         // Ensure resources list exists
-        if (playerData.Resources != null)
+        if (playerData.ResourcesData != null)
         {
-            Resources = playerData.Resources;
+            _resources = playerData.ResourcesData;
         }
         else
         {
-            Resources = new List<ResourceData>();
-            playerData.Resources = Resources;
+            _resources = new List<ResourceData>();
+            playerData.ResourcesData = _resources;
         }
 
         ResourceControllerUI.Instance.UpdateResourcesTopPanel();
@@ -61,19 +60,15 @@ public class ResourcesMNG : MonoBehaviour
         {
             if (newResource.Config == null || newResource.Count <= 0)
                 continue;
-
-            // Try to find existing resource by config
-            existingResource = Resources.Find(r => r.Config == newResource.Config);
+            existingResource = _resources.Find(r => r.Config.ResourceName == newResource.Config.ResourceName);
 
             if (existingResource != null)
             {
-                // Update existing resource count
                 existingResource.Count += newResource.Count;
             }
             else
             {
-                // Add new resource
-                Resources.Add(new ResourceData(newResource.Config, newResource.Count));
+                _resources.Add(new ResourceData(newResource.Config, newResource.Count));
             }
         }
 
@@ -85,7 +80,7 @@ public class ResourcesMNG : MonoBehaviour
 
     private void SaveResource()
     {
-        GameDataMNG.Instance.PlayerData.Resources = Resources;
+        GameDataMNG.Instance.PlayerData.ResourcesData = Resources;
     }
 
     public bool TryConsumeResource(ResourcesType resourceType, int amount)
@@ -103,14 +98,5 @@ public class ResourcesMNG : MonoBehaviour
         ResourceControllerUI.Instance.UpdateResourcesTopPanel();
         Debug.LogWarning($"Недостаточно ресурса: {resourceType}");
         return false;
-    }
-
-
-    public void AddExperience()
-    {
-    }
-
-    public void AddItem()
-    {
     }
 }

@@ -24,6 +24,7 @@ MonoBehaviour:
       itemInstance:
         itemName: 
         icon: {fileID: 0}
+        iconPath: 
         power: 0
         actionType: 0
         sideAffect: 0
@@ -36,6 +37,7 @@ MonoBehaviour:
       itemInstance:
         itemName: 
         icon: {fileID: 0}
+        iconPath: 
         power: 0
         actionType: 0
         sideAffect: 0
@@ -57,6 +59,7 @@ MonoBehaviour:
       itemInstance:
         itemName: 
         icon: {fileID: 0}
+        iconPath: 
         power: 0
         actionType: 0
         sideAffect: 0

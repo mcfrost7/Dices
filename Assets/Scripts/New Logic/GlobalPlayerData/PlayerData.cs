@@ -77,7 +77,7 @@ public class SerializablePlayerData
             ResourcesData = new List<SerializableResourceData>(resourcesDict.Values);
 
         }
-        if (data.Items != null)
+        if (data.Items != null && data.Items.Count > 0)
         {
             foreach (var item in data.Items)
             {

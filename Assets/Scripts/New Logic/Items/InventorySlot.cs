@@ -23,22 +23,35 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             if (draggedItem.Item != null)
             {
                 draggedItem.Item.inventoryPosition = InventoryPosition;
-                foreach (var item in GameDataMNG.Instance.PlayerData.Items)
-                {
-                    if (item == draggedItem.Item)
+                if (draggedItem.Item.inventoryPosition > 0)
+                { 
+                    foreach (var item in GameDataMNG.Instance.PlayerData.Items)
                     {
-                        item.inventoryPosition = InventoryPosition;
-                        break;
+                        if (item == draggedItem.Item)
+                        {
+                            item.inventoryPosition = InventoryPosition;
+                            break;
+                        }
                     }
-                }
-                if (InventoryPosition > 0)
-                {
                     if (!UnitsPanelUI.Instance.CurrentUnit._dice._items.Contains(draggedItem.Item))
                     {
                         UnitsPanelUI.Instance.CurrentUnit._dice._items.Add(draggedItem.Item);
                     }
-
                     Debug.Log($"Предмет перемещен в слот {InventoryPosition}");
+                }else
+                {
+                    foreach (var item in GameDataMNG.Instance.PlayerData.Items)
+                    {
+                        if (item == draggedItem.Item)
+                        {
+                            item.inventoryPosition = InventoryPosition;
+                            break;
+                        }
+                    }
+                    if (UnitsPanelUI.Instance.CurrentUnit._dice._items.Contains(draggedItem.Item))
+                    {
+                        UnitsPanelUI.Instance.CurrentUnit._dice._items.Remove(draggedItem.Item);
+                    }
                 }
             }
         }

@@ -43,7 +43,7 @@ public class ResourceEventHandler : IEventHandler
         }
         if (config.lootSettings.reward.item != null)
         {
-            ItemMNG.Instance.AddItem(config.lootSettings.reward.itemInstance);
+            ItemMNG.Instance.AddItem(config.lootSettings.reward.GetItem());
         }
     }
 }

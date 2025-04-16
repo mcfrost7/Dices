@@ -40,6 +40,7 @@ public class ArsenalPanelUI : MonoBehaviour
                 if (item.inventoryPosition == slot.InventoryPosition)
                 {
                     CreateItem(item, slot.gameObject);
+                    break;
                 }
             }
     }

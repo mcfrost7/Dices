@@ -25,9 +25,9 @@ public class ItemInstance
     public int power;
     public ActionType actionType;
     public ItemSideAffect sideAffect;
-    public int inventoryPosition;
+    public int inventoryPosition = -1;
     [NonSerialized]
-    private ItemConfig sourceConfig;
+    private ItemConfig sourceConfig = null;
 
     public ItemInstance(ItemConfig config)
     {
@@ -40,7 +40,10 @@ public class ItemInstance
         sideAffect = config.sideAffect;
         inventoryPosition = config.inventoryPosition;
     }
-    public ItemInstance() { }
+    public ItemInstance()
+    {
+        inventoryPosition = -1; 
+    }
 }
 
 [Serializable]
@@ -62,7 +65,6 @@ public class SerializableItemConfig
         string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fullPath);
         string directory = Path.GetDirectoryName(fullPath).Replace("Assets\\Resources\\", "");
         this.iconPath = Path.Combine(directory, fileNameWithoutExt).Replace("\\", "/");
-        //this.iconPath = "Sprites/Items/" + item.iconPath ;
         this.power = item.power;
         this.power = item.power;
         this.actionType = item .actionType;

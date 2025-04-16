@@ -8,6 +8,7 @@ public class GameDataMNG : MonoBehaviour
     [SerializeField] private CanvasMapGenerator mapGenerator;
     [SerializeField] private TeamMNG teamMNG;
     [SerializeField] private EventsController eventsController;
+    [SerializeField] private ItemConfig item;
 
     private PlayerData playerData;
     public NewTileConfig CurrentTile { get; private set; } 
@@ -34,6 +35,7 @@ public class GameDataMNG : MonoBehaviour
             mapGenerator.GenerateMap();
             mapGenerator.SaveMapToPlayerData();
             ResourcesMNG.Instance.SetupResources();
+            ItemMNG.Instance.AddItem(new ItemInstance(item));
             SaveGame();
         }
     }

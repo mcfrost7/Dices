@@ -6,54 +6,56 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     [SerializeField] private int _inventoryPosition = -1;
     private bool _isActive = false;
-
+    private DraggableItem draggedItem = null;
     public int InventoryPosition { get => _inventoryPosition; set => _inventoryPosition = value; }
 
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag == null) return;
+        draggedItem = eventData.pointerDrag.GetComponent<DraggableItem>();
+        if (draggedItem == null || draggedItem.Item == null) return;
 
-        DraggableItem draggedItem = eventData.pointerDrag.GetComponent<DraggableItem>();
-        if (draggedItem == null) return;
+        if (GameDataMNG.Instance == null || GameDataMNG.Instance.PlayerData == null ||
+            UnitsPanelUI.Instance == null || UnitsPanelUI.Instance.CurrentUnit == null ||
+            UnitsPanelUI.Instance.CurrentUnit._dice == null)
+        {
+            return;
+        }
 
         if (transform.childCount == 0)
         {
             draggedItem.parentAfterDrag = transform;
-
-            if (draggedItem.Item != null)
+            draggedItem.Item.inventoryPosition = InventoryPosition;
+            var items = GameDataMNG.Instance.PlayerData.Items;
+            if (items != null)
             {
-                draggedItem.Item.inventoryPosition = InventoryPosition;
-                if (draggedItem.Item.inventoryPosition > 0)
-                { 
-                    foreach (var item in GameDataMNG.Instance.PlayerData.Items)
-                    {
-                        if (item == draggedItem.Item)
-                        {
-                            item.inventoryPosition = InventoryPosition;
-                            break;
-                        }
-                    }
-                    if (!UnitsPanelUI.Instance.CurrentUnit._dice._items.Contains(draggedItem.Item))
-                    {
-                        UnitsPanelUI.Instance.CurrentUnit._dice._items.Add(draggedItem.Item);
-                    }
-                    Debug.Log($"Предмет перемещен в слот {InventoryPosition}");
-                }else
+                foreach (var item in items)
                 {
-                    foreach (var item in GameDataMNG.Instance.PlayerData.Items)
+                    if (item == draggedItem.Item)
                     {
-                        if (item == draggedItem.Item)
-                        {
-                            item.inventoryPosition = InventoryPosition;
-                            break;
-                        }
-                    }
-                    if (UnitsPanelUI.Instance.CurrentUnit._dice._items.Contains(draggedItem.Item))
-                    {
-                        UnitsPanelUI.Instance.CurrentUnit._dice._items.Remove(draggedItem.Item);
+                        item.inventoryPosition = InventoryPosition;
+                        break;
                     }
                 }
             }
+
+            var diceItems = UnitsPanelUI.Instance.CurrentUnit._dice._items;
+            if (InventoryPosition > 0)
+            {
+                if (!diceItems.Contains(draggedItem.Item))
+                {
+                    diceItems.Add(draggedItem.Item);
+                }
+            }
+            else
+            {
+                if (diceItems.Contains(draggedItem.Item))
+                {
+                    diceItems.Remove(draggedItem.Item);
+                }
+            }
+            GameDataMNG.Instance.SaveGame();
+            EquipmentUI.Instance.SetupInfo(UnitsPanelUI.Instance.CurrentUnit);
         }
     }
 

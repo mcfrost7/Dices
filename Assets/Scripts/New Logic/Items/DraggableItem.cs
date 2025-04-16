@@ -11,11 +11,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
     [HideInInspector] public Transform parentAfterDrag;
 
 
-
-
-    private ItemInstance config;
+    private ItemInstance _item;
     private Canvas canvasParent;
-    public ItemInstance Item { get => config; set => config = value; }
+    public ItemInstance Item { get => _item; set => _item = value; }
 
 
     public void Setup(ItemInstance item, Canvas canvas)
@@ -29,6 +27,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
     {
         if (rectTransform == null)
             rectTransform = GetComponent<RectTransform>();
+        _item = new ItemInstance();
     }
 
     public void OnBeginDrag(PointerEventData eventData)

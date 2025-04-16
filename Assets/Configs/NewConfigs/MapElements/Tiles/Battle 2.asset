@@ -30,7 +30,7 @@ MonoBehaviour:
         power: 1
         actionType: 1
         sideAffect: 1
-        inventoryPosition: -1
+        inventoryPosition: 2
   lootSettings:
     reward:
       resource: []

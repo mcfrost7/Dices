@@ -28,7 +28,7 @@ MonoBehaviour:
         power: 0
         actionType: 0
         sideAffect: 0
-        inventoryPosition: 0
+        inventoryPosition: -1
   lootSettings:
     reward:
       resource: []

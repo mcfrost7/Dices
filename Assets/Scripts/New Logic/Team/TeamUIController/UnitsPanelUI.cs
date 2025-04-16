@@ -68,7 +68,7 @@ public class UnitsPanelUI : MonoBehaviour
         }
 
     }
-    private void OnUnitClick(NewUnitStats unit)
+    public void OnUnitClick(NewUnitStats unit)
     {
         CurrentUnit = unit;
         OnUnitSelected?.Invoke(unit);

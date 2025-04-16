@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class BattleReward : MonoBehaviour
@@ -21,7 +22,7 @@ public class BattleReward : MonoBehaviour
     {
         ResourceReward(reward.resource);
         ExpReward(reward.expAmount);
-        ItemReward(reward.itemInstance);
+        ItemReward(reward.GetItem());
     }
 
     private void ResourceReward(List<ResourceData> resource)
@@ -44,6 +45,6 @@ public class BattleReward : MonoBehaviour
     private void ItemReward(ItemInstance item)
     {
         if (item == null) return;
-        GameDataMNG.Instance.PlayerData.Items.Add(item);
+        ItemMNG.Instance.AddItem(item);
     }
 }

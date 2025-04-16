@@ -113,3 +113,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a3651179e1a1f4ba1b5a820d9b029c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inventoryPosition: -1
+  draggedItem: {fileID: 3892134518624780073, guid: a5f41a982481d8c4cbd0c7c1ddeeb475, type: 3}

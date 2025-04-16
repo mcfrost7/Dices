@@ -92,23 +92,15 @@ public class TileConfigEditor : Editor
         {
             reward.resource.RemoveAt(reward.resource.Count - 1);
         }
-
-        // Опыт и предметы
         reward.expAmount = EditorGUILayout.IntField("Experience Amount", reward.expAmount);
         reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", reward.item, typeof(ItemConfig), false);
-    }
+        reward.itemInstance = new ItemInstance(reward.item);
 
-    /// <summary>
-    /// Метод для отображения списка конфигураций рулетки
-    /// </summary>
+    }
     private void DrawRouletteConfigList(ref List<RouletteConfig> configs, string title)
     {
         EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-
-        // Инициализация списка конфигураций
         configs ??= new List<RouletteConfig>();
-
-        // Отображение списка конфигураций
         for (int i = 0; i < configs.Count; i++)
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -122,7 +114,7 @@ public class TileConfigEditor : Editor
             if (GUILayout.Button("Remove Config"))
             {
                 configs.RemoveAt(i);
-                break; // Выходим из цикла, чтобы избежать ошибок при изменении списка во время итерации
+                break;
             }
 
             EditorGUILayout.EndVertical();

@@ -7,4 +7,5 @@ public class RewardConfig
     public List<ResourceData> resource;
     public int expAmount;
     public ItemConfig item;
+    [HideInInspector]public ItemInstance itemInstance;
 }

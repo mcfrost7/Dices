@@ -21,7 +21,7 @@ public class BattleReward : MonoBehaviour
     {
         ResourceReward(reward.resource);
         ExpReward(reward.expAmount);
-        ItemReward(reward.item);
+        ItemReward(reward.itemInstance);
     }
 
     private void ResourceReward(List<ResourceData> resource)
@@ -41,7 +41,7 @@ public class BattleReward : MonoBehaviour
             unit._current_exp = Mathf.Min(unit._current_exp + exp, maxExp);
         }
     }
-    private void ItemReward(ItemConfig item)
+    private void ItemReward(ItemInstance item)
     {
         if (item == null) return;
         GameDataMNG.Instance.PlayerData.Items.Add(item);

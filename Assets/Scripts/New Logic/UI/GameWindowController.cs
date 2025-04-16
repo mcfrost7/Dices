@@ -178,6 +178,17 @@ public class GameWindowController : MonoBehaviour
             {
                 resourceText.AppendLine($"<color=#8B0000></color> <color=#2F2F2F>{res.Config.ResourceName.ToUpper()}:</color> <color=#B8860B>{res.Count}</color>");
             }
+
+            if (reward.expAmount > 0)
+            {
+                resourceText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{reward.expAmount}");
+            }
+
+            if (reward.item != null)
+            {
+                resourceText.AppendLine("<color=#2F2F2F><b>РЕЛИКВИЯ:</b></color>");
+                resourceText.AppendLine($"<color=#8B0000></color> <b>{reward.item.itemName.ToUpper()}</b>");
+            }
         }
         else
         {

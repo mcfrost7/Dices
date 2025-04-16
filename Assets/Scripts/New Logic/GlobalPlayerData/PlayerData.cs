@@ -9,13 +9,13 @@ public class PlayerData
     [SerializeField] private List<MapNodeData> _mapNodes = new();
     [SerializeField] private List<NewUnitStats> _playerUnits = new();
     [SerializeField] private List<NewUnitStats> _unitsStorage = new();
-    [SerializeField] private List<ItemConfig> _items = new();
+    [SerializeField] private List<ItemInstance> _items = new();
     [SerializeField] private List<ResourceData> _resourcesData = new();
 
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
     public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
     public List<NewUnitStats> UnitsStorage { get => _unitsStorage; set => _unitsStorage = value; }
-    public List<ItemConfig> Items { get => _items; set => _items = value; }
+    public List<ItemInstance> Items { get => _items; set => _items = value; }
     public List<ResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
 
 }
@@ -75,12 +75,13 @@ public class SerializablePlayerData
 
             // Конвертируем словарь обратно в список
             ResourcesData = new List<SerializableResourceData>(resourcesDict.Values);
-            if (data.Items != null)
+
+        }
+        if (data.Items != null)
+        {
+            foreach (var item in data.Items)
             {
-                foreach (var item in data.Items)
-                {
-                    Items.Add(new SerializableItemConfig(item));
-                }
+                Items.Add(new SerializableItemConfig(item));
             }
         }
     }
@@ -136,11 +137,11 @@ public class SerializablePlayerData
         }
         data.ResourcesData = new List<ResourceData>(resourcesDict.Values);
 
-        // Конвертируем предметы
-        data.Items = new List<ItemConfig>();
+
+        data.Items = new List<ItemInstance>();
         foreach (var serItem in Items)
         {
-            data.Items.Add(serItem.ToItemConfig());
+            data.Items.Add(serItem.ToItemInstance());
         }
 
         return data;

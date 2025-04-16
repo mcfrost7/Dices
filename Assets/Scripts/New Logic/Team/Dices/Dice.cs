@@ -7,7 +7,7 @@ public class Dice
 {
     [SerializeField] public NewDiceConfig _diceConfig;
     [SerializeField] private DiceSide _currentSide;
-    [SerializeField] public List<ItemConfig> _items;
+    [SerializeField] public List<ItemInstance> _items;
 
     public Dice(NewDiceConfig diceConfig)
     {
@@ -25,7 +25,7 @@ public class Dice
             this._currentSide = null; // Make sure your code can handle null _currentSide
         }
     }
-    public Dice(NewDiceConfig diceConfig, List<ItemConfig> items)
+    public Dice(NewDiceConfig diceConfig, List<ItemInstance> items)
     {
         this._diceConfig = diceConfig;
         this._currentSide = diceConfig.sides[0];
@@ -73,10 +73,10 @@ public class SerializableDice
 
         if (items != null)
         {
-            dice._items = new List<ItemConfig>();
+            dice._items = new List<ItemInstance>();
             foreach (var serItem in items)
             {
-                dice._items.Add(serItem.ToItemConfig());
+                dice._items.Add(serItem.ToItemInstance());
             }
         }
 

@@ -13,12 +13,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
 
 
 
-    private ItemConfig config;
+    private ItemInstance config;
     private Canvas canvasParent;
-    public ItemConfig Item { get => config; set => config = value; }
+    public ItemInstance Item { get => config; set => config = value; }
 
 
-    public void Setup(ItemConfig item, Canvas canvas)
+    public void Setup(ItemInstance item, Canvas canvas)
     {
         Item = item;
         _icon.sprite = item.icon;

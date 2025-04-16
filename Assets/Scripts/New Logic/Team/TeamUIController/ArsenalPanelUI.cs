@@ -20,10 +20,13 @@ public class ArsenalPanelUI : MonoBehaviour
         ClearInventory();
         foreach (var item in GameDataMNG.Instance.PlayerData.Items)
         {
-            GameObject slotGO = Instantiate(_inventorySlot, _contentPlaceHolder.transform);
-            if (item.inventoryPosition == -1)
+            if (item != null)
             {
-                CreateItem(item, slotGO);
+                GameObject slotGO = Instantiate(_inventorySlot, _contentPlaceHolder.transform);
+                if (item.inventoryPosition == -1)
+                {
+                    CreateItem(item, slotGO);
+                }
             }
         }
     }
@@ -41,7 +44,7 @@ public class ArsenalPanelUI : MonoBehaviour
             }
     }
 
-    private void CreateItem(ItemConfig item, GameObject slotGO)
+    private void CreateItem(ItemInstance item, GameObject slotGO)
     {
         DraggableItem draggable = Instantiate(_item, slotGO.transform);
         if (draggable != null)

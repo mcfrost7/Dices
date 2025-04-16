@@ -20,9 +20,9 @@ public class ItemMNG : MonoBehaviour
     }
     [SerializeField] private List<InventorySlot> _activeItems;
 
-    public void AddItem(ItemConfig itemConfig)
+    public void AddItem(ItemInstance item)
     {
-        GameDataMNG.Instance.PlayerData.Items.Add(itemConfig);
+        GameDataMNG.Instance.PlayerData.Items.Add(item);
     }
 
 

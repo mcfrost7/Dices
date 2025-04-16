@@ -13,55 +13,59 @@ public class ItemConfig : ScriptableObject
     public ItemSideAffect sideAffect;
     public int inventoryPosition = -1;
 }
-
 [System.Serializable]
 public class ItemInstance
 {
     public string itemName;
-    public int power;
     public Sprite icon;
+    public string iconPath;
+    public int power;
     public ActionType actionType;
     public ItemSideAffect sideAffect;
-    public int inventoryPosition = -1;
+    public int inventoryPosition;
+    [NonSerialized]
+    private ItemConfig sourceConfig;
 
     public ItemInstance(ItemConfig config)
     {
+        if (config == null) return;
+        sourceConfig = config;
         itemName = config.itemName;
-        power = config.power;
         icon = config.icon;
+        power = config.power;
         actionType = config.actionType;
         sideAffect = config.sideAffect;
         inventoryPosition = config.inventoryPosition;
+        iconPath = config.name;
     }
+    public ItemInstance() { }
 }
 
 [Serializable]
 public class SerializableItemConfig
 {
     public string itemName;
-    public string iconPath; // Path to the sprite asset
+    public string iconPath; 
     public int power;
     public ActionType actionType;
     public ItemSideAffect sideAffect;
-    public int inventoryPosition = -1;
+    public int inventoryPosition;
 
-    // Constructor to create from ItemConfig
-    public SerializableItemConfig(ItemConfig item)
+    public SerializableItemConfig(ItemInstance item)
     {
         if (item == null) return;
 
         this.itemName = item.itemName;
-        this.iconPath = "Sprites/Items/" + item.icon.name + ".png";
+        this.iconPath = "Sprites/Items/" + item.iconPath + ".png";
         this.power = item.power;
-        this.actionType = item.actionType;
+        this.actionType = item .actionType;
         this.sideAffect = item.sideAffect;
         this.inventoryPosition = item.inventoryPosition;
     }
 
-    // Method to convert back to ItemConfig
-    public ItemConfig ToItemConfig()
+    public ItemInstance ToItemInstance()
     {
-        var item = ScriptableObject.CreateInstance<ItemConfig>();
+        ItemInstance item = new ItemInstance();
         item.itemName = this.itemName;
 
         if (!string.IsNullOrEmpty(iconPath))

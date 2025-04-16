@@ -100,7 +100,7 @@ public class TeamMNG : MonoBehaviour
         Dice dice = new Dice
         (
             diceList[Random.Range(0, diceList.Count)],
-            new List<ItemConfig>()
+            new List<ItemInstance>()
         );
 
         // Сгенерировать уникальный ID

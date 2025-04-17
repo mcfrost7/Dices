@@ -38,6 +38,7 @@ public class NewUnitStats
         _current_health = health;
         _current_defense=0;
         _dice=dice;
+        _buffs = null;
     }
 
 }

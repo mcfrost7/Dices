@@ -96,7 +96,7 @@ public class BattleActionManager : MonoBehaviour
             return;
 
         DiceSide currentSide = source.UnitData._dice.GetCurrentSide();
-        int power = source.CalculateSidePowerWithBuffs(source.UnitData, currentSide);
+        int power = source.CalculateSidePower(source.UnitData, currentSide);
         int duration = source.UnitData._dice.GetCurrentSide().duration;
 
         // ѕолучаем нужное действие и выполн€ем его

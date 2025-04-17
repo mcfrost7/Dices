@@ -16,5 +16,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9bc1ee61272d1884da077f602e5b26fd, type: 3}
   power: 1
   actionType: 1
-  sideAffect: 1
+  sideAffect: 2
   inventoryPosition: -1

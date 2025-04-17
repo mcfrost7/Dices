@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -36,9 +37,7 @@ public class EquipmentUI : MonoBehaviour
             {
                 _diceSides[i].GetComponentInChildren<TextMeshProUGUI>().enabled = false;
                 _diceSides[i].GetComponent<Image>().sprite = _clickedUnit._dice._diceConfig.sides[i].sprite;
-
-                // Получаем значение с учетом баффов
-                int finalPower = CalculateSidePower(_clickedUnit, i);
+                int finalPower = CalculateSidePower(_clickedUnit, i) + _clickedUnit._dice._diceConfig.sides[i].power;
 
                 if (finalPower != -1)
                 {
@@ -51,15 +50,12 @@ public class EquipmentUI : MonoBehaviour
 
     public int CalculateSidePower(NewUnitStats clickedUnit, int sideIndex)
     {
+        if (clickedUnit._buffs == null)
+            return 0;
         if (sideIndex < 0 || sideIndex >= clickedUnit._dice._diceConfig.sides.Count)
         {
             Debug.LogError("Side index out of range");
             return 0;
-        }
-        int basePower = clickedUnit._dice._diceConfig.sides[sideIndex].power;
-        if (basePower == -1)
-        {
-            return -1;
         }
         ActionType sideType = clickedUnit._dice._diceConfig.sides[sideIndex].actionType;
         int buffBonus = 0;
@@ -72,21 +68,79 @@ public class EquipmentUI : MonoBehaviour
                 buffBonus += buff.buffPower;
             }
         }
-        foreach (var item in clickedUnit._dice._items) 
+        foreach (var item in clickedUnit._dice._items)
         {
-            if (item.actionType == sideType) 
+            if (item.actionType == sideType && item != null)
             {
-                if (item.sideAffect == ItemSideAffect.Even)
+                switch (item.sideAffect)
                 {
-                    if ((sideIndex + 1) % 2 == 0)
-                    {
+                    case ItemSideAffect.Nearest:
+                        if (sideIndex+1 == item.inventoryPosition)
+                        {
+                            itemBonus += item.power;
+                        }
+                        break;
+
+                    case ItemSideAffect.Even:
+                        if ((sideIndex + 1) % 2 == 0)
+                        {
+                            itemBonus += item.power;
+                        }
+                        break;
+
+                    case ItemSideAffect.Odd:
+                        if ((sideIndex + 1) % 2 != 0)
+                        {
+                            itemBonus += item.power;
+                        }
+                        break;
+
+                    case ItemSideAffect.All:
                         itemBonus += item.power;
-                    }
+                        break;
+
+                    case ItemSideAffect.Touching:
+                        switch (item.inventoryPosition)
+                        {
+                            case -1:
+                                break;
+                            case 1:
+                                if (sideIndex  == 0 || sideIndex == 3)
+                                {
+                                    itemBonus += item.power;
+                                }
+                                break;
+                            case 2:
+                                if (sideIndex == 1 || sideIndex == 0)
+                                {
+                                    itemBonus += item.power;
+                                }
+                                break;
+                            case 3:
+                                if (sideIndex  == 2 || sideIndex == 1)
+                                {
+                                    itemBonus += item.power;
+                                }
+                                break;
+                            case 4:
+                                if (sideIndex  == 3 || sideIndex == 2)
+                                {
+                                    itemBonus += item.power;
+                                }
+                                break;
+                        }
+                        break;
+
+                    case ItemSideAffect.None:
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
         }
-        
-        return basePower + buffBonus + itemBonus ;
+        clickedUnit._dice.GetCurrentSide().bonus = itemBonus + buffBonus;
+        return clickedUnit._dice.GetCurrentSide().bonus;
     }
 
 

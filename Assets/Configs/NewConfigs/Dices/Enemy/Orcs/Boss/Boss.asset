@@ -15,31 +15,43 @@ MonoBehaviour:
   sides:
   - actionType: 1
     power: 4
+    bonus: 0
+    sideIndex: 0
     duration: 1
     sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
     ActionSide: 0
   - actionType: 1
     power: 2
+    bonus: 0
+    sideIndex: 1
     duration: 1
     sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
     ActionSide: 0
   - actionType: 4
     power: 4
+    bonus: 0
+    sideIndex: 2
     duration: 1
     sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
     ActionSide: 1
   - actionType: 0
     power: 0
+    bonus: 0
+    sideIndex: 3
     duration: 1
     sprite: {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
     ActionSide: 0
   - actionType: 4
     power: 4
+    bonus: 0
+    sideIndex: 4
     duration: 1
     sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
     ActionSide: 1
   - actionType: 0
     power: 0
+    bonus: 0
+    sideIndex: 5
     duration: 1
     sprite: {fileID: 21300000, guid: 1b2e580e30b36b3429d8960b9b3b83a7, type: 3}
     ActionSide: 0

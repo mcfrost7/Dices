@@ -58,7 +58,7 @@ public class BattleUnit : MonoBehaviour
         IsEnemy = false;
         SetupCommon(newUnitStats);
         _moralText.text = newUnitStats._moral.ToString();
-        _powerText.text = CalculateSidePowerWithBuffs(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
+        _powerText.text = CalculateSidePower(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
     }
 
     public void SetupEnemy(NewUnitStats newUnitStats)
@@ -81,23 +81,9 @@ public class BattleUnit : MonoBehaviour
         SetSelectionState(IsSelected);
     }
 
-    public int CalculateSidePowerWithBuffs(NewUnitStats clickedUnit, DiceSide diceSide)
+    public int CalculateSidePower(NewUnitStats _clickedUnit, DiceSide _diceSide)
     {
-        int basePower = diceSide.power;
-        if (basePower == -1)
-        {
-            return -1;
-        }
-        ActionType sideType = diceSide.actionType;
-        int buffBonus = 0;
-        foreach (BuffConfig buff in clickedUnit._buffs)
-        {
-            if (buff.buffType == sideType)
-            {
-                buffBonus += buff.buffPower;
-            }
-        }
-        return basePower + buffBonus;
+        return EquipmentUI.Instance.CalculateSidePower(_clickedUnit,_diceSide.sideIndex) + _diceSide.power;
     }
 
     public void ToggleSelection()
@@ -161,7 +147,7 @@ public class BattleUnit : MonoBehaviour
         if (!IsEnemy)
         {
             _moralText.text = UnitData._moral.ToString();
-            _powerText.text = CalculateSidePowerWithBuffs(UnitData, UnitData._dice.GetCurrentSide()).ToString();
+            _powerText.text = CalculateSidePower(UnitData, UnitData._dice.GetCurrentSide()).ToString();
         }
         else
         {
@@ -250,7 +236,7 @@ public class BattleUnit : MonoBehaviour
 
         if (!IsEnemy)
         {
-            _powerText.text = CalculateSidePowerWithBuffs(UnitData, UnitData._dice.GetCurrentSide()).ToString();
+            _powerText.text = CalculateSidePower(UnitData, UnitData._dice.GetCurrentSide()).ToString();
         }
         else
         {

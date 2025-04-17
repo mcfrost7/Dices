@@ -34,10 +34,10 @@ public class UnitsPanelUI : MonoBehaviour
         playerUnits = TeamMNG.Instance.GetPlayerUnits();
         DrawUnitsOnPanel();
         SetUpSceneWithLastUnit();
-        UpdateAddButtonVisibility();
+        CampSetup();
         SceneLoaded?.Invoke();
     }
-    private void UpdateAddButtonVisibility()
+    private void CampSetup()
     {
         if (GameDataMNG.Instance.CurrentTile != null)
         {
@@ -46,6 +46,7 @@ public class UnitsPanelUI : MonoBehaviour
             else _addButton.SetActive(false);
         }
         else _addButton.SetActive(false);
+
     }
 
     private void SetUpSceneWithLastUnit()
@@ -86,7 +87,7 @@ public class UnitsPanelUI : MonoBehaviour
     }
 
 
-    public void CampSetup()
+    public void AddButtonVisibility()
     {
         _addButton.SetActive(true);
     }

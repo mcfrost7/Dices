@@ -9,6 +9,7 @@ public class RouletteScreen : MonoBehaviour
     [SerializeField] private RouletteView _view;
     [SerializeField] private Button _spinButtton;
     Roulette roulette;
+    private bool _isRewarded = false;
     public void SetupRoulette(List<RouletteConfig> _configs)
     {
         _spinButtton.interactable = true;   
@@ -28,15 +29,24 @@ public class RouletteScreen : MonoBehaviour
 
     private void SpinRoulette()
     {
-        StartCoroutine(SpinRouletteCoroutine());
+        _isRewarded = false;
+        _spinButtton.interactable = false;
+        StartCoroutine(SpinAndHandleResult());
     }
 
-    private IEnumerator SpinRouletteCoroutine()
+    private IEnumerator SpinAndHandleResult()
     {
-        _spinButtton.interactable = false;
         yield return StartCoroutine(roulette.SpinRoulette());
-        GameWindowController.Instance.SetupRouletteInfo(roulette.GetConfigByAngle());
+        var config = roulette.GetConfigByAngle();
+        GameWindowController.Instance.SetupRouletteInfo(config);
+        if (_isRewarded == false)
+        {
+            foreach (var reward in config.WinItems)
+                RewardMNG.Instance.CalculateReward(reward);
+            _isRewarded = true;
+        }
         GameWindowController.Instance.CallPanel(1);
     }
+
 
 }

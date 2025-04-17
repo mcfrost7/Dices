@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-public class BattleReward : MonoBehaviour
+public class RewardMNG : MonoBehaviour
 {
-   public static BattleReward Instance { get; private set; }
+   public static RewardMNG Instance { get; private set; }
     private void Awake()
     {
         if (Instance == null)
@@ -34,7 +34,7 @@ public class BattleReward : MonoBehaviour
     }
     private void ExpReward(int exp)
     {
-        foreach (var unit in BattleController.Instance.PlayerUnits)
+        foreach (var unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
         {
             if (unit == null) continue;
 

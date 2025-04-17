@@ -43,6 +43,7 @@ public class GameWindowController : MonoBehaviour
         {
             _title.text = "<color=#E31837><b>ПУСТЫЕ ТРОФЕИ</b></color>";
             _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";
+            Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
             return;
         }
 

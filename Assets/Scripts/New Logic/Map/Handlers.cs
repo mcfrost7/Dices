@@ -53,7 +53,7 @@ public class CampEventHandler : IEventHandler
 {
     public void HandleEvent(NewTileConfig config)
     {
-        UnitsPanelUI.Instance.CampSetup();
+        UnitsPanelUI.Instance.AddButtonVisibility();
         CampPanel.Instance.SetupInfo(config);
         GameWindowController.Instance.SetupCampfireTileInfo(config);
         GameWindowController.Instance.CallPanel(1);

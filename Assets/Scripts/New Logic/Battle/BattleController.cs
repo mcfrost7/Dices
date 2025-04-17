@@ -135,7 +135,7 @@ public class BattleController : MonoBehaviour
         {
             reward = CurrentBattleConfig.battleSettings.reward;
         }
-        BattleReward.Instance.CalculateReward(reward);
+        RewardMNG.Instance.CalculateReward(reward);
         GameDataMNG.Instance.SaveGame();
     }
 

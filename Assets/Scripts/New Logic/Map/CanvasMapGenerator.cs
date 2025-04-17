@@ -343,8 +343,6 @@ public class CanvasMapGenerator : MonoBehaviour
         {
             UpdateNodesAvailability();
         }
-
-        // Сохранение карты
         SaveMapToPlayerData();
         GameDataMNG.Instance.HandleTileClick(node);
     }

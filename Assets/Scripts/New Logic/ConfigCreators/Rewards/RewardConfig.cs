@@ -11,6 +11,9 @@ public class RewardConfig
 
     public ItemInstance GetItem()
     {
-        return new ItemInstance(item);
+        if (item != null)
+            return new ItemInstance(item);
+        else 
+            return null;
     }
 }

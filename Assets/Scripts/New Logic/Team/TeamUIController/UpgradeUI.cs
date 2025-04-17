@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeUI : MonoBehaviour
 {
@@ -14,13 +15,26 @@ public class UpgradeUI : MonoBehaviour
 
     private void SetUpInfo(NewUnitStats _unit)
     {
-        ClearPanel();
-
-        for (int i = 0; i < _unit._upgrade_list.Count;i++)
+        bool isCamp = false;
+        if (GameDataMNG.Instance.CurrentTile != null)
         {
-            UIUnit _unitOnPanel = Instantiate(_prefab, _panel);
-            _unitOnPanel.InitializeUpgrade(TeamMNG.Instance.GetUnitByID(_unit._upgrade_list[i]),_unit);
+            var campSettings = GameDataMNG.Instance.CurrentTile.campSettings;
+            if (campSettings != null)
+            {
+                isCamp = campSettings.isUpgradeAvailable;
+            }
         }
+        ClearPanel();
+        foreach (var upgradeID in _unit._upgrade_list)
+        {
+            var unitOnPanel = Instantiate(_prefab, _panel);
+            unitOnPanel.gameObject.SetActive(false);
+            var nextUnit = TeamMNG.Instance.GetUnitByID(upgradeID);
+            unitOnPanel.InitializeUpgrade(nextUnit, _unit, isCamp);
+            unitOnPanel.gameObject.SetActive(true);
+        }
+
+
     }
     private void ClearPanel()
     {

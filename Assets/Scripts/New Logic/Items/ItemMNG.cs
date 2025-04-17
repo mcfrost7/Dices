@@ -25,5 +25,15 @@ public class ItemMNG : MonoBehaviour
         GameDataMNG.Instance.PlayerData.Items.Add(item);
     }
 
+    public void ReplaceItemsOnUpgrade(NewUnitStats unit)
+    {
+        foreach (var item in unit._dice._items)
+        {
+            if (item != null)
+            {
+                item.inventoryPosition = -1;
+            }
+        }
 
+    }
 }

@@ -1,9 +1,6 @@
 using System;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Windows;
-using static UnityEditor.Progress;
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Configs/Item")]
 
@@ -26,13 +23,13 @@ public class ItemInstance
     public ActionType actionType;
     public ItemSideAffect sideAffect;
     public int inventoryPosition = -1;
-    [NonSerialized]
     private ItemConfig sourceConfig = null;
 
     public ItemInstance(ItemConfig config)
     {
         if (config == null) return;
         sourceConfig = config;
+        iconPath = config.name;
         itemName = config.itemName;
         icon = config.icon;
         power = config.power;
@@ -61,10 +58,7 @@ public class SerializableItemConfig
         if (item == null) return;
 
         this.itemName = item.itemName;
-        string fullPath = AssetDatabase.GetAssetPath(item.icon.texture); 
-        string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fullPath);
-        string directory = Path.GetDirectoryName(fullPath).Replace("Assets\\Resources\\", "");
-        this.iconPath = Path.Combine(directory, fileNameWithoutExt).Replace("\\", "/");
+        this.iconPath = "Sprites/Items/" + item.iconPath;
         this.power = item.power;
         this.power = item.power;
         this.actionType = item .actionType;
@@ -76,7 +70,6 @@ public class SerializableItemConfig
     {
         ItemInstance item = new ItemInstance();
         item.itemName = this.itemName;
-
         if (!string.IsNullOrEmpty(iconPath))
         {
             item.icon = Resources.Load<Sprite>(iconPath);

@@ -304,9 +304,9 @@ public class TeamMNG : MonoBehaviour
     // Заменить юнит игрока на улучшенную версию
     public void UpgradePlayerUnit(int oldUnitID, int newUnitID)
     {
-
         if (_playerUnitIDs.Contains(oldUnitID) && _unitsCache.ContainsKey(newUnitID))
         {
+            ItemMNG.Instance.ReplaceItemsOnUpgrade(GetUnitByID(oldUnitID));
             int index = _playerUnitIDs.IndexOf(oldUnitID);
             if (index >= 0)
             {

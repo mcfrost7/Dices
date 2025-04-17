@@ -10,10 +10,14 @@ public class UIUnit : MonoBehaviour
     [SerializeField] private Image _image;
     [SerializeField] private Button _button;
     [SerializeField] private TextMeshProUGUI _text;
+
+    public Button Button { get => _button; set => _button = value; }
+
     public void Initialize(NewDiceConfig _newDiceConfig, Action onClick)
     {
+        _button.interactable = true;
         _image.sprite = _newDiceConfig._unitSprite;
-        _button.onClick.AddListener(() => onClick?.Invoke());
+        Button.onClick.AddListener(() => onClick?.Invoke());
     }
 
     public void InitializeBuffs(BuffConfig _buff)
@@ -23,10 +27,11 @@ public class UIUnit : MonoBehaviour
     }
 
 
-    public void InitializeUpgrade(NewUnitStats _unitNext,NewUnitStats _unitCurrent)
+    public void InitializeUpgrade(NewUnitStats _unitNext,NewUnitStats _unitCurrent, bool state)
     {
+        _button.interactable = state;
         _image.sprite = _unitNext._dice._diceConfig._unitSprite;
-        _button.onClick.AddListener(() => TeamMNG.Instance.UpgradePlayerUnit(_unitCurrent._ID, _unitNext._ID));
+        Button.onClick.AddListener(() => UpgradeUnit(_unitCurrent, _unitNext));
     }
 
     public void CreateUnit()
@@ -37,7 +42,24 @@ public class UIUnit : MonoBehaviour
         }
         else
         {
-            Debug.Log("Недостаточно ресурса SignalTransmitter для создания юнита!");
+        }
+    }
+
+    public void UpgradeUnit(NewUnitStats _unitCurrent, NewUnitStats _unitNext)
+    {
+        if (_unitCurrent._current_exp == _unitNext._level * 10)
+        {
+            if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, _unitCurrent._level + 1))
+            {
+                TeamMNG.Instance.UpgradePlayerUnit(_unitCurrent._ID, _unitNext._ID);
+            }
+            else
+            {
+                Debug.Log("Not enough signal transmitters!");
+            }
+        }
+        {
+            Debug.Log("Not enough exp!");
         }
     }
 

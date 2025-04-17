@@ -116,7 +116,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 3635741481095079178}
   m_OnClick:
     m_PersistentCalls:
@@ -135,3 +135,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _image: {fileID: 3635741481095079178}
   _button: {fileID: 8686146956374137549}
+  _text: {fileID: 0}

@@ -27,6 +27,7 @@ MonoBehaviour:
       itemInstance:
         itemName: 
         icon: {fileID: 0}
+        iconPath: 
         power: 0
         actionType: 0
         sideAffect: 0
@@ -34,17 +35,7 @@ MonoBehaviour:
   - Name: 
     Percent: 0.25
     Color: {r: 0, g: 1, b: 0.9431782, a: 1}
-    WinItems:
-    - resource: []
-      expAmount: 0
-      item: {fileID: 11400000, guid: 900fad417f0af7342876a54c65dc6f1f, type: 2}
-      itemInstance:
-        itemName: 
-        icon: {fileID: 0}
-        power: 0
-        actionType: 0
-        sideAffect: 0
-        inventoryPosition: 0
+    WinItems: []
   - Name: 
     Percent: 0.25
     Color: {r: 0.27074933, g: 1, b: 0, a: 1}
@@ -57,6 +48,7 @@ MonoBehaviour:
       itemInstance:
         itemName: 
         icon: {fileID: 0}
+        iconPath: 
         power: 0
         actionType: 0
         sideAffect: 0

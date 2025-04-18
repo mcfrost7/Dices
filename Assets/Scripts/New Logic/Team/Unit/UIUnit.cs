@@ -47,7 +47,7 @@ public class UIUnit : MonoBehaviour
 
     public void UpgradeUnit(NewUnitStats _unitCurrent, NewUnitStats _unitNext)
     {
-        if (_unitCurrent._current_exp == _unitNext._level * 10)
+        if (_unitCurrent._current_exp == _unitCurrent._level * 10)
         {
             if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, _unitCurrent._level + 1))
             {
@@ -57,7 +57,7 @@ public class UIUnit : MonoBehaviour
             {
                 Debug.Log("Not enough signal transmitters!");
             }
-        }
+        }else
         {
             Debug.Log("Not enough exp!");
         }

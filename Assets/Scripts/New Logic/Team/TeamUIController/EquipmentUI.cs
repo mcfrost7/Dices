@@ -70,62 +70,62 @@ public class EquipmentUI : MonoBehaviour
         }
         foreach (var item in clickedUnit._dice._items)
         {
-            if (item.actionType == sideType && item != null)
+            if (item.ActionType == sideType && item != null)
             {
-                switch (item.sideAffect)
+                switch (item.SideAffect)
                 {
                     case ItemSideAffect.Nearest:
-                        if (sideIndex+1 == item.inventoryPosition)
+                        if (sideIndex+1 == item.InventoryPosition)
                         {
-                            itemBonus += item.power;
+                            itemBonus += item.Power;
                         }
                         break;
 
                     case ItemSideAffect.Even:
                         if ((sideIndex + 1) % 2 == 0)
                         {
-                            itemBonus += item.power;
+                            itemBonus += item.Power;
                         }
                         break;
 
                     case ItemSideAffect.Odd:
                         if ((sideIndex + 1) % 2 != 0)
                         {
-                            itemBonus += item.power;
+                            itemBonus += item.Power;
                         }
                         break;
 
                     case ItemSideAffect.All:
-                        itemBonus += item.power;
+                        itemBonus += item.Power;
                         break;
 
                     case ItemSideAffect.Touching:
-                        switch (item.inventoryPosition)
+                        switch (item.InventoryPosition)
                         {
                             case -1:
                                 break;
                             case 1:
                                 if (sideIndex  == 0 || sideIndex == 3)
                                 {
-                                    itemBonus += item.power;
+                                    itemBonus += item.Power;
                                 }
                                 break;
                             case 2:
                                 if (sideIndex == 1 || sideIndex == 0)
                                 {
-                                    itemBonus += item.power;
+                                    itemBonus += item.Power;
                                 }
                                 break;
                             case 3:
                                 if (sideIndex  == 2 || sideIndex == 1)
                                 {
-                                    itemBonus += item.power;
+                                    itemBonus += item.Power;
                                 }
                                 break;
                             case 4:
                                 if (sideIndex  == 3 || sideIndex == 2)
                                 {
-                                    itemBonus += item.power;
+                                    itemBonus += item.Power;
                                 }
                                 break;
                         }

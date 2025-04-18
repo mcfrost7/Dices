@@ -26,133 +26,85 @@ public class GameWindowController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        Button.onClick.AddListener(()=>CallPanel(-1));
+        Button.onClick.AddListener(() => CallPanel(-1));
     }
-    
+
     public void CallPanel(int _direction)
     {
-        _panel.transform.DOLocalMoveY(_panel.transform.localPosition.y - 960*_direction, 1f).SetEase(Ease.InOutExpo);
+        _panel.transform.DOLocalMoveY(_panel.transform.localPosition.y - 960 * _direction, 1f).SetEase(Ease.InOutExpo);
         MenuMNG.Instance.CallFreezePanel(_direction);
     }
 
-    public void SetupRouletteInfo(SectorConfig _rewardConfig)
+    public void SetupRouletteInfo(SectorConfig rewardConfig)
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-        if (_rewardConfig == null || _rewardConfig.WinItems == null || _rewardConfig.WinItems.Count == 0)
+
+        if (rewardConfig == null || rewardConfig.WinItems == null || rewardConfig.WinItems.Count == 0)
         {
-            _title.text = "<color=#E31837><b>ПУСТЫЕ ТРОФЕИ</b></color>";
+            _title.text = "<color=#E31837><size=42><b>ПУСТЫЕ ТРОФЕИ</b></size></color>";
             _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";
             Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
             return;
         }
 
-        _title.text = "<color=#8B0000><b>ДОБЫЧА ВОЙНЫ</b></color>";
+        _title.text = "<color=#8B0000><size=42><b>ДОБЫЧА ВОЙНЫ</b></size></color>";
 
         StringBuilder lootText = new StringBuilder();
-        lootText.AppendLine("<color=#5A5A5A>-----------------------------</color>");
+        lootText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         lootText.AppendLine();
 
-        foreach (var reward in _rewardConfig.WinItems)
+        foreach (var reward in rewardConfig.WinItems)
         {
-            if (reward.resource != null && reward.resource.Count > 0)
-            {
-                lootText.AppendLine("<color=#2F2F2F><b>ТРОФЕИ:</b></color>");
-                foreach (var res in reward.resource)
-                {
-                    lootText.AppendLine($"<color=#8B0000></color> {res.Config.ResourceName.ToUpper()}: <color=#B8860B>{res.Count}</color>");
-                }
-            }
-
-            if (reward.expAmount > 0)
-            {
-                lootText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{reward.expAmount}");
-            }
-
-            if (reward.item != null)
-            {
-                lootText.AppendLine("<color=#2F2F2F><b>РЕЛИКВИЯ:</b></color>");
-                lootText.AppendLine($"<color=#8B0000></color> <b>{reward.item.itemName.ToUpper()}</b>");
-            }
+            lootText.Append(FormatReward(reward));
         }
 
-        lootText.AppendLine("<color=#5A5A5A>-----------------------------</color>");
-        lootText.AppendLine("<size=32><color=#8B0000>«ДАЖЕ ПЕПЕЛ ВРАГА ПРИГОДИТСЯ»</color></size>");
+        lootText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        lootText.AppendLine("<size=32><color=#8B0000><i>«ДОБЫЧА ДОСТАНЕТСЯ СИЛЬНЕЙШЕМУ»</i></color></size>");
 
         _text.text = lootText.ToString();
-        Button.onClick.AddListener(()=>GlobalWindowController.Instance.GoBack());
+        Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
     }
 
-    public void SetupWinBattleInfo(NewTileConfig _tile)
+    public void SetupWinBattleInfo(NewTileConfig tile)
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
+        Button.onClick.AddListener(() => GlobalWindowController.Instance.ShowGlobalCanvas());
 
-        if (_tile == null)
+        if (tile == null)
         {
-            _title.text = "<color=#8B0000><b>НЕТ ДОСТОЙНОЙ ЦЕЛИ</b></color>";
+            _title.text = "<color=#8B0000><size=42><b>НЕТ ДОСТОЙНОЙ ЦЕЛИ</b></size></color>";
             _text.text = "<size=36><color=#5A5A5A><i>Победа без славы — как пир без мяса.</i></color></size>";
             return;
         }
 
-        // Заголовок (оптимизированные цвета)
-        _title.text = "<color=#8B0000><b>ВО ИМЯ ИМПЕРАТОРА!</b></color>";
+        _title.text = "<color=#8B0000><size=42><b>ВО ИМЯ ИМПЕРАТОРА!</b></size></color>";
+        RewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
 
         StringBuilder victoryText = new StringBuilder();
-
-        // Разделитель (тёмно-серый)
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         victoryText.AppendLine();
-
-        RewardConfig _rewardConfig = !BattleController.Instance.IsBossBattle
-            ? _tile.battleSettings.reward
-            : _tile.bossSettings.reward;
-
-        // Опыт (тёмное золото)
-        victoryText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{_rewardConfig.expAmount} ед. опыта");
-        victoryText.AppendLine();
-
-        // Ресурсы (тёмно-красные акценты)
-        if (_rewardConfig.resource != null && _rewardConfig.resource.Count > 0)
-        {
-            victoryText.AppendLine("<color=#5A5A5A><b>ТРОФЕИ:</b></color>");
-            foreach (var res in _rewardConfig.resource)
-            {
-                victoryText.AppendLine($"<color=#8B0000></color> {res.Config.ResourceName.ToUpper()}: <color=#B8860B>{res.Count}</color>");
-            }
-            victoryText.AppendLine();
-        }
-
-        // Предмет (тёмно-красный акцент)
-        if (_rewardConfig.item != null)
-        {
-            victoryText.AppendLine("<color=#5A5A5A><b>РЕЛИКВИЯ:</b></color>");
-            victoryText.AppendLine($"<color=#8B0000></color> <b>{_rewardConfig.item.itemName.ToUpper()}</b>");
-            victoryText.AppendLine();
-        }
-
-        // Заключительная строка
+        victoryText.Append(FormatReward(rewardConfig));
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
-        victoryText.AppendLine("<size=36><color=#8B0000>«КРОВЬ ВРАГОВ — ЛУЧШАЯ НАГРАДА»</color></size>");
+        victoryText.AppendLine("<size=32><color=#8B0000><i>«ПОБЕДА — ЕДИНСТВЕННЫЙ ЗАКОН ВОЙНЫ»</i></color></size>");
 
         _text.text = victoryText.ToString();
     }
-
 
     public void SetupDefeatBattleInfo()
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-        _title.text = "<size=42><color=#8B0000>КАТАСТРОФА</color></size>";
 
+        _title.text = "<size=42><color=#8B0000>КАТАСТРОФА</color></size>";
         _text.text = "<size=30>" +
                      "<color=#5A5A5A>-------------------------------------</color>\n\n" +
                      "<color=#2F2F2F>ПОСЛЕДНИЙ ПЕРЕДАТЧИК ЗАМОЛК. ПОСЛЕДНИЙ БОЕЦ ПАЛ.\n\n" +
                      "ВАШ ОТРЯД УНИЧТОЖЕН.\n\n" +
                      "ЭТА ВОЙНА ПРОИГРАНА. ВАШИ ИМЕНА БУДУТ ЗАБЫТЫ.\n\n" +
                      "<color=#5A5A5A>-------------------------------------</color>\n\n" +
-                     "<size=26><color=#8B0000><i>«В ВОЙНЕ НЕТ ПОБЕД — ЕСТЬ ТОЛЬКО ВЫЖИВАНИЕ. ВЫ НЕ ВЫЖИЛИ.»</i></color></size>" +
-                     "</size>";
+                     "<size=26><color=#8B0000><i>«В ВОЙНЕ НЕТ ПОБЕД — ЕСТЬ ТОЛЬКО ВЫЖИВАНИЕ.ВЫ НЕ ВЫЖИЛИ.»</i></color></size>";
         Button.onClick.AddListener(() => BattleController.Instance.OnBattleLose());
     }
 
@@ -160,61 +112,60 @@ public class GameWindowController : MonoBehaviour
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-        // Заголовок в стиле Warhammer
-        _title.text = "<color=#8B0000><b>РЕСУРСЫ ДОБЫТЫ</b></color>";
+
+        _title.text = "<color=#8B0000><size=42><b>РЕСУРСЫ ДОБЫТЫ</b></size></color>";
 
         StringBuilder resourceText = new StringBuilder();
-
-        // Разделитель
-        resourceText.AppendLine("<color=#5A5A5A>-------------------------------------</color>");
+        resourceText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         resourceText.AppendLine();
-
-        // Основной текст
-        if (reward.resource != null && reward.resource.Count > 0)
-        {
-            resourceText.AppendLine("<color=#5A5A5A><b>ТРОФЕИ ВОЙНЫ:</b></color>");
-            resourceText.AppendLine();
-
-            foreach (var res in reward.resource)
-            {
-                resourceText.AppendLine($"<color=#8B0000></color> <color=#2F2F2F>{res.Config.ResourceName.ToUpper()}:</color> <color=#B8860B>{res.Count}</color>");
-            }
-
-            if (reward.expAmount > 0)
-            {
-                resourceText.AppendLine($"<color=#B8860B><b>СЛАВА:</b></color> +{reward.expAmount}");
-            }
-
-            if (reward.item != null)
-            {
-                resourceText.AppendLine("<color=#2F2F2F><b>РЕЛИКВИЯ:</b></color>");
-                resourceText.AppendLine($"<color=#8B0000></color> <b>{reward.item.itemName.ToUpper()}</b>");
-            }
-        }
-        else
-        {
-            resourceText.AppendLine("<color=#5A5A5A><i>Пусто... лишь пыль и пепел</i></color>");
-        }
-
-        // Заключительная строка
-        resourceText.AppendLine();
-        resourceText.AppendLine("<color=#5A5A5A>-------------------------------------</color>");
-        resourceText.AppendLine("<size=32><color=#8B0000>«ВОЙНА КОРМИТ ВОЙНУ»</color></size>");
+        resourceText.Append(FormatReward(reward));
+        resourceText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        resourceText.AppendLine("<size=32><color=#8B0000><i>«ВОЙНА КОРМИТ ВОЙНУ»</i></color></size>");
 
         _text.text = resourceText.ToString();
+    }
+
+    private string FormatReward(RewardConfig reward)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        if (reward.expAmount > 0)
+        {
+            sb.AppendLine("<color=#8B4513><size=32><b>СЛАВА</b></size></color>");  // Тёмно-коричневый
+            sb.AppendLine($"{reward.expAmount} ед. опыта\n");
+        }
+
+        if (reward.resource != null && reward.resource.Count > 0)
+        {
+            sb.AppendLine("<color=#556B2F><size=32><b>ТРОФЕИ</b></size></color>");  // Оливковый
+            foreach (var res in reward.resource)
+            {
+                sb.AppendLine($"{res.Config.ResourceName.ToUpper()}: {res.Count}");
+            }
+            sb.AppendLine();
+        }
+
+        if (reward.items != null)
+        {
+            sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");  // Защитный
+            sb.AppendLine($"{reward.itemInstance.ItemName.ToUpper()}\n");
+        }
+
+        return sb.ToString();
     }
 
     public void SetupCampfireTileInfo(NewTileConfig _tile)
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-        _title.text = "<size=36><color=#8B0000>ПЕРЕДЫШКА В УКРЫТИИ</color></size>";
 
-        _text.text = "<size=28>" +
+        _title.text = "<size=42><color=#8B0000>УКРЫТИЕ</color></size>";
+
+        _text.text = "<size=30>" +
                      "<color=#5A5A5A>-------------------------------------</color>\n" +
                      "<color=#2F2F2F>В ЗАБРОШЕННЫХ ОТСЕКАХ ДРЕВНЕГО КОРАБЛЯ БОЙЦЫ НАШЛИ ВРЕМЕННОЕ УБЕЖИЩЕ." +
                      "СРЕДИ ГУЛА ДРЕМЛЮЩИХ МАШИН И МЕРЦАЮЩИХ РУН МОЖНО:\n\n" +
-                     "<color=#8B0000>▪</color> <color=#B8860B>ОТДОХНУТЬ</color> - ВОССТАНОВИТЬ ЗДОРОВЬЕ\n" +
+                     "<color=#8B0000>▪</color> <color=#B8860B>ПРИМЕНИТЬ АПТЕКАРИСКЕИ АМПЛАНТЫ</color> - ВОССТАНОВИТЬ ЗДОРОВЬЕ\n" +
                      "<color=#8B0000>▪</color> <color=#B8860B>ИЗУЧИТЬ АРХИВЫ</color> - УЛУЧШИТЬ ЭКИПИРОВКУ\n" +
                      "<color=#8B0000>▪</color> <color=#B8860B>СВЯЗАТЬСЯ С КОМАНДОВАНИЕМ</color> - ПОПОЛНИТЬ РЯДЫ\n" +
                      "<color=#5A5A5A>-------------------------------------</color>\n" +

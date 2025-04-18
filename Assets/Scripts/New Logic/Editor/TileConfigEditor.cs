@@ -60,43 +60,74 @@ public class TileConfigEditor : Editor
         reward ??= new RewardConfig();
         EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
 
-        // Инициализация списка ресурсов
         reward.resource ??= new List<ResourceData>();
+        EditorGUILayout.LabelField("Resources", EditorStyles.boldLabel);
 
-        // Отображение списка ресурсов
         for (int i = 0; i < reward.resource.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
 
+            // Название ресурса (ObjectField)
+            EditorGUILayout.LabelField($"Resource {i + 1}:", GUILayout.Width(80));
+
             reward.resource[i].Config = (ResourceConfig)EditorGUILayout.ObjectField(
-                $"Resource {i + 1}", reward.resource[i].Config, typeof(ResourceConfig), false
+                reward.resource[i].Config, typeof(ResourceConfig), false, GUILayout.Width(200)
             );
 
-            reward.resource[i].Count = EditorGUILayout.IntField("Amount", reward.resource[i].Count);
+            // Количество
+            EditorGUILayout.LabelField("Amount:", GUILayout.Width(55));
+            reward.resource[i].Count = EditorGUILayout.IntField(reward.resource[i].Count, GUILayout.Width(60));
 
+            // Кнопка удаления
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 reward.resource.RemoveAt(i);
-                break; // Выходим из цикла, чтобы избежать ошибок при изменении списка во время итерации
+                break;
             }
 
             EditorGUILayout.EndHorizontal();
         }
 
         if (GUILayout.Button("Add Resource"))
-        {
             reward.resource.Add(new ResourceData());
-        }
 
-        if (reward.resource.Count > 0 && GUILayout.Button("Delete Resource"))
-        {
-            reward.resource.RemoveAt(reward.resource.Count - 1);
-        }
+        // Опыт
         reward.expAmount = EditorGUILayout.IntField("Experience Amount", reward.expAmount);
-        reward.item = (ItemConfig)EditorGUILayout.ObjectField("Item", reward.item, typeof(ItemConfig), false);
-        reward.itemInstance = new ItemInstance(reward.item);
 
+        // Предметы
+        reward.items ??= new List<ItemConfig>();
+        EditorGUILayout.LabelField("Items", EditorStyles.boldLabel);
+        for (int i = 0; i < reward.items.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+
+            reward.items[i] = (ItemConfig)EditorGUILayout.ObjectField(
+                $"Item {i + 1}", reward.items[i], typeof(ItemConfig), false
+            );
+
+            if (GUILayout.Button("X", GUILayout.Width(20)))
+            {
+                reward.items.RemoveAt(i);
+                break;
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        if (GUILayout.Button("Add Item"))
+            reward.items.Add(null);
+
+        if (reward.items != null && reward.items.Count > 0)
+        {
+            var randomItem = reward.items[Random.Range(0, reward.items.Count)];
+            reward.itemInstance = new ItemInstance(randomItem);
+        }
+        else
+        {
+            reward.itemInstance = null;
+        }
     }
+
     private void DrawRouletteConfigList(ref List<RouletteConfig> configs, string title)
     {
         EditorGUILayout.LabelField(title, EditorStyles.boldLabel);

@@ -8,6 +8,7 @@ public class BattleEnemyAI : MonoBehaviour
     public static BattleEnemyAI Instance { get; private set; }
     public Dictionary<BattleUnit, BattleUnit> EnemyIntentions { get => enemyIntentions; set => enemyIntentions = value; }
 
+    private bool endAction = false;
     private void Awake()
     {
         if (Instance == null)
@@ -44,16 +45,23 @@ public class BattleEnemyAI : MonoBehaviour
         return target;
     }
 
-    public void ExecuteActions() 
+    public void ExecuteActions()
     {
+        StartCoroutine(ExecuteActionsCoroutine());
+    }
+    private IEnumerator ExecuteActionsCoroutine()
+    {
+        endAction = false;
         foreach (var source in BattleController.Instance.EnemiesObj)
         {
             BattleUnit target = EnemyIntentions.TryGetValue(source, out var targetIn) ? targetIn : null;
             if (target != null)
             {
                 BattleActionManager.Instance.ExecuteAction(source, target);
+                yield return new WaitForSeconds(1f);
             }
         }
+        endAction = true;
     }
-    public bool AreActionsComplete() { return true; }
+    public bool AreActionsComplete() { return endAction; }
 }

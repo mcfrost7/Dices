@@ -6,18 +6,17 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    [SerializeField] private List<MapNodeData> _mapNodes = new();
-    [SerializeField] private List<NewUnitStats> _playerUnits = new();
-    [SerializeField] private List<NewUnitStats> _unitsStorage = new();
-    [SerializeField] private List<ItemInstance> _items = new();
-    [SerializeField] private List<ResourceData> _resourcesData = new();
+    private List<MapNodeData> _mapNodes = new();
+    private List<NewUnitStats> _playerUnits = new();
+    private List<NewUnitStats> _unitsStorage = new();
+    private List<ItemInstance> _items = new();
+    private List<ResourceData> _resourcesData = new();
 
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
     public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
     public List<NewUnitStats> UnitsStorage { get => _unitsStorage; set => _unitsStorage = value; }
     public List<ItemInstance> Items { get => _items; set => _items = value; }
     public List<ResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
-
 }
 [Serializable]
 public class SerializablePlayerData

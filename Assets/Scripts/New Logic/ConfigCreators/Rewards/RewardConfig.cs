@@ -6,14 +6,17 @@ public class RewardConfig
 {
     public List<ResourceData> resource = null;
     public int expAmount = 0;
-    public ItemConfig item = null;
+    public List<ItemConfig> items = null;
     [HideInInspector]public ItemInstance itemInstance = null;
 
     public ItemInstance GetItem()
     {
-        if (item != null)
-            return new ItemInstance(item);
-        else 
-            return null;
+        if (items != null && items.Count > 0)
+        {
+            var randomItem = items[Random.Range(0, items.Count)];
+            return new ItemInstance(randomItem);
+        }
+        return null;
     }
+
 }

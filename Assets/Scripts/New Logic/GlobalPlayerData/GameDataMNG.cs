@@ -41,12 +41,12 @@ public class GameDataMNG : MonoBehaviour
     }
 
 
-    public void LoadGame()
+    public bool LoadGame()
     {
         if (!SaveLoadMNG.SaveExists())
         {
             Debug.LogWarning("Сохранение не найдено!");
-            return;
+            return false;
         }
 
         PlayerData = SaveLoadMNG.Load();
@@ -58,6 +58,7 @@ public class GameDataMNG : MonoBehaviour
             ResourcesMNG.Instance.LoadResources(PlayerData);
 
         }
+        return true;    
     }
 
     public void SaveGame()

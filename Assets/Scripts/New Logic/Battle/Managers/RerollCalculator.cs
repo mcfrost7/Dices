@@ -33,9 +33,9 @@ public static class RerollCalculator
 
         foreach (var item in unit._dice._items)
         {
-            if (item.actionType == ActionType.Moral)
+            if (item.ActionType == ActionType.Moral)
             {
-                morale += item.power;
+                morale += item.Power;
             }
         }
           

@@ -5,7 +5,7 @@ using UnityEngine;
 public class FsmStateBotAction : FsmState
 {
     private float _stateTimer = 0f;
-    private float _actionDuration = 2f; // Duration of enemy actions
+    private float _actionDuration = 5f; // Duration of enemy actions
 
     public FsmStateBotAction(FSM fsm) : base(fsm) { }
 
@@ -35,7 +35,7 @@ public class FsmStateBotAction : FsmState
         }
 
         // When bot action is complete, cycle back to Intention state
-        if (_stateTimer >= _actionDuration || BattleEnemyAI.Instance.AreActionsComplete())
+        if (BattleEnemyAI.Instance.AreActionsComplete())
         {
             Fsm.SetState<FsmStateIntention>();
         }

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 
 public class CanvasMapGenerator : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class CanvasMapGenerator : MonoBehaviour
     }
 
     public MapGenerationSettings generationSettings;
+    public MapNode _currentNode;
     private List<List<MapNode>> layers = new List<List<MapNode>>();
     private int currentAvailableLayer;
 
@@ -67,8 +69,6 @@ public class CanvasMapGenerator : MonoBehaviour
     // Генерация карты
     public void GenerateMap()
     {
-
-
         ClearExistingNodes();
         layers.Clear();
         float currentLayerY = generationSettings.mapContainer.rect.height / 2;
@@ -199,6 +199,28 @@ public class CanvasMapGenerator : MonoBehaviour
 
         DetermineCurrentAvailableLayer();
         UpdateNodesAvailability();
+        _currentNode = FindLastVisitedNode();
+        if (_currentNode != null)
+        {
+            if (_currentNode.tileConfig.tileType == TileType.CampTile)
+            {
+                CampPanel.Instance.SetupInfo(_currentNode.tileConfig);
+            }
+        }
+    }
+
+    private MapNode FindLastVisitedNode()
+    {
+        for (int i = 0; i < layers.Count; i++)
+        {
+            List<MapNode> visitedNodes = layers[i].Where(node => node.isVisited).ToList();
+
+            if (visitedNodes.Count > 0)
+            {
+                return visitedNodes.Last();
+            }
+        }
+        return null;
     }
 
     private void DetermineCurrentAvailableLayer()
@@ -218,7 +240,6 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
-    // Сохраняем карту в данные игрока
     public void SaveMapToPlayerData()
     {
         List<MapNodeData> mapNodesData = new List<MapNodeData>();

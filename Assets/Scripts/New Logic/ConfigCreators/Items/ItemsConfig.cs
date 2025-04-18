@@ -11,78 +11,51 @@ public class ItemConfig : ScriptableObject
     public int power;
     public ActionType actionType;
     public ItemSideAffect sideAffect;
-    public int inventoryPosition = -1;
+    [HideInInspector]public int inventoryPosition = -1;
 }
 [System.Serializable]
 public class ItemInstance
 {
-    public string itemName;
-    public Sprite icon;
-    public string iconPath;
-    public int power;
-    public ActionType actionType;
-    public ItemSideAffect sideAffect;
-    public int inventoryPosition = -1;
-    private ItemConfig sourceConfig = null;
+    [SerializeField] private ItemConfig sourceConfig;
+    public ItemConfig Config => sourceConfig;
+
+    public string ItemName => sourceConfig?.itemName;
+    public Sprite Icon => sourceConfig?.icon;
+    public int Power => sourceConfig?.power ?? 0;
+    public ActionType ActionType => sourceConfig?.actionType ?? ActionType.None;
+    public ItemSideAffect SideAffect => sourceConfig?.sideAffect ?? ItemSideAffect.None;
+
+    public int InventoryPosition;
 
     public ItemInstance(ItemConfig config)
     {
-        if (config == null) return;
         sourceConfig = config;
-        iconPath = config.name;
-        itemName = config.itemName;
-        icon = config.icon;
-        power = config.power;
-        actionType = config.actionType;
-        sideAffect = config.sideAffect;
-        inventoryPosition = config.inventoryPosition;
+        InventoryPosition = config?.inventoryPosition ?? -1;
     }
-    public ItemInstance()
-    {
-        inventoryPosition = -1; 
-    }
+
+    public ItemInstance() => InventoryPosition = -1;
 }
+
 
 [Serializable]
 public class SerializableItemConfig
 {
-    public string itemName;
-    public string iconPath; 
-    public int power;
-    public ActionType actionType;
-    public ItemSideAffect sideAffect;
+    public string configName;
     public int inventoryPosition;
 
     public SerializableItemConfig(ItemInstance item)
     {
-        if (item == null) return;
-
-        this.itemName = item.itemName;
-        this.iconPath = "Sprites/Items/" + item.iconPath;
-        this.power = item.power;
-        this.power = item.power;
-        this.actionType = item .actionType;
-        this.sideAffect = item.sideAffect;
-        this.inventoryPosition = item.inventoryPosition;
+        configName = item.Config?.name;
+        inventoryPosition = item.InventoryPosition;
     }
 
     public ItemInstance ToItemInstance()
     {
-        ItemInstance item = new ItemInstance();
-        item.itemName = this.itemName;
-        if (!string.IsNullOrEmpty(iconPath))
+        var config = Resources.Load<ItemConfig>("ItemConfigs/" + configName);
+        if (config == null)
         {
-            item.icon = Resources.Load<Sprite>(iconPath);
-            if (item.icon == null)
-                Debug.Log($"Icon '{iconPath}' not found in Resources!");
+            Debug.LogWarning($"ItemConfig '{configName}' not found!");
         }
-
-        item.power = this.power;
-        item.actionType = this.actionType;
-        item.sideAffect = this.sideAffect;
-        item.inventoryPosition = this.inventoryPosition;
-
-        return item;
+        return new ItemInstance(config) { InventoryPosition = inventoryPosition };
     }
-
 }

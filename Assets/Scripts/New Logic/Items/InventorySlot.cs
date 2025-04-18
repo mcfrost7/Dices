@@ -25,7 +25,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
         if (transform.childCount == 0)
         {
             draggedItem.parentAfterDrag = transform;
-            draggedItem.Item.inventoryPosition = InventoryPosition;
+            draggedItem.Item.InventoryPosition = InventoryPosition;
             var items = GameDataMNG.Instance.PlayerData.Items;
             if (items != null)
             {
@@ -33,7 +33,7 @@ public class InventorySlot : MonoBehaviour, IDropHandler
                 {
                     if (item == draggedItem.Item)
                     {
-                        item.inventoryPosition = InventoryPosition;
+                        item.InventoryPosition = InventoryPosition;
                         break;
                     }
                 }

@@ -22,7 +22,7 @@ public class ArsenalPanelUI : MonoBehaviour
             if (item != null)
             {
                 GameObject slotGO = Instantiate(_inventorySlot, _contentPlaceHolder.transform);
-                if (item.inventoryPosition == -1)
+                if (item.InventoryPosition == -1)
                 {
                     CreateItem(item, slotGO);
                 }
@@ -36,7 +36,7 @@ public class ArsenalPanelUI : MonoBehaviour
         foreach (var item in unit._dice._items)
             foreach (var slot in ItemMNG.Instance.ActiveSlotForItems)
             {
-                if (item.inventoryPosition == slot.InventoryPosition)
+                if (item.InventoryPosition == slot.InventoryPosition)
                 {
                     CreateItem(item, slot.gameObject);
                     break;

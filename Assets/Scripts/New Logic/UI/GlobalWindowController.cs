@@ -8,6 +8,7 @@ public class GlobalWindowController : MonoBehaviour
 {
     public static GlobalWindowController Instance { get; private set; }
     public GameObject GlobalCanvas { get => _globalCanvas; set => _globalCanvas = value; }
+    public GameObject CurrentActiveCanvas { get => _currentActiveCanvas; set => _currentActiveCanvas = value; }
 
     [SerializeField] private GameObject _menu;
     [SerializeField] private GameObject _globalCanvas;
@@ -38,41 +39,35 @@ public class GlobalWindowController : MonoBehaviour
     public void ShowTeam() => SwitchCanvas(_team);
     public void ShowBattle() => SwitchCanvas(_battle);
     public void ShowRoulette() => SwitchCanvas(_roulette);
-
-    // Метод для показа настроек с сохранением предыдущего экрана
     public void ShowSettings()
     {
-        if (_currentActiveCanvas != _settings)
+        if (CurrentActiveCanvas != _settings)
         {
-            _canvasHistory.Push(_currentActiveCanvas); // Сохраняем предыдущий экран
+            _canvasHistory.Push(CurrentActiveCanvas); 
         }
         SwitchCanvas(_settings);
     }
-
-    // Метод для возврата на предыдущий экран
     public void GoBack()
     {
         if (_canvasHistory.Count > 0)
         {
             GameObject previousCanvas = _canvasHistory.Pop();
-            SwitchCanvas(previousCanvas, false); // Не добавляем в историю
+            SwitchCanvas(previousCanvas, false); 
         }
     }
-
-    // Универсальный метод для переключения между канвасами
     private void SwitchCanvas(GameObject targetCanvas, bool addToHistory = true)
     {
-        if (_currentActiveCanvas == targetCanvas)
+        if (CurrentActiveCanvas == targetCanvas)
             return;
 
-        if (addToHistory && _currentActiveCanvas != null)
+        if (addToHistory && CurrentActiveCanvas != null)
         {
-            _canvasHistory.Push(_currentActiveCanvas);
+            _canvasHistory.Push(CurrentActiveCanvas);
         }
-        _currentActiveCanvas = targetCanvas;
+        CurrentActiveCanvas = targetCanvas;
         HideAllCanvases();
         targetCanvas.SetActive(true);
-        OnCanvasSwitched?.Invoke(_currentActiveCanvas);
+        OnCanvasSwitched?.Invoke(CurrentActiveCanvas);
     }
 
 
@@ -83,7 +78,7 @@ public class GlobalWindowController : MonoBehaviour
         _team.SetActive(false);
         _battle.SetActive(false);
         _roulette.SetActive(false); 
-        if (_currentActiveCanvas != _roulette)
+        if (CurrentActiveCanvas != _roulette)
         {
             GlobalCanvas.SetActive(false);
         }

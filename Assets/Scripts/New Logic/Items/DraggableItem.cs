@@ -18,7 +18,7 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
     public void Setup(ItemInstance item, Canvas canvas)
     {
         Item = item;
-        _icon.sprite = item.icon;
+        _icon.sprite = item.Icon;
         canvasParent = canvas;
     }
 

@@ -15,33 +15,25 @@ MonoBehaviour:
   tileType: 0
   tileSprite: {fileID: 21300000, guid: 037be2c734516ee4ba067aa638e085f2, type: 3}
   battleSettings:
-    battleDifficulty: 1
+    battleDifficulty: 2
     tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}
     reward:
       resource: []
-      expAmount: 1
-      item: {fileID: 0}
+      expAmount: 10
+      items:
+      - {fileID: 11400000, guid: 5a2a14ab20d80d545aa378b4cadf61dc, type: 2}
+      - {fileID: 11400000, guid: fff40e8ae0a8f5840b45814d0dd74260, type: 2}
       itemInstance:
-        itemName: 
-        icon: {fileID: 0}
-        iconPath: 
-        power: 0
-        actionType: 0
-        sideAffect: 0
-        inventoryPosition: -1
+        sourceConfig: {fileID: 11400000, guid: 5a2a14ab20d80d545aa378b4cadf61dc, type: 2}
+        InventoryPosition: -1
   lootSettings:
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      items: []
       itemInstance:
-        itemName: 
-        icon: {fileID: 0}
-        iconPath: 
-        power: 0
-        actionType: 0
-        sideAffect: 0
-        inventoryPosition: 0
+        sourceConfig: {fileID: 0}
+        InventoryPosition: -1
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0
@@ -55,12 +47,7 @@ MonoBehaviour:
     reward:
       resource: []
       expAmount: 0
-      item: {fileID: 0}
+      items: []
       itemInstance:
-        itemName: 
-        icon: {fileID: 0}
-        iconPath: 
-        power: 0
-        actionType: 0
-        sideAffect: 0
-        inventoryPosition: 0
+        sourceConfig: {fileID: 0}
+        InventoryPosition: -1

@@ -1,6 +1,5 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-
 public class NewCameraMovement : MonoBehaviour
 {
     public float moveSpeed = 3f;
@@ -11,45 +10,43 @@ public class NewCameraMovement : MonoBehaviour
     private Vector2 minBounds;
     private Vector2 maxBounds;
 
-    private Camera cam;
+    [SerializeField] private Camera cam;
     [SerializeField] private GameObject plane;
 
     private bool canMoveAndZoom = true;
     private Vector3 lastMouseWorldPosition;
     private bool isDragging = false;
-    private bool wasActive;
 
     void Start()
     {
-        cam = GetComponent<Camera>();
+        if (cam == null)
+            cam = Camera.main;
+
         SetBounds();
         SetStartPosition();
+
+        GlobalWindowController.Instance.OnCanvasSwitched += HandleCanvasSwitched;
+        var currentCanvas = GlobalWindowController.Instance.CurrentActiveCanvas;
+        canMoveAndZoom = currentCanvas == GlobalWindowController.Instance.GlobalCanvas;
+        isDragging = false;
     }
 
-    private void OnEnable()
-    {
-        if (GlobalWindowController.Instance != null)
-            GlobalWindowController.Instance.OnCanvasSwitched += HandleCanvasSwitched;
-    }
-
-    private void OnDisable()
-    {
-        if (GlobalWindowController.Instance != null)
-            GlobalWindowController.Instance.OnCanvasSwitched -= HandleCanvasSwitched;
-    }
 
     private void HandleCanvasSwitched(GameObject newCanvas)
     {
         if (newCanvas == GlobalWindowController.Instance.GlobalCanvas)
-        { 
+        {
             Input.ResetInputAxes();
             canMoveAndZoom = true;
+            isDragging = false;
         }
         else
         {
             canMoveAndZoom = false;
+            isDragging = false;
         }
     }
+
 
     void Update()
     {
@@ -59,10 +56,6 @@ public class NewCameraMovement : MonoBehaviour
             HandleZooming();
         }
     }
-
-
-
-
     void HandlePanning()
     {
         if (Input.GetMouseButtonDown(0))

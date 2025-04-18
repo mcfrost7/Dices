@@ -31,7 +31,7 @@ public class ItemMNG : MonoBehaviour
         {
             if (item != null)
             {
-                item.inventoryPosition = -1;
+                item.InventoryPosition = -1;
             }
         }
 

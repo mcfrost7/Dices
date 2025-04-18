@@ -45,7 +45,7 @@ public class CampPanel : MonoBehaviour
     public void SetupInfo(NewTileConfig config)
     {
         _button.enabled = true;
-        _textName.text = "<color=#8B0000>ПЕРЕДЫШКА В УКРЫТИИ</color>";
+        _textName.text = "<color=#8B0000>УКРЫТИИ</color>";
         _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
                      $"<color=#2F2F2F>Использовать полевые аптечки для восстановления <color=#B8860B>{config.campSettings.healAmount}</color> ед. здоровья каждому воину.</color>\n" +
                      $"<color=#5A5A5A>-----------------------------</color>\n" +
@@ -64,6 +64,7 @@ public class CampPanel : MonoBehaviour
             {
                 healAction.Heal(unit, _amount);
             }
+            SFXManager.Instance.PlaySound(ActionType.Heal);
             _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
                          $"<color=#2F2F2F>Здоровье пополнено. Отряд готов к продолжению операции.</color>\n" +
                          $"<color=#5A5A5A>-----------------------------</color>";

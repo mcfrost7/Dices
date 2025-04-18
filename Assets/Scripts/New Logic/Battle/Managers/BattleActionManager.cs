@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using DG.Tweening;
+using static UnityEngine.GraphicsBuffer;
 
 public class BattleActionManager : MonoBehaviour
 {
@@ -94,15 +96,12 @@ public class BattleActionManager : MonoBehaviour
     {
         if (source == null || target == null)
             return;
-
         DiceSide currentSide = source.UnitData._dice.GetCurrentSide();
         int power = source.CalculateSidePower(source.UnitData, currentSide);
         int duration = source.UnitData._dice.GetCurrentSide().duration;
-
-        // Получаем нужное действие и выполняем его
         IBattleAction action = BattleActionFactory.Instance.GetAction(currentSide.actionType);
         action.Execute(source, target, power,duration);
-
+        SFXManager.Instance.PlaySound(currentSide.actionType);
         source.DisableUnitAfterAction();
         source.RefreshUnitUI();
         target.RefreshUnitUI();
@@ -124,7 +123,7 @@ public class BattleActionManager : MonoBehaviour
     {
         if (target.UnitData._current_health <= 0)
         {
-            // Remove defeated unit
+            // Удаление из списков
             if (BattleController.Instance.UnitsObj.Contains(target))
             {
                 BattleController.Instance.UnitsObj.Remove(target);
@@ -132,14 +131,54 @@ public class BattleActionManager : MonoBehaviour
             }
             else if (BattleController.Instance.EnemiesObj.Contains(target))
             {
+                target.Arrow.gameObject.SetActive(false);
                 BattleController.Instance.EnemiesObj.Remove(target);
-                BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
             }
 
-            // Destroy the game object
-            Destroy(target.gameObject);
+            var intentions = BattleEnemyAI.Instance.EnemyIntentions;
+            var toRemove = new List<BattleUnit>();
+
+            foreach (var pair in intentions)
+            {
+                if (pair.Key == target || pair.Value == target)
+                {
+                    toRemove.Add(pair.Key);
+                }
+            }
+
+            foreach (var unit in toRemove)
+            {
+                intentions.Remove(unit);
+            }
+
+            StartCoroutine(DeathAnimation(target));
         }
     }
+
+
+
+    private IEnumerator DeathAnimation(BattleUnit _unit)
+    {
+        int direction = _unit.IsEnemy ? 1 : -1;
+        RectTransform rect = _unit.GetComponent<RectTransform>();
+        var layoutGroup = rect.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
+        var fitter = rect.parent.GetComponent<ContentSizeFitter>();
+        var layoutElem = _unit.GetComponent<LayoutElement>();
+        if (layoutGroup != null) layoutGroup.enabled = false;
+        if (fitter != null) fitter.enabled = false;
+        if (layoutElem != null) layoutElem.ignoreLayout = true;
+        Vector2 startPos = rect.anchoredPosition;
+        rect.DOAnchorPosX(startPos.x + 560 * direction, 1f).SetEase(Ease.InOutExpo);
+
+        yield return new WaitForSeconds(1f);
+        if (layoutElem != null) layoutElem.ignoreLayout = false;
+        if (layoutGroup != null) layoutGroup.enabled = true;
+        if (fitter != null) fitter.enabled = true;
+        Destroy(_unit.gameObject);
+        BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
+    }
+
+
 
     public void ShowActionFeedback(string message)
     {

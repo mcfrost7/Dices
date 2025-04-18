@@ -41,7 +41,7 @@ public class ResourceEventHandler : IEventHandler
         {
             ResourcesMNG.Instance.AddResources(config.lootSettings.reward.resource);
         }
-        if (config.lootSettings.reward.item != null)
+        if (config.lootSettings.reward.items != null)
         {
             ItemMNG.Instance.AddItem(config.lootSettings.reward.GetItem());
         }

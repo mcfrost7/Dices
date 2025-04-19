@@ -19,15 +19,9 @@ MonoBehaviour:
     tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}
     reward:
       sourceConfig: {fileID: 11400000, guid: 199fbb9ce616b1d488a44e422ab32fa6, type: 2}
-      itemInstance:
-        sourceConfig: {fileID: 0}
-        InventoryPosition: -1
   lootSettings:
     reward:
       sourceConfig: {fileID: 0}
-      itemInstance:
-        sourceConfig: {fileID: 0}
-        InventoryPosition: -1
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0
@@ -40,6 +34,3 @@ MonoBehaviour:
     tileEnemies: {fileID: 0}
     reward:
       sourceConfig: {fileID: 0}
-      itemInstance:
-        sourceConfig: {fileID: 0}
-        InventoryPosition: -1

@@ -131,7 +131,7 @@ public class BattleController : MonoBehaviour
         if (IsBossBattle)
         {
             reward = CurrentBattleConfig.bossSettings.reward;
-        }
+        } else
         {
             reward = CurrentBattleConfig.battleSettings.reward;
         }

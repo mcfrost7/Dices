@@ -27,7 +27,7 @@ public class RewardMNG : MonoBehaviour
 
     private void ResourceReward(List<ResourceData> resource)
     {
-        if (resource.Count > 0)
+        if (resource.Count > 0 && resource != null)
         {
             ResourcesMNG.Instance.AddResources(resource);
         }

@@ -74,7 +74,6 @@ public class CanvasMapGenerator : MonoBehaviour
         float currentLayerY = generationSettings.mapContainer.rect.height / 2;
         bool bossPlaced = false;
 
-        // Select a random location config for this map
         LocationConfig selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
 
         for (int layerIndex = 0; layerIndex < generationSettings.numberOfLayers; layerIndex++)
@@ -302,11 +301,11 @@ public class CanvasMapGenerator : MonoBehaviour
                 List<NewTileConfig> bossTileConfigs = new List<NewTileConfig>();
                 foreach (var tile in locationConfig.tiles)
                 {
-                    foreach (var config in tile.tileConfig)
+                    if (tile.tileType == TileType.BossTile)
                     {
-                        if (config.tileType == TileType.BossTile)
+                        foreach (var tileConfig in tile.tileConfig)
                         {
-                            bossTileConfigs.Add(config);
+                            bossTileConfigs.Add(tileConfig);
                         }
                     }
                 }
@@ -338,20 +337,18 @@ public class CanvasMapGenerator : MonoBehaviour
             // Create regular tile
             TileType selectedTileType = GetRandomTileType();
 
-            // Find all configs matching the selected tile type
             List<NewTileConfig> matchingTileConfigs = new List<NewTileConfig>();
             foreach (var tile in locationConfig.tiles)
             {
-                foreach (var config in tile.tileConfig)
+                if (tile.tileType == selectedTileType)
                 {
-                    if (config.tileType == selectedTileType)
+                    foreach (var tileConfig in tile.tileConfig)
                     {
-                        matchingTileConfigs.Add(config);
+                        matchingTileConfigs.Add(tileConfig);
                     }
                 }
             }
 
-            // If no matching tile configs found, try to use any available tile
             if (matchingTileConfigs.Count == 0)
             {
                 Debug.LogWarning($"No tile configurations found for tile type {selectedTileType}. Using any available tile.");

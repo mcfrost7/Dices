@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabfe68735d382c4e801e8c7b3680fe9, type: 3}
+  m_Name: Level 1
+  m_EditorClassIdentifier: 
+  _locationName: "\u0428\u043B\u044E\u0437\u044B"
+  tiles:
+  - tileType: 0
+    tileConfig:
+    - {fileID: 11400000, guid: 18fe1d9a49e402e41a55cdfb092dd96e, type: 2}
+    - {fileID: 11400000, guid: 6cbfed1db890c3943b0cf2b6f035fe92, type: 2}
+    - {fileID: 11400000, guid: 39cea05d3404d2d45a262ecb1b473183, type: 2}
+    - {fileID: 11400000, guid: 6a9b72c85b9265b4ba59268b4a6fded3, type: 2}
+    - {fileID: 11400000, guid: 6f1dd326a2be189458b3ce2f3c314c02, type: 2}
+  - tileType: 1
+    tileConfig:
+    - {fileID: 11400000, guid: 39e2bfe62562a274e864eb8d5bf5bc0a, type: 2}
+    - {fileID: 11400000, guid: 16c5e451c1d341e4f9af8ffdc2c55270, type: 2}
+    - {fileID: 11400000, guid: c1afc842399603b4698e9d66c57cfd08, type: 2}
+  - tileType: 2
+    tileConfig:
+    - {fileID: 11400000, guid: 2b7b34c89a58ece49bd058f4a3da7f6b, type: 2}
+  - tileType: 3
+    tileConfig:
+    - {fileID: 11400000, guid: 26e904e3684fc7442a2b77b17eb83fe7, type: 2}
+  - tileType: 4
+    tileConfig:
+    - {fileID: 11400000, guid: 434045b9604d4a6409d5b9da0e696753, type: 2}
+  _locationLevel: 1

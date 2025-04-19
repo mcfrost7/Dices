@@ -127,7 +127,7 @@ public class BattleController : MonoBehaviour
     }
     public void OnBattleWin()
     {
-        RewardConfig reward = null;
+        SerializableRewardConfig reward = null;
         if (IsBossBattle)
         {
             reward = CurrentBattleConfig.bossSettings.reward;

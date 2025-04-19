@@ -18,9 +18,9 @@ public class RewardMNG : MonoBehaviour
         }
     }
     
-    public void CalculateReward(RewardConfig reward)
+    public void CalculateReward(SerializableRewardConfig reward)
     {
-        ResourceReward(reward.resource);
+        ResourceReward(reward.resources);
         ExpReward(reward.expAmount);
         ItemReward(reward.GetItem());
     }

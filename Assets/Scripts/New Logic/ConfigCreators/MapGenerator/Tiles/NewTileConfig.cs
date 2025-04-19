@@ -18,13 +18,13 @@ public class BattleSettings
 {
     public int battleDifficulty; 
     public TileEnemies tileEnemies;
-    public RewardConfig reward = new RewardConfig();
+    public SerializableRewardConfig reward;
 }
 
 [System.Serializable]
 public class LootSettings
 {
-    public RewardConfig reward = new RewardConfig();
+    public SerializableRewardConfig reward;
 }
 
 [System.Serializable]
@@ -47,5 +47,5 @@ public class BossSettings
 {
     public int battleDifficulty;
     public TileEnemies tileEnemies;
-    public RewardConfig reward = new RewardConfig();
+    public SerializableRewardConfig reward;
 }

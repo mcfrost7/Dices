@@ -74,11 +74,14 @@ public class CanvasMapGenerator : MonoBehaviour
         float currentLayerY = generationSettings.mapContainer.rect.height / 2;
         bool bossPlaced = false;
 
+        // Select a random location config for this map
+        LocationConfig selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
+
         for (int layerIndex = 0; layerIndex < generationSettings.numberOfLayers; layerIndex++)
         {
             int nodesInLayer = layerIndex == 0 ? 1 : Random.Range(generationSettings.minNodesPerLayer, generationSettings.maxNodesPerLayer + 1);
 
-            List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced);
+            List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced, selectedLocationConfig);
             layers.Add(layerNodes);
             currentLayerY -= generationSettings.layerHeight;
         }
@@ -170,12 +173,31 @@ public class CanvasMapGenerator : MonoBehaviour
                 RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTransform.anchoredPosition = nodeData.Position;
 
-                LocationConfig.LocationTile tileConfig = locationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == nodeData.TileType) ?? locationConfig.tiles.FirstOrDefault();
+                // Find tile configs that match the tile type
+                List<NewTileConfig> matchingTileConfigs = new List<NewTileConfig>();
+                foreach (var tile in locationConfig.tiles)
+                {
+                    foreach (var config in tile.tileConfig)
+                    {
+                        if (config.tileType == nodeData.TileType)
+                        {
+                            matchingTileConfigs.Add(config);
+                        }
+                    }
+                }
 
+                if (matchingTileConfigs.Count == 0)
+                {
+                    Debug.LogWarning($"No tile configurations of type {nodeData.TileType} found in location {locationConfig.name}!");
+                    continue;
+                }
+
+                // Find the specific tile config that was used
+                NewTileConfig tileConfig = matchingTileConfigs.FirstOrDefault(t => t.name == nodeData.TileConfigId);
                 if (tileConfig == null)
                 {
-                    Debug.LogWarning($"No tile configurations found in location {locationConfig.name}!");
-                    continue;
+                    // If the specific config is not found, use a random one of the matching type
+                    tileConfig = matchingTileConfigs[Random.Range(0, matchingTileConfigs.Count)];
                 }
 
                 MapNode mapNode = new MapNode
@@ -184,13 +206,13 @@ public class CanvasMapGenerator : MonoBehaviour
                     rectTransform = nodeRectTransform,
                     locationConfig = locationConfig,
                     tileType = nodeData.TileType,
-                    tileConfig = tileConfig.tileConfig,
+                    tileConfig = tileConfig,
                     layerIndex = nodeData.LayerIndex,
                     isVisited = nodeData.IsVisited,
                     isAvailable = nodeData.IsAvailable
                 };
 
-                nodeObject.Initialize(tileConfig.tileConfig.tileSprite, OnNodeClick, mapNode);
+                nodeObject.Initialize(tileConfig.tileSprite, OnNodeClick, mapNode);
                 layerNodes.Add(mapNode);
             }
 
@@ -260,7 +282,7 @@ public class CanvasMapGenerator : MonoBehaviour
     }
 
     // Создаем узлы для слоя
-    private List<MapNode> CreateNodesForLayer(int layerIndex, float layerY, int nodesInLayer, ref bool bossPlaced)
+    private List<MapNode> CreateNodesForLayer(int layerIndex, float layerY, int nodesInLayer, ref bool bossPlaced, LocationConfig locationConfig)
     {
         List<MapNode> layerNodes = new List<MapNode>();
         float totalWidth = generationSettings.mapContainer.rect.width;
@@ -272,64 +294,100 @@ public class CanvasMapGenerator : MonoBehaviour
             RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
             float xPosition = spacing * (i + 1) - totalWidth / 2 + Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
             nodeRectTransform.anchoredPosition = new Vector2(xPosition, layerY);
-            LocationConfig selectedLocationConfig = null;
 
             // Handle boss placement on the first layer
             if (!bossPlaced && layerIndex == 0)
             {
-                selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
-
-                if (selectedLocationConfig != null)
+                // Get all boss tile configs from the location
+                List<NewTileConfig> bossTileConfigs = new List<NewTileConfig>();
+                foreach (var tile in locationConfig.tiles)
                 {
-                    LocationConfig.LocationTile bossTile = selectedLocationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == TileType.BossTile);
-
-                    if (bossTile != null)
+                    foreach (var config in tile.tileConfig)
                     {
-                        MapNode newNode = new MapNode
+                        if (config.tileType == TileType.BossTile)
                         {
-                            nodeObject = nodeObject,
-                            rectTransform = nodeRectTransform,
-                            locationConfig = selectedLocationConfig,
-                            tileType = TileType.BossTile,
-                            tileConfig = bossTile.tileConfig,
-                            layerIndex = layerIndex,
-                            isVisited = false,
-                            isAvailable = false
-                        };
-
-                        newNode.nodeObject.Initialize(bossTile.tileConfig.tileSprite, OnNodeClick, newNode);
-                        layerNodes.Add(newNode);
-                        bossPlaced = true;
-                        continue;
+                            bossTileConfigs.Add(config);
+                        }
                     }
+                }
+
+                if (bossTileConfigs.Count > 0)
+                {
+                    // Select a random boss tile config
+                    NewTileConfig selectedBossTileConfig = bossTileConfigs[Random.Range(0, bossTileConfigs.Count)];
+
+                    MapNode newNode = new MapNode
+                    {
+                        nodeObject = nodeObject,
+                        rectTransform = nodeRectTransform,
+                        locationConfig = locationConfig,
+                        tileType = TileType.BossTile,
+                        tileConfig = selectedBossTileConfig,
+                        layerIndex = layerIndex,
+                        isVisited = false,
+                        isAvailable = false
+                    };
+
+                    newNode.nodeObject.Initialize(selectedBossTileConfig.tileSprite, OnNodeClick, newNode);
+                    layerNodes.Add(newNode);
+                    bossPlaced = true;
+                    continue;
                 }
             }
 
             // Create regular tile
             TileType selectedTileType = GetRandomTileType();
-            selectedLocationConfig = generationSettings.locationConfigs[Random.Range(0, generationSettings.locationConfigs.Count)];
 
-            LocationConfig.LocationTile generatedTile = selectedLocationConfig.tiles.FirstOrDefault(tile => tile.tileConfig.tileType == selectedTileType);
-
-            if (generatedTile == null)
+            // Find all configs matching the selected tile type
+            List<NewTileConfig> matchingTileConfigs = new List<NewTileConfig>();
+            foreach (var tile in locationConfig.tiles)
             {
-                generatedTile = selectedLocationConfig.tiles.FirstOrDefault();
-                selectedTileType = generatedTile?.tileConfig.tileType ?? TileType.BattleTile;
+                foreach (var config in tile.tileConfig)
+                {
+                    if (config.tileType == selectedTileType)
+                    {
+                        matchingTileConfigs.Add(config);
+                    }
+                }
             }
+
+            // If no matching tile configs found, try to use any available tile
+            if (matchingTileConfigs.Count == 0)
+            {
+                Debug.LogWarning($"No tile configurations found for tile type {selectedTileType}. Using any available tile.");
+                foreach (var tile in locationConfig.tiles)
+                {
+                    if (tile.tileConfig.Count > 0)
+                    {
+                        matchingTileConfigs.AddRange(tile.tileConfig);
+                    }
+                }
+
+                if (matchingTileConfigs.Count == 0)
+                {
+                    Debug.LogError("No tile configurations found in location!");
+                    continue;
+                }
+
+                selectedTileType = matchingTileConfigs[0].tileType;
+            }
+
+            // Select a random config from matching tiles
+            NewTileConfig selectedTileConfig = matchingTileConfigs[Random.Range(0, matchingTileConfigs.Count)];
 
             MapNode newTileNode = new MapNode
             {
                 nodeObject = nodeObject,
                 rectTransform = nodeRectTransform,
-                locationConfig = selectedLocationConfig,
+                locationConfig = locationConfig,
                 tileType = selectedTileType,
-                tileConfig = generatedTile.tileConfig,
+                tileConfig = selectedTileConfig,
                 layerIndex = layerIndex,
                 isVisited = false,
                 isAvailable = false
             };
 
-            newTileNode.nodeObject.Initialize(generatedTile.tileConfig.tileSprite, OnNodeClick, newTileNode);
+            newTileNode.nodeObject.Initialize(selectedTileConfig.tileSprite, OnNodeClick, newTileNode);
             layerNodes.Add(newTileNode);
         }
 

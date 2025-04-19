@@ -1,13 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class RewardConfig
+[CreateAssetMenu(fileName = "RewardConfig", menuName = "Configs/RewardConfig")]
+public class RewardConfig : ScriptableObject
 {
     public List<ResourceData> resource = null;
     public int expAmount = 0;
     public List<ItemConfig> items = null;
-    [HideInInspector]public ItemInstance itemInstance = null;
+    [HideInInspector] public ItemInstance itemInstance = new ItemInstance();
+}
+
+[System.Serializable]
+public class SerializableRewardConfig
+{
+    [SerializeField] private RewardConfig sourceConfig;
+    public List<ResourceData> resources => SourceConfig?.resource;
+    public int expAmount => SourceConfig?.expAmount ?? 0;
+    public List<ItemConfig> items => SourceConfig?.items;
+    private ItemInstance itemInstance;
+
+    public RewardConfig SourceConfig { get => sourceConfig; set => sourceConfig = value; }
+
+    public SerializableRewardConfig(RewardConfig config)
+    {
+        SourceConfig = config;
+        itemInstance = null;
+    }
 
     public ItemInstance GetItem()
     {
@@ -18,5 +36,4 @@ public class RewardConfig
         }
         return null;
     }
-
 }

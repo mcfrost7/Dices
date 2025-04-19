@@ -10,7 +10,7 @@ public class ResourceConfig : ScriptableObject
     [SerializeField] private string resourceName; // Название ресурса
     [SerializeField] private Sprite icon;        // Иконка ресурса
     [SerializeField] private ResourcesType resourcesType; // Тип ресурса
-    public string _id;
+    [HideInInspector]public string _id;
     public string ResourceName { get => resourceName; set => resourceName = value; }
     public Sprite Icon { get => icon; set => icon = value; }
     public ResourcesType ResourcesType { get => resourcesType; set => resourcesType = value; }

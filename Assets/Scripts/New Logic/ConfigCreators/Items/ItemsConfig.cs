@@ -16,6 +16,7 @@ public class ItemConfig : ScriptableObject
 [System.Serializable]
 public class ItemInstance
 {
+
     [SerializeField] private ItemConfig sourceConfig;
     public ItemConfig Config => sourceConfig;
 
@@ -51,7 +52,7 @@ public class SerializableItemConfig
 
     public ItemInstance ToItemInstance()
     {
-        var config = Resources.Load<ItemConfig>("ItemConfigs/" + configName);
+        var config = Resources.Load<ItemConfig>("Configs/ItemConfigs/" + configName);
         if (config == null)
         {
             Debug.LogWarning($"ItemConfig '{configName}' not found!");

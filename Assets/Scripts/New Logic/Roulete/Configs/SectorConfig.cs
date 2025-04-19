@@ -9,5 +9,5 @@ public class SectorConfig
     public string Name;
     [Range(0, 1)] public float Percent;
     public Color Color = Color.white;
-    public List<RewardConfig> WinItems;
+    public List<SerializableRewardConfig> WinItems;
 }

@@ -80,7 +80,7 @@ public class GameWindowController : MonoBehaviour
         }
 
         _title.text = "<color=#8B0000><size=42><b>ВО ИМЯ ИМПЕРАТОРА!</b></size></color>";
-        RewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
+        SerializableRewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
 
         StringBuilder victoryText = new StringBuilder();
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
@@ -108,7 +108,7 @@ public class GameWindowController : MonoBehaviour
         Button.onClick.AddListener(() => BattleController.Instance.OnBattleLose());
     }
 
-    public void SetupResourceInfo(RewardConfig reward)
+    public void SetupResourceInfo(SerializableRewardConfig reward)
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
@@ -125,7 +125,7 @@ public class GameWindowController : MonoBehaviour
         _text.text = resourceText.ToString();
     }
 
-    private string FormatReward(RewardConfig reward)
+    private string FormatReward(SerializableRewardConfig reward)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -135,20 +135,20 @@ public class GameWindowController : MonoBehaviour
             sb.AppendLine($"{reward.expAmount} ед. опыта\n");
         }
 
-        if (reward.resource != null && reward.resource.Count > 0)
+        if (reward.resources != null && reward.resources.Count > 0)
         {
             sb.AppendLine("<color=#556B2F><size=32><b>ТРОФЕИ</b></size></color>");  // Оливковый
-            foreach (var res in reward.resource)
+            foreach (var res in reward.resources)
             {
                 sb.AppendLine($"{res.Config.ResourceName.ToUpper()}: {res.Count}");
             }
             sb.AppendLine();
         }
 
-        if (reward.items != null)
+        if (reward.GetItem() != null)
         {
             sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");  // Защитный
-            sb.AppendLine($"{reward.itemInstance.ItemName.ToUpper()}\n");
+            sb.AppendLine($"{reward.GetItem().ItemName.ToUpper()}\n");
         }
 
         return sb.ToString();

@@ -25,7 +25,7 @@ public class TileConfigEditor : Editor
 
             case TileType.LootTile:
                 config.lootSettings ??= new LootSettings();
-                DrawRewardSettings(ref config.lootSettings.reward, "Loot Reward");
+                DrawRewardSettings( ref config.lootSettings.reward, "Loot Reward");
                 break;
 
             case TileType.CampTile:
@@ -55,78 +55,43 @@ public class TileConfigEditor : Editor
     /// <summary>
     /// Метод для удобного отображения настроек наград
     /// </summary>
-    private void DrawRewardSettings(ref RewardConfig reward, string title)
+
+    private void DrawRewardSettings(ref SerializableRewardConfig reward, string title)
     {
-        reward ??= new RewardConfig();
         EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Load Config:", GUILayout.Width(80));
 
-        reward.resource ??= new List<ResourceData>();
-        EditorGUILayout.LabelField("Resources", EditorStyles.boldLabel);
+        RewardConfig currentConfig = reward?.SourceConfig;
+        RewardConfig newConfig = (RewardConfig)EditorGUILayout.ObjectField(
+            currentConfig,
+            typeof(RewardConfig),
+            false,
+            GUILayout.Width(200)
+        );
 
-        for (int i = 0; i < reward.resource.Count; i++)
+        EditorGUILayout.EndHorizontal();
+
+        // Обновляем reward только если конфиг изменился
+        if (newConfig != currentConfig && newConfig != null)
         {
-            EditorGUILayout.BeginHorizontal();
-
-            // Название ресурса (ObjectField)
-            EditorGUILayout.LabelField($"Resource {i + 1}:", GUILayout.Width(80));
-
-            reward.resource[i].Config = (ResourceConfig)EditorGUILayout.ObjectField(
-                reward.resource[i].Config, typeof(ResourceConfig), false, GUILayout.Width(200)
-            );
-
-            // Количество
-            EditorGUILayout.LabelField("Amount:", GUILayout.Width(55));
-            reward.resource[i].Count = EditorGUILayout.IntField(reward.resource[i].Count, GUILayout.Width(60));
-
-            // Кнопка удаления
-            if (GUILayout.Button("X", GUILayout.Width(20)))
-            {
-                reward.resource.RemoveAt(i);
-                break;
-            }
-
-            EditorGUILayout.EndHorizontal();
+            reward = new SerializableRewardConfig(newConfig);
         }
 
-        if (GUILayout.Button("Add Resource"))
-            reward.resource.Add(new ResourceData());
-
-        // Опыт
-        reward.expAmount = EditorGUILayout.IntField("Experience Amount", reward.expAmount);
-
-        // Предметы
-        reward.items ??= new List<ItemConfig>();
-        EditorGUILayout.LabelField("Items", EditorStyles.boldLabel);
-        for (int i = 0; i < reward.items.Count; i++)
+        // Показываем содержимое
+        if (reward?.SourceConfig != null)
         {
-            EditorGUILayout.BeginHorizontal();
-
-            reward.items[i] = (ItemConfig)EditorGUILayout.ObjectField(
-                $"Item {i + 1}", reward.items[i], typeof(ItemConfig), false
-            );
-
-            if (GUILayout.Button("X", GUILayout.Width(20)))
-            {
-                reward.items.RemoveAt(i);
-                break;
-            }
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        if (GUILayout.Button("Add Item"))
-            reward.items.Add(null);
-
-        if (reward.items != null && reward.items.Count > 0)
-        {
-            var randomItem = reward.items[Random.Range(0, reward.items.Count)];
-            reward.itemInstance = new ItemInstance(randomItem);
-        }
-        else
-        {
-            reward.itemInstance = null;
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Reward Config Preview:", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Exp Amount: {reward.expAmount}");
+            EditorGUILayout.LabelField($"Resources: {reward.resources?.Count ?? 0}");
+            EditorGUILayout.LabelField($"Items: {reward.items?.Count ?? 0}");
+            EditorGUILayout.LabelField($"ItemInstance: {reward.GetItem()?.Config?.name ?? "None"}");
         }
     }
+
+
+
 
     private void DrawRouletteConfigList(ref List<RouletteConfig> configs, string title)
     {

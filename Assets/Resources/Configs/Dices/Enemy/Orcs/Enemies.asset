@@ -15,3 +15,4 @@ MonoBehaviour:
   newDiceConfigs:
   - {fileID: 11400000, guid: 3a1be4679dcc2424dac3ae5179972944, type: 2}
   - {fileID: 11400000, guid: cfea82708bf60f04696d034f07f1c8d8, type: 2}
+  _enemiesName: "\u0411\u043E\u0439\u0437\u044B \u0438 \u0420\u0443\u0431\u0430\u043A\u0438"

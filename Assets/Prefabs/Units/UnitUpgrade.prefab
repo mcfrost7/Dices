@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3635741481095079178}
   - component: {fileID: 8686146956374137549}
   - component: {fileID: 2378328046904997681}
+  - component: {fileID: -3440585129671259853}
   m_Layer: 0
   m_Name: UnitUpgrade
   m_TagString: Untagged
@@ -136,3 +137,15 @@ MonoBehaviour:
   _image: {fileID: 3635741481095079178}
   _button: {fileID: 8686146956374137549}
   _text: {fileID: 0}
+--- !u!114 &-3440585129671259853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6608181200862402278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed1517d04283f84b9647e21ddebefbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9116914415387762719}
   - component: {fileID: 1627129075772666882}
   - component: {fileID: 2174483864563029476}
+  - component: {fileID: 1133139321266483656}
   m_Layer: 0
   m_Name: NewTile
   m_TagString: Untagged
@@ -136,3 +137,18 @@ MonoBehaviour:
   _image: {fileID: 9116914415387762719}
   _button: {fileID: 1627129075772666882}
   _text: {fileID: 0}
+  _tooltipTrigger: {fileID: 1133139321266483656}
+--- !u!114 &1133139321266483656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6958758824216107968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed1517d04283f84b9647e21ddebefbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: 
+  header: 

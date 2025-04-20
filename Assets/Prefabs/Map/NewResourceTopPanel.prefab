@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 3135313278587059137}
   - component: {fileID: 6965038015487854608}
   - component: {fileID: -5467377319677207181}
+  - component: {fileID: 5975901531247350484}
   m_Layer: 0
   m_Name: NewResourceTopPanel
   m_TagString: Untagged
@@ -453,3 +454,15 @@ MonoBehaviour:
   _image: {fileID: 8692130118250912859}
   _name: {fileID: 2713016673280030100}
   _amount: {fileID: 3728754235557539028}
+--- !u!114 &5975901531247350484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7940448449071829794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed1517d04283f84b9647e21ddebefbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

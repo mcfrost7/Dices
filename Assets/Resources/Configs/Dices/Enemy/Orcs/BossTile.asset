@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newDiceConfigs:
   - {fileID: 11400000, guid: 09de311b73e90d946acb76e61a84b067, type: 2}
-  - {fileID: 11400000, guid: 09de311b73e90d946acb76e61a84b067, type: 2}
+  _enemiesName: "\u0428\u0443\u0442-\u0411\u043E\u0439\u0437"

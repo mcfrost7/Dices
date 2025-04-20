@@ -50,12 +50,14 @@ public class CanvasMapGenerator : MonoBehaviour
     }
 
     public MapGenerationSettings generationSettings;
-    public MapNode _currentNode;
+    private MapNode currentNode;
     private List<List<MapNode>> layers = new List<List<MapNode>>();
     private int currentAvailableLayer;
 
     // Событие для кликов по тайлам
     private UnityEvent<MapNode> OnTileClicked;
+
+    public MapNode CurrentNode { get => currentNode; set => currentNode = value; }
 
     private void Start()
     {
@@ -220,12 +222,12 @@ public class CanvasMapGenerator : MonoBehaviour
 
         DetermineCurrentAvailableLayer();
         UpdateNodesAvailability();
-        _currentNode = FindLastVisitedNode();
-        if (_currentNode != null)
+        CurrentNode = FindLastVisitedNode();
+        if (CurrentNode != null)
         {
-            if (_currentNode.tileConfig.tileType == TileType.CampTile)
+            if (CurrentNode.tileConfig.tileType == TileType.CampTile)
             {
-                CampPanel.Instance.SetupInfo(_currentNode.tileConfig);
+                CampPanel.Instance.SetupInfo(CurrentNode.tileConfig);
             }
         }
     }

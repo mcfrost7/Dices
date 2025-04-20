@@ -63,6 +63,32 @@ public class GameWindowController : MonoBehaviour
         Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
     }
 
+    public void SetupWinBosseInfo(NewTileConfig tile)
+    {
+        Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(() => CallPanel(-1));
+        Button.onClick.AddListener(() => BattleController.Instance.OnBattleLose());
+
+        if (tile == null)
+        {
+            _title.text = "<color=#8B0000><size=42><b>НЕТ ДОСТОЙНОЙ ЦЕЛИ</b></size></color>";
+            _text.text = "<size=36><color=#5A5A5A><i>Победа без славы — как пир без мяса.</i></color></size>";
+            return;
+        }
+
+        _title.text = "<color=#8B0000><size=42><b>ГЛАВНЫЙ КСЕНОС УНИЧТОЖЕН - ЭТО ПОБЕДА!</b></size></color>";
+        SerializableRewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
+
+        StringBuilder victoryText = new StringBuilder();
+        victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        victoryText.AppendLine();
+        victoryText.Append(FormatReward(rewardConfig));
+        victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
+        victoryText.AppendLine("<size=32><color=#8B0000><i>«Во имя Терры! Ещё одна победа для Вечного Трона!»</i></color></size>");
+
+        _text.text = victoryText.ToString();
+    }
+
     public void SetupWinBattleInfo(NewTileConfig tile)
     {
         Button.onClick.RemoveAllListeners();
@@ -164,9 +190,9 @@ public class GameWindowController : MonoBehaviour
                      "<color=#5A5A5A>-------------------------------------</color>\n" +
                      "<color=#2F2F2F>В ЗАБРОШЕННЫХ ОТСЕКАХ ДРЕВНЕГО КОРАБЛЯ БОЙЦЫ НАШЛИ ВРЕМЕННОЕ УБЕЖИЩЕ." +
                      "СРЕДИ ГУЛА ДРЕМЛЮЩИХ МАШИН И МЕРЦАЮЩИХ РУН МОЖНО:\n\n" +
-                     "<color=#8B0000>▪</color> <color=#B8860B>ПРИМЕНИТЬ АПТЕКАРИСКЕИ АМПЛАНТЫ</color> - ВОССТАНОВИТЬ ЗДОРОВЬЕ\n" +
-                     "<color=#8B0000>▪</color> <color=#B8860B>ИЗУЧИТЬ АРХИВЫ</color> - УЛУЧШИТЬ ЭКИПИРОВКУ\n" +
-                     "<color=#8B0000>▪</color> <color=#B8860B>СВЯЗАТЬСЯ С КОМАНДОВАНИЕМ</color> - ПОПОЛНИТЬ РЯДЫ\n" +
+                     "<color=#8B0000>▪</color> <color=#B8860B>ВОССТАНОВИТЬ ЗДОРОВЬЕ</color>\n" +
+                     "<color=#8B0000>▪</color> <color=#B8860B>УЛУЧШИТЬ ЭКИПИРОВКУ</color>\n" +
+                     "<color=#8B0000>▪</color> <color=#B8860B>ПОПОЛНИТЬ РЯДЫ</color>\n" +
                      "<color=#5A5A5A>-------------------------------------</color>\n" +
                      "<size=32><color=#8B0000><i>«ДАЖЕ В АДУ НАЙДЁТСЯ МЕСТО ДЛЯ ПЕРЕДЫШКИ»</i></color></size>" +
                      "</size>";

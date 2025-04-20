@@ -570,11 +570,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1685127128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 15}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 680, y: 630}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &61101646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12350,7 +12350,7 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
-  Mute: 1
+  Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -12634,20 +12634,9 @@ MonoBehaviour:
       probability: 0.1
     - tileType: 3
       probability: 0.15
-    - tileType: 4
-      probability: 0
     availableNodeColor: {r: 1, g: 1, b: 1, a: 1}
     visitedNodeColor: {r: 1, g: 0, b: 0, a: 1}
     unavailableNodeColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.7529412}
-  _currentNode:
-    nodeObject: {fileID: 0}
-    rectTransform: {fileID: 0}
-    locationConfig: {fileID: 0}
-    tileType: 0
-    tileConfig: {fileID: 0}
-    layerIndex: 0
-    isVisited: 0
-    isAvailable: 0
 --- !u!114 &1725379680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14522,8 +14511,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 680, y: 50}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 680, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1922426478
 MonoBehaviour:

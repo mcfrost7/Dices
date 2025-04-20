@@ -46,17 +46,17 @@ public class RewardMNG : MonoBehaviour
     private void ItemReward(SerializableRewardConfig reward)
     {
         if (reward == null) return;
-        if (reward.ItemInstance == null) return;
-        if (reward.ItemInstance.Config != null)
+
+        // Выбираем случайный предмет в момент получения награды
+        ItemInstance item = reward.GetRandomItem();
+
+        if (item != null && item.Config != null)
         {
             if (Random.Range(0f, 100f) <= _dropChance)
             {
-                ItemMNG.Instance.AddItem(reward.ItemInstance);
-            }
-            else
-            {
-                reward.ItemInstance = null;
+                ItemMNG.Instance.AddItem(item);
             }
         }
     }
+
 }

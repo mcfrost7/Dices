@@ -17,7 +17,11 @@ MonoBehaviour:
   battleSettings:
     battleDifficulty: 0
     tileEnemies: {fileID: 0}
-  lootSettings: {}
+    reward:
+      sourceConfig: {fileID: 0}
+  lootSettings:
+    reward:
+      sourceConfig: {fileID: 0}
   campSettings:
     healAmount: 0
     isUpgradeAvailable: 0
@@ -28,3 +32,5 @@ MonoBehaviour:
   bossSettings:
     battleDifficulty: 3
     tileEnemies: {fileID: 11400000, guid: dd39acbe54ae28143a2b4dc5fd545941, type: 2}
+    reward:
+      sourceConfig: {fileID: 11400000, guid: 681d61b879e17014c9de8307a08936b2, type: 2}

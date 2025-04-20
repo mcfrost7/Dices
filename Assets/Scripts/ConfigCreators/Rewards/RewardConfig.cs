@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RewardConfig", menuName = "Configs/RewardConfig")]
+[System.Serializable]
 public class RewardConfig : ScriptableObject
 {
     public List<ResourceData> resource = null;
@@ -17,30 +18,35 @@ public class SerializableRewardConfig
     public List<ResourceData> resources => SourceConfig?.resource;
     public int expAmount => SourceConfig?.expAmount ?? 0;
     public List<ItemConfig> items => SourceConfig?.items;
-    private ItemInstance itemInstance;
-
+    [HideInInspector] private ItemInstance itemInstance;
+    public ItemInstance ItemInstance
+    {
+        get => itemInstance;
+        set => itemInstance = value;
+    }
     public RewardConfig SourceConfig { get => sourceConfig; set => sourceConfig = value; }
-    public ItemInstance ItemInstance { get => itemInstance; set => itemInstance = value; }
 
     public SerializableRewardConfig(RewardConfig config)
     {
         SourceConfig = config;
         if (config.items != null && config.items.Count > 0)
         {
-            var randomItem = config.items[Random.Range(0, items.Count)];
-            ItemInstance =  new ItemInstance(randomItem);
-        }else
+            var randomItem = config.items[Random.Range(0, config.items.Count)];
+            ItemInstance = new ItemInstance(randomItem);
+        }
+        else
         {
             ItemInstance = null;
         }
     }
-
-    public ItemInstance GetItem()
+    public ItemInstance GetRandomItem()
     {
-        return ItemInstance;
-    }
-    public void SetItem(ItemInstance itemInstance)
-    {
-        this.ItemInstance = itemInstance;
+        if (SourceConfig?.items != null && SourceConfig.items.Count > 0)
+        {
+            var randomItem = SourceConfig.items[Random.Range(0, SourceConfig.items.Count)];
+            ItemInstance = new ItemInstance(randomItem);
+            return ItemInstance;
+        }
+        return null;
     }
 }

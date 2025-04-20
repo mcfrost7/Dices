@@ -35,7 +35,10 @@ public class ItemInstance
     }
 
     public ItemInstance() => InventoryPosition = -1;
+
+
 }
+
 
 
 [Serializable]

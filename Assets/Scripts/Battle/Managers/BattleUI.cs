@@ -99,7 +99,10 @@ public class BattleUI : MonoBehaviour
 
     public void ShowVictoryScreen()
     {
-        GameWindowController.Instance.SetupWinBattleInfo(BattleController.Instance.CurrentBattleConfig);
+        if (BattleController.Instance.CurrentBattleConfig.tileType == TileType.BattleTile)
+            GameWindowController.Instance.SetupWinBattleInfo(BattleController.Instance.CurrentBattleConfig);
+        else
+            GameWindowController.Instance.SetupWinBosseInfo(BattleController.Instance.CurrentBattleConfig);
         GameWindowController.Instance.CallPanel(1);
     }
     public void HideVictoryScreen() 

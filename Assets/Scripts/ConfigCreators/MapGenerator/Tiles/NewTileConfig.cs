@@ -18,7 +18,7 @@ public class BattleSettings
 {
     public int battleDifficulty; 
     public TileEnemies tileEnemies;
-    public SerializableRewardConfig reward = null;
+    public SerializableRewardConfig reward;
 }
 
 [System.Serializable]

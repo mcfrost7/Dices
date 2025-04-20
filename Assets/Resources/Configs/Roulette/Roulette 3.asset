@@ -22,16 +22,25 @@ MonoBehaviour:
     Color: {r: 1, g: 0, b: 0, a: 1}
     WinItems:
       sourceConfig: {fileID: 11400000, guid: ee5ccab30cf3d5e449d7ae1f361970e4, type: 2}
+      itemInstance:
+        sourceConfig: {fileID: 0}
+        InventoryPosition: -1
   - Name: 
     Percent: 0.25
     Color: {r: 0, g: 1, b: 0.9431782, a: 1}
     WinItems:
       sourceConfig: {fileID: 11400000, guid: 5703375c3fe0fde4e94906088ac67dad, type: 2}
+      itemInstance:
+        sourceConfig: {fileID: 0}
+        InventoryPosition: -1
   - Name: 
     Percent: 0.5
     Color: {r: 0.2705884, g: 1, b: 0, a: 1}
     WinItems:
-      sourceConfig: {fileID: 0}
+      sourceConfig: {fileID: 11400000, guid: 3fbe6f8af72e8a34bba841035431f690, type: 2}
+      itemInstance:
+        sourceConfig: {fileID: 0}
+        InventoryPosition: -1
   <SpinCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:

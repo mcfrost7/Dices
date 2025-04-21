@@ -43,13 +43,13 @@ public class EnemyCreator
             1 => Random.Range(1, 3),    
             2 => Random.Range(2, 4),    
             3 => Random.Range(3, 5),    
-            4 => Random.Range(4, 6),    
-            5 => Random.Range(5, 7),    
-            6 => Random.Range(6, 8),    
-            7 => Random.Range(7, 9),    
-            8 => Random.Range(8, 10),   
-            9 => Random.Range(9, 11),  
-            10 => Random.Range(10, 12), 
+            4 => Random.Range(4, 5),    
+            5 => 5,    
+            6 => 5,    
+            7 => 5,    
+            8 => 5,   
+            9 => 5,  
+            10 => 5, 
             _ => Random.Range(1, 3)     
         };
     }

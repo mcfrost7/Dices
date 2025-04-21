@@ -30,7 +30,7 @@ MonoBehaviour:
   rouleteSettings:
     _configs: []
   bossSettings:
-    battleDifficulty: 5
+    battleDifficulty: 4
     tileEnemies: {fileID: 11400000, guid: dd39acbe54ae28143a2b4dc5fd545941, type: 2}
     reward:
       sourceConfig: {fileID: 11400000, guid: 681d61b879e17014c9de8307a08936b2, type: 2}

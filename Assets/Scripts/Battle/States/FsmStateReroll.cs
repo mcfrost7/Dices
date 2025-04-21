@@ -31,7 +31,6 @@ public class FsmStateReroll : FsmState
             Fsm.SetState<FsmStateWin>();
             return;
         }
-        // Removed automatic transition when AvailableRerolls == 0
     }
 
     private void OnRerollsComplete()

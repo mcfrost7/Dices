@@ -184,7 +184,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             case ItemSideAffect.Even: return "Чётные стороны => 2,4,6";
             case ItemSideAffect.Odd: return "Нечётные стороны => 1,3,5";
             case ItemSideAffect.All: return "Все стороны => 1,2,3,4,5,6";
-            case ItemSideAffect.Touching: return "Соприкасающиеся стороны => номер стороны, номер стороны + 1";
+            case ItemSideAffect.Touching: return "Соприкасающиеся стороны => 1,2 | 2,3 | 3,4 | 1,4";
             default: return "Неизвестная зона";
         }
     }

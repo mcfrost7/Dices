@@ -19,8 +19,8 @@ public class ConsidirationController
     private float CalculateUnitValue(NewUnitStats unit)
     {
         float healthFactor = 1f - (unit._current_health / (float)unit._health); // Чем меньше ХП, тем выше приоритет
-        float levelFactor = unit._level * 3f; // Чем выше уровень, тем выше приоритет
-        float moralFactor = unit._moral * 2f; // Высокая мораль → опасный юнит
+        float levelFactor = unit._level * 2f; // Чем выше уровень, тем выше приоритет
+        float moralFactor = unit._moral * 1.5f; // Высокая мораль → опасный юнит
 
         float dicePowerFactor = 0f;
         float attackFactor = 0f;
@@ -55,10 +55,8 @@ public class ConsidirationController
             }
         }
 
-        float baseScore = healthFactor * 10 + levelFactor + moralFactor + dicePowerFactor + attackFactor - defensePenalty + buffBonus - buffPenalty;
-
-        // Добавляем случайный коэффициент (от -10% до +10% к финальному значению)
-        float randomFactor = UnityEngine.Random.Range(0.9f, 1.1f);
+        float baseScore = healthFactor * 10 + levelFactor + moralFactor + dicePowerFactor + attackFactor + defensePenalty - buffBonus + buffPenalty;
+        float randomFactor = UnityEngine.Random.Range(0.8f, 1.2f);
 
         return baseScore * randomFactor;
     }

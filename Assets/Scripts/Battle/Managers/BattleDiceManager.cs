@@ -70,11 +70,7 @@ public class BattleDiceManager : MonoBehaviour
             }
         }
 
-        if (totalRolls == 0 && OnAllRollsComplete != null)
-        {
-            Debug.LogWarning("No units to roll dice for!");
-            OnAllRollsComplete.Invoke();
-        }
+      
     }
 
     public void ExecuteRerolls()

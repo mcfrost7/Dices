@@ -67,7 +67,13 @@ public class SerializableDice
     {
         // Load the dice config by name if available
         NewDiceConfig config = !string.IsNullOrEmpty(diceConfigName) ?
-            Resources.Load<NewDiceConfig>("Configs/Dices/Spacemarines/" + diceConfigName) : null;
+            Resources.Load<NewDiceConfig>("Configs/Dices/Spacemarines/Tier 1/" + diceConfigName) : null;
+        if (config == null)
+            config = !string.IsNullOrEmpty(diceConfigName) ?
+            Resources.Load<NewDiceConfig>("Configs/Dices/Spacemarines/Tier 2/" + diceConfigName) : null;
+        if (config == null) 
+            config = !string.IsNullOrEmpty(diceConfigName) ?
+            Resources.Load<NewDiceConfig>("Configs/Dices/Spacemarines/Tier 3/" + diceConfigName) : null;
 
         Dice dice = new Dice(config);
 

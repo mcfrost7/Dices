@@ -77,8 +77,13 @@ public class BattleActionManager : MonoBehaviour
 
         _targetUnit = unit;
 
-        // Проверяем валидность цели
-        if (IsValidTarget(_selectedUnit, _targetUnit))
+        // Check if it's self-targeting for ally action
+        DiceSide currentSide = _selectedUnit.UnitData._dice.GetCurrentSide();
+        bool isSelfTargetingAllyAction = (_selectedUnit == _targetUnit &&
+                                         currentSide.ActionSide == ActionSide.Ally);
+
+        // Check normal targeting rules or self-targeting exception
+        if (IsValidTarget(_selectedUnit, _targetUnit) || isSelfTargetingAllyAction)
         {
             ExecuteAction(_selectedUnit, _targetUnit);
             _isWaitingForTarget = false;
@@ -86,11 +91,8 @@ public class BattleActionManager : MonoBehaviour
         }
         else
         {
-            // Показываем сообщение о неправильной цели
             ShowActionFeedback("Недопустимая цель для этого действия!");
-
-            // Используем существующий метод для сброса всех выделений
-            DeselectUnit();
+            //DeselectUnit();
         }
     }
 
@@ -116,7 +118,12 @@ public class BattleActionManager : MonoBehaviour
         if (source == null || target == null || source.UnitData == null || target.UnitData == null)
             return false;
 
-        ActionType actionType = source.UnitData._dice.GetCurrentSide().actionType;
+        DiceSide currentSide = source.UnitData._dice.GetCurrentSide();
+        ActionType actionType = currentSide.actionType;
+
+        if (source == target && currentSide.ActionSide == ActionSide.Ally)
+            return true;
+
         IBattleAction action = BattleActionFactory.Instance.GetAction(actionType);
         return action.IsValidTarget(source, target);
     }

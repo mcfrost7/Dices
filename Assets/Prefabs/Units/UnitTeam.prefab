@@ -136,3 +136,4 @@ MonoBehaviour:
   _image: {fileID: 3635741481095079178}
   _button: {fileID: 8686146956374137549}
   _text: {fileID: 0}
+  _trigger: {fileID: 0}

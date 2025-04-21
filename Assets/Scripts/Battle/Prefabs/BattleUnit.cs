@@ -39,15 +39,39 @@ public class BattleUnit : MonoBehaviour
         _actionTrigger.onClick.AddListener(OnActionTriggerClicked);
     }
 
+    public void AllowSelfSelection()
+    {
+        if (!IsUsed && !IsEnemy)
+        {
+            DiceSide currentSide = UnitData._dice.GetCurrentSide();
+            if (currentSide.ActionSide == ActionSide.Ally)
+            {
+                BattleActionManager.Instance.SetSelectedUnit(this);
+                BattleActionManager.Instance.SetTargetUnit(this);
+            }
+        }
+    }
     private void OnActionTriggerClicked()
     {
         if (isEnemy)
         {
             ToggleEnemySelection();
         }
+        else if (BattleActionManager.Instance.IsWaitingForTarget)
+        {
+            BattleActionManager.Instance.SetTargetUnit(this);
+        }
         else
         {
-            ToggleSelection();
+            DiceSide currentSide = UnitData._dice.GetCurrentSide();
+            if (currentSide.ActionSide == ActionSide.Ally)
+            {
+                ToggleSelection();
+            }
+            else
+            {
+                ToggleSelection();
+            }
         }
     }
 

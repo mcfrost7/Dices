@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BattleRerolls : MonoBehaviour
@@ -14,6 +15,7 @@ public class BattleRerolls : MonoBehaviour
     [SerializeField] private Button _endRerolls;
 
     private int _availableRerolls;
+    public event System.Action OnAllRerollsComplete;
 
     private void Awake()
     {
@@ -47,7 +49,7 @@ public class BattleRerolls : MonoBehaviour
         BattleDiceManager.Instance.ExecuteRerolls();
         AvailableRerolls--;
         BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);
-        DeselectPlayerUnits();
+        //DeselectPlayerUnits();
     }
 
     public void DeselectPlayerUnits()
@@ -58,6 +60,7 @@ public class BattleRerolls : MonoBehaviour
 
     private void OnEndlButtonPressed()
     {
+        OnAllRerollsComplete?.Invoke();
         BattleActionManager.Instance.EndAction.gameObject.SetActive(true); 
         AvailableRerolls = 0;
         BattleUI.Instance.ChangeMaxRerollText(AvailableRerolls);

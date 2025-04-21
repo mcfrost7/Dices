@@ -5,7 +5,6 @@ public class FsmStateReroll : FsmState
 {
     private float _stateTimer = 0f;
 
-
     public FsmStateReroll(FSM fsm) : base(fsm) { }
 
     public override void Enter()
@@ -14,42 +13,45 @@ public class FsmStateReroll : FsmState
         _stateTimer = 0f;
         BattleRerolls.Instance.InitRerolls();
         BattleDiceManager.Instance.OnAllRerollsComplete += OnRerollsComplete;
+        BattleRerolls.Instance.OnAllRerollsComplete += OnEndRerollsPressed;
         BattleDiceManager.Instance.AllowMultipleSelections = true;
     }
 
     public override void Update()
     {
         _stateTimer += Time.deltaTime;
-
         // Check for win/lose conditions
         if (CheckAllPlayersDead())
         {
             Fsm.SetState<FsmStateLose>();
             return;
         }
-
         if (CheckAllEnemiesDead())
         {
             Fsm.SetState<FsmStateWin>();
             return;
         }
-        if (BattleRerolls.Instance.AvailableRerolls == 0 )
-        {
-            Fsm.SetState<FsmStateAction>();
-        }
+        // Removed automatic transition when AvailableRerolls == 0
     }
+
     private void OnRerollsComplete()
     {
         Debug.Log("All rerolls completed in FSM state");
         BattleDiceManager.Instance.EnablePlayerUnitSelections();
     }
 
+    private void OnEndRerollsPressed()
+    {
+        Debug.Log("End Rerolls button pressed, transitioning to Action state");
+        Fsm.SetState<FsmStateAction>();
+    }
+
     public override void Exit()
     {
         BattleRerolls.Instance.DeselectPlayerUnits();
         BattleDiceManager.Instance.OnAllRerollsComplete -= OnRerollsComplete;
+        BattleRerolls.Instance.OnAllRerollsComplete -= OnEndRerollsPressed;
         Debug.Log("Exiting Reroll state");
-
     }
 
     private bool CheckAllPlayersDead()

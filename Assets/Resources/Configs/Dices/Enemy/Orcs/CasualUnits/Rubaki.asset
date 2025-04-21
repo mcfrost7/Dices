@@ -20,13 +20,13 @@ MonoBehaviour:
     duration: 1
     sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
     ActionSide: 1
-  - actionType: 1
-    power: 2
+  - actionType: 0
+    power: 0
     bonus: 0
     sideIndex: 1
     duration: 1
-    sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
-    ActionSide: 1
+    sprite: {fileID: 21300000, guid: 7f2469c02b8abb44588d4532281a9162, type: 3}
+    ActionSide: 0
   - actionType: 1
     power: 2
     bonus: 0

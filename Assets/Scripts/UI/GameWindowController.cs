@@ -40,7 +40,7 @@ public class GameWindowController : MonoBehaviour
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
 
-        if (rewardConfig == null || rewardConfig.WinItems == null || rewardConfig.WinItems.ItemInstance == null)
+        if (rewardConfig == null || rewardConfig.WinItems == null)
         {
             _title.text = "<color=#E31837><size=42><b>ПУСТЫЕ ТРОФЕИ</b></size></color>";
             _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";
@@ -49,12 +49,16 @@ public class GameWindowController : MonoBehaviour
         }
 
         _title.text = "<color=#8B0000><size=42><b>ДОБЫЧА ВОЙНЫ</b></size></color>";
-
         StringBuilder lootText = new StringBuilder();
         lootText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         lootText.AppendLine();
+        string formattedReward = FormatReward(rewardConfig.WinItems);
+        lootText.Append(formattedReward);
 
-        lootText.Append(FormatReward(rewardConfig.WinItems));
+        if (string.IsNullOrWhiteSpace(formattedReward))
+        {
+            lootText.AppendLine("<size=36><color=#8A8A8A><i>Ничего ценного не найдено...</i></color></size>");
+        }
 
         lootText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         lootText.AppendLine("<size=32><color=#8B0000><i>«ДОБЫЧА ДОСТАНЕТСЯ СИЛЬНЕЙШЕМУ»</i></color></size>");
@@ -170,7 +174,7 @@ public class GameWindowController : MonoBehaviour
             sb.AppendLine();
         }
 
-        if (reward.ItemInstance != null && reward.items.Count > 0)
+        if (reward.ItemInstance != null && reward.items != null && reward.items.Count > 0)
         {
             sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");  // Защитный
             sb.AppendLine($"{reward.ItemInstance.ItemName}\n");

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Roulette 2
   m_EditorClassIdentifier: 
   resource: []
-  expAmount: 1
+  expAmount: 2
   items: []
   itemInstance:
     sourceConfig: {fileID: 0}

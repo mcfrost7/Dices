@@ -41,10 +41,9 @@ public class RouletteScreen : MonoBehaviour
 
         if (_isRewarded == false)
         {
-            RewardMNG.Instance.CalculateReward(config.WinItems);
+            GameWindowController.Instance.SetupRouletteInfo(config);
             _isRewarded = true;
         }
-        GameWindowController.Instance.SetupRouletteInfo(config);
         GameWindowController.Instance.CallPanel(1);
     }
 

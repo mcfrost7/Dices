@@ -110,7 +110,7 @@ public class TeamMNG : MonoBehaviour
         newUnit = new NewUnitStats(
             $"Unit_Level{level}_{Random.Range(1000, 9999)}", // Случайное имя
             Random.Range(3, 5) * level,  // Случайное здоровье
-            Random.Range(2, 4) * level,   // Случайная мораль
+            Random.Range(0, 3) * level,   // Случайная мораль
             level,
             dice,
             tempBuffList

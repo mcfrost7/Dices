@@ -29,6 +29,8 @@ MonoBehaviour:
   - tileType: 2
     tileConfig:
     - {fileID: 11400000, guid: 2b7b34c89a58ece49bd058f4a3da7f6b, type: 2}
+    - {fileID: 11400000, guid: bbf7e51cd3df605419da82d4bc3f2f82, type: 2}
+    - {fileID: 11400000, guid: ea663f1a1f8dd9d46a94a583896e07bd, type: 2}
   - tileType: 3
     tileConfig:
     - {fileID: 11400000, guid: 26e904e3684fc7442a2b77b17eb83fe7, type: 2}

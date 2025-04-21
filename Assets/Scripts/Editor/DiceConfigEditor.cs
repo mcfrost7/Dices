@@ -23,6 +23,11 @@ public class NewDiceConfigEditor : Editor
             config.RefreshSideIndices();
             EditorUtility.SetDirty(config);
         }
+        if (GUILayout.Button("Load Unit Meta Data"))
+        {
+            config.LoadImages();
+            EditorUtility.SetDirty(config);
+        }
     }
 }
 #endif

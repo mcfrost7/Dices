@@ -37,7 +37,6 @@ public class ResourceEventHandler : IEventHandler
     {
         if (config.lootSettings.reward != null)
         { 
-            RewardMNG.Instance.CalculateReward(config.lootSettings.reward);
             GameWindowController.Instance.SetupResourceInfo(config.lootSettings.reward);
             GameWindowController.Instance.CallPanel(1);
         }

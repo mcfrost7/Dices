@@ -35,24 +35,26 @@ public class GameWindowController : MonoBehaviour
         MenuMNG.Instance.CallFreezePanel(_direction);
     }
 
+
     public void SetupRouletteInfo(SectorConfig rewardConfig)
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-
+        Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
         if (rewardConfig == null || rewardConfig.WinItems == null)
         {
             _title.text = "<color=#E31837><size=42><b>ПУСТЫЕ ТРОФЕИ</b></size></color>";
-            _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";
-            Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
+            _text.text = "<size=36><color=#8A8A8A><i>Ничего не найдено в руинах...</i></color></size>";;
             return;
         }
+
+        SerializableRewardConfig actualReward = RewardMNG.Instance.CalculateReward(rewardConfig.WinItems);
 
         _title.text = "<color=#8B0000><size=42><b>ДОБЫЧА ВОЙНЫ</b></size></color>";
         StringBuilder lootText = new StringBuilder();
         lootText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         lootText.AppendLine();
-        string formattedReward = FormatReward(rewardConfig.WinItems);
+        string formattedReward = FormatReward(actualReward);
         lootText.Append(formattedReward);
 
         if (string.IsNullOrWhiteSpace(formattedReward))
@@ -64,7 +66,7 @@ public class GameWindowController : MonoBehaviour
         lootText.AppendLine("<size=32><color=#8B0000><i>«ДОБЫЧА ДОСТАНЕТСЯ СИЛЬНЕЙШЕМУ»</i></color></size>");
 
         _text.text = lootText.ToString();
-        Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
+
     }
 
     public void SetupWinBosseInfo(NewTileConfig tile)
@@ -82,11 +84,11 @@ public class GameWindowController : MonoBehaviour
 
         _title.text = "<color=#8B0000><size=42><b>ГЛАВНЫЙ КСЕНОС УНИЧТОЖЕН - ЭТО ПОБЕДА!</b></size></color>";
         SerializableRewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
-
+        SerializableRewardConfig actualReward = RewardMNG.Instance.CalculateReward(rewardConfig);
         StringBuilder victoryText = new StringBuilder();
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         victoryText.AppendLine();
-        victoryText.Append(FormatReward(rewardConfig));
+        victoryText.Append(FormatReward(actualReward));
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         victoryText.AppendLine("<size=32><color=#8B0000><i>«Во имя Терры! Ещё одна победа для Вечного Трона!»</i></color></size>");
 
@@ -109,11 +111,11 @@ public class GameWindowController : MonoBehaviour
 
         _title.text = "<color=#8B0000><size=42><b>ВО ИМЯ ИМПЕРАТОРА!</b></size></color>";
         SerializableRewardConfig rewardConfig = !BattleController.Instance.IsBossBattle ? tile.battleSettings.reward : tile.bossSettings.reward;
-
+        SerializableRewardConfig actualReward = RewardMNG.Instance.CalculateReward(rewardConfig);
         StringBuilder victoryText = new StringBuilder();
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         victoryText.AppendLine();
-        victoryText.Append(FormatReward(rewardConfig));
+        victoryText.Append(FormatReward(actualReward));
         victoryText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         victoryText.AppendLine("<size=32><color=#8B0000><i>«ПОБЕДА — ЕДИНСТВЕННЫЙ ЗАКОН ВОЙНЫ»</i></color></size>");
 
@@ -147,7 +149,8 @@ public class GameWindowController : MonoBehaviour
         StringBuilder resourceText = new StringBuilder();
         resourceText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         resourceText.AppendLine();
-        resourceText.Append(FormatReward(reward));
+        SerializableRewardConfig actualReward = RewardMNG.Instance.CalculateReward(reward);
+        resourceText.Append(FormatReward(actualReward));
         resourceText.AppendLine("<color=#5A5A5A>-----------------------------------------------------------------</color>");
         resourceText.AppendLine("<size=32><color=#8B0000><i>«ВОЙНА КОРМИТ ВОЙНУ»</i></color></size>");
 
@@ -174,9 +177,14 @@ public class GameWindowController : MonoBehaviour
             sb.AppendLine();
         }
 
-        if (reward.ItemInstance != null && reward.items != null && reward.items.Count > 0)
+        if (reward.PotentialItemLost)
         {
-            sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");  // Защитный
+            sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");
+            sb.AppendLine("<color=#A52A2A><i>УТЕРЯНЫ В ВАРПЕ</i></color>\n");
+        }
+        else if (reward.ItemInstance != null && reward.items != null && reward.items.Count > 0)
+        {
+            sb.AppendLine("<color=#6B8E23><size=32><b>РЕЛИКВИИ</b></size></color>");
             sb.AppendLine($"{reward.ItemInstance.ItemName}\n");
         }
 

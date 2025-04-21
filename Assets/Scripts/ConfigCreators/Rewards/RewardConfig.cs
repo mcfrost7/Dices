@@ -19,6 +19,8 @@ public class SerializableRewardConfig
     public int expAmount => SourceConfig?.expAmount ?? 0;
     public List<ItemConfig> items => SourceConfig?.items;
     [HideInInspector] private ItemInstance itemInstance;
+
+    public bool PotentialItemLost { get; set; }
     public ItemInstance ItemInstance
     {
         get => itemInstance;

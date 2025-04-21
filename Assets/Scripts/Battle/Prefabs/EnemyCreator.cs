@@ -40,10 +40,17 @@ public class EnemyCreator
     {
         return difficulty switch
         {
-            1 => Random.Range(1, 3), // Лёгкий бой (1-2 врага)
-            2 => Random.Range(2, 4), // Средний бой (2-3 врага)
-            3 => Random.Range(3, 5), // Сложный бой (3-4 врага)
-            _ => Random.Range(1, 3)
+            1 => Random.Range(1, 3),    
+            2 => Random.Range(2, 4),    
+            3 => Random.Range(3, 5),    
+            4 => Random.Range(4, 6),    
+            5 => Random.Range(5, 7),    
+            6 => Random.Range(6, 8),    
+            7 => Random.Range(7, 9),    
+            8 => Random.Range(8, 10),   
+            9 => Random.Range(9, 11),  
+            10 => Random.Range(10, 12), 
+            _ => Random.Range(1, 3)     
         };
     }
 
@@ -87,7 +94,14 @@ public class EnemyCreator
             1 => Random.Range(1, 3),
             2 => Random.Range(2, 5),
             3 => Random.Range(3, 6),
-            _ => Random.Range(1, 3)
+            4 => Random.Range(4, 7),
+            5 => Random.Range(5, 8),
+            6 => Random.Range(6, 9),
+            7 => Random.Range(7, 10),
+            8 => Random.Range(8, 11),
+            9 => Random.Range(9, 12),
+            10 => Random.Range(10, 13),
+            _ => Random.Range(3, 6)
         };
 
         return Mathf.RoundToInt(baseHealth + difficultyMultiplier);

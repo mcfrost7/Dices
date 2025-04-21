@@ -50,7 +50,8 @@ public class BattleUI : MonoBehaviour
         {
             enemyObj.Arrow.gameObject.SetActive(true);
             RectTransform enemyPoint = enemyObj.LinePoint;
-            RectTransform targetPoint = GetTargetObject(enemyIntentions, enemyObj).LinePoint ? GetTargetObject(enemyIntentions, enemyObj).LinePoint : null;
+            BattleUnit targetUnit = GetTargetObject(enemyIntentions, enemyObj);
+            RectTransform targetPoint = targetUnit != null ? targetUnit.LinePoint : null;
             if (targetPoint != null)
             {
                 Vector2 screenPosEnemy = RectTransformUtility.WorldToScreenPoint(cam, enemyPoint.position);

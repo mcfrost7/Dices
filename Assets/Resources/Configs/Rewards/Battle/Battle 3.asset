@@ -15,11 +15,28 @@ MonoBehaviour:
   resource:
   - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
     _count: 1
-  expAmount: 3
+  expAmount: 2
   items:
-  - {fileID: 11400000, guid: 805ff338fa2812e46b0b7c2761d7039c, type: 2}
-  - {fileID: 11400000, guid: 947f14a485a4d7745b98dbe0968cada5, type: 2}
-  - {fileID: 11400000, guid: 20df7dc9e7942554981cf61ae8c5fe2c, type: 2}
+  - {fileID: 11400000, guid: 864060453b24d554f884b7fa0605e87d, type: 2}
+  - {fileID: 11400000, guid: a995c91d767b65a45900786fca43f81d, type: 2}
+  - {fileID: 11400000, guid: 3c5935e5dedbdf747b1327c1c3f50817, type: 2}
+  - {fileID: 11400000, guid: bde3a55ac056ab94c82536ccb17499ce, type: 2}
+  - {fileID: 11400000, guid: 3b10ea5e84a3aae4ea83dcef453c5bcb, type: 2}
+  - {fileID: 11400000, guid: d126774a30053f043a0638e6a05ae609, type: 2}
+  - {fileID: 11400000, guid: dde9aa7b918131842afc8ece799df9f3, type: 2}
+  - {fileID: 11400000, guid: d116cb79df4ec45409debb3b31cc3b56, type: 2}
+  - {fileID: 11400000, guid: 4606c652742e68d4fb75f9a4f60313cb, type: 2}
+  - {fileID: 11400000, guid: 6814e69fca8d26a48bb1dbf91aa83e44, type: 2}
+  - {fileID: 11400000, guid: 32214a7eec3d02a4a8ca3451bf7a1a9e, type: 2}
+  - {fileID: 11400000, guid: 83a89e45c63c31c4d87bc3ed6f5f95cf, type: 2}
+  - {fileID: 11400000, guid: 13649f120c17a79448f509fbb696eeed, type: 2}
+  - {fileID: 11400000, guid: ab176b93a6f9f474193f8499fa5b5f84, type: 2}
+  - {fileID: 11400000, guid: 6aace6edc0ba46f4290c55e016ae1ef7, type: 2}
+  - {fileID: 11400000, guid: fd5b70142d0dc8c488d5c62c82732aaf, type: 2}
+  - {fileID: 11400000, guid: e2fcfc1074b18744ba132272be2c6e78, type: 2}
+  - {fileID: 11400000, guid: 6df296c9a17ee0345a98d144e23f6405, type: 2}
+  - {fileID: 11400000, guid: 2bcdd1cfbb5216648983bcd1074cfd92, type: 2}
+  - {fileID: 11400000, guid: 629ca9344de46864c8acd7f209e4ae25, type: 2}
   itemInstance:
     sourceConfig: {fileID: 0}
     InventoryPosition: -1

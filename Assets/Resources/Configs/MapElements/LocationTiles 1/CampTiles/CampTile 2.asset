@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d33361d4d28c1d142a52ddfa6c916b25, type: 3}
+  m_Name: CampTile 2
+  m_EditorClassIdentifier: 
+  tileType: 2
+  tileSprite: {fileID: 21300000, guid: a9fa7937e0bbc5b46969648b8ad7ce7a, type: 3}
+  battleSettings:
+    battleDifficulty: 0
+    tileEnemies: {fileID: 0}
+    reward:
+      sourceConfig: {fileID: 0}
+  lootSettings:
+    reward:
+      sourceConfig: {fileID: 0}
+  campSettings:
+    healAmount: 3
+    isUpgradeAvailable: 1
+    isReinforceAvailable: 1
+    isShopAvailable: 1
+  rouleteSettings:
+    _configs: []
+  bossSettings:
+    battleDifficulty: 0
+    tileEnemies: {fileID: 0}
+    reward:
+      sourceConfig: {fileID: 0}

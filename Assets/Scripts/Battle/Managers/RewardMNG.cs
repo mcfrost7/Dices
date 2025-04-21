@@ -18,12 +18,26 @@ public class RewardMNG : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
-    public void CalculateReward(SerializableRewardConfig reward)
+
+    public SerializableRewardConfig CalculateReward(SerializableRewardConfig reward)
     {
-        ResourceReward(reward.resources);
-        ExpReward(reward.expAmount);
-        ItemReward(reward);
+        // Create a new reward config that will contain only what was actually given
+        SerializableRewardConfig actualReward = new SerializableRewardConfig(reward.SourceConfig);
+        // Process rewards
+        ResourceReward(actualReward.resources);
+        ExpReward(actualReward.expAmount);
+
+        ItemInstance droppedItem = ItemReward(reward);
+        if (droppedItem != null)
+        {
+            actualReward.ItemInstance = droppedItem;
+        }
+        else if (reward.GetRandomItem() != null)
+        {
+            actualReward.PotentialItemLost = true;
+        }
+
+        return actualReward;
     }
 
     private void ResourceReward(List<ResourceData> resource)
@@ -43,20 +57,21 @@ public class RewardMNG : MonoBehaviour
             unit._current_exp = Mathf.Min(unit._current_exp + exp, maxExp);
         }
     }
-    private void ItemReward(SerializableRewardConfig reward)
+    private ItemInstance ItemReward(SerializableRewardConfig reward)
     {
-        if (reward == null) return;
+        if (reward == null) return null;
 
-        // Выбираем случайный предмет в момент получения награды
         ItemInstance item = reward.GetRandomItem();
-
         if (item != null && item.Config != null)
         {
             if (Random.Range(0f, 100f) <= _dropChance)
             {
                 ItemMNG.Instance.AddItem(item);
+                return item;
             }
         }
+
+        return null;
     }
 
 }

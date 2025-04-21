@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Battle 2
   m_EditorClassIdentifier: 
   tileType: 0
-  tileSprite: {fileID: 21300000, guid: 4ed0e7fa6fca03f47b9c79885d8a9b41, type: 3}
+  tileSprite: {fileID: 21300000, guid: 037be2c734516ee4ba067aa638e085f2, type: 3}
   battleSettings:
     battleDifficulty: 2
     tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}
     reward:
-      sourceConfig: {fileID: 11400000, guid: 180107f1a26a4c64090e521523c90707, type: 2}
+      sourceConfig: {fileID: 11400000, guid: be74409125fbbdd4795c26ee0d71dd0c, type: 2}
   lootSettings:
     reward:
       sourceConfig: {fileID: 0}

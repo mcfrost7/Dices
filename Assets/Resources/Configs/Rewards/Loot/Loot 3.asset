@@ -16,7 +16,12 @@ MonoBehaviour:
   - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
     _count: 1
   expAmount: 1
-  items: []
+  items:
+  - {fileID: 11400000, guid: d5e589e09bb4b854fb7218222d4f589a, type: 2}
+  - {fileID: 11400000, guid: 302729f77cc359a48ad2cd45c2fd4740, type: 2}
+  - {fileID: 11400000, guid: 925001941ca57664ea26163da3572020, type: 2}
+  - {fileID: 11400000, guid: 8e31b964ac1f40944aee2a99a120d9b2, type: 2}
+  - {fileID: 11400000, guid: 18dea9434ca2d9346b7b5e3a8d97b70b, type: 2}
   itemInstance:
     sourceConfig: {fileID: 0}
     InventoryPosition: -1

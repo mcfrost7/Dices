@@ -15,6 +15,7 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] private Button _actionTrigger;
     [SerializeField] private RectTransform _linePoint;
     [SerializeField] private RectTransform _arrow;
+    [SerializeField] private TooltipTrigger _trigger;
 
     // Add visual indicator for selection
     [SerializeField] private GameObject _selectionIndicator;
@@ -83,6 +84,7 @@ public class BattleUnit : MonoBehaviour
         SetupCommon(newUnitStats);
         _moralText.text = newUnitStats._moral.ToString();
         _powerText.text = CalculateSidePower(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
+        _trigger.SetUnitBattleTooltip(newUnitStats);
     }
 
     public void SetupEnemy(NewUnitStats newUnitStats)
@@ -93,6 +95,7 @@ public class BattleUnit : MonoBehaviour
         newUnitStats._dice.SetCurrentSide(diceSide);
         SetupCommon(newUnitStats);
         _powerText.text = newUnitStats._dice.GetCurrentSide().power.ToString();
+        _trigger.SetUnitBattleTooltip(newUnitStats);
     }
 
     private void SetupCommon(NewUnitStats newUnitStats)

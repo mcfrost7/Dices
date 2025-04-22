@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        delay = LeanTween.delayedCall(0.5f, () => 
+        delay = LeanTween.delayedCall(0.8f, () => 
         {
             TooltipSystem.Show(Content, Header);
          });
@@ -233,4 +234,124 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             default: return "Бонус";
         }
     }
+
+
+    public void SetUnitUpgradeTooltip(NewUnitStats unit)
+    {
+        if (unit == null)
+        {
+            Header = "Неизвестный юнит";
+            Content = "Информация отсутствует";
+            return;
+        }
+
+        Header = !string.IsNullOrEmpty(unit._name) ? unit._name : "Безымянный юнит";
+        Content = BuildUnitTooltipContent(unit);
+    }
+
+    public void SetUnitCurrentTooltip(NewUnitStats unit)
+    {
+        if (unit == null)
+        {
+            Header = "Неизвестный юнит";
+            Content = "Информация отсутствует";
+            return;
+        }
+
+        Header = !string.IsNullOrEmpty(unit._name) ? unit._name : "Безымянный юнит";
+        Content = BuildUnitTooltipContent(unit, true);
+    }
+    private string BuildUnitTooltipContent(NewUnitStats unit, bool showExp = false)
+    {
+        if (unit == null) return "Информация отсутствует";
+
+        StringBuilder sb = new StringBuilder();
+
+        AppendBaseStats(sb, unit, showExp);
+        AppendDiceInfo(sb, unit);
+        AppendBuffsInfo(sb, unit);
+        AppendUpgradesInfo(sb, unit);
+
+        return sb.ToString();
+    }
+
+    private void AppendBaseStats(StringBuilder sb, NewUnitStats unit, bool showExp)
+    {
+        sb.AppendLine($"Уровень: {unit._level}");
+        sb.AppendLine($"Здоровье: {unit._current_health}/{unit._health}");
+        sb.AppendLine($"Мораль: {unit._moral}");
+
+        if (showExp)
+        {
+            sb.AppendLine($"Опыт: {unit._current_exp}/{unit._level * 10}");
+        }
+    }
+
+    private void AppendDiceInfo(StringBuilder sb, NewUnitStats unit)
+    {
+        sb.AppendLine("Грани куба:");
+
+        if (unit._dice == null || unit._dice._diceConfig?.sides == null) return;
+
+        int sideNumber = 1;
+        foreach (var side in unit._dice._diceConfig.sides)
+        {
+            sb.AppendLine($"{sideNumber++}. {GetFormattedSideInfo(side)}");
+        }
+    }
+
+    private string GetFormattedSideInfo(DiceSide side)
+    {
+        return $"{GetActionTypeName(side.actionType)}: {side.power}";
+    }
+
+    private void AppendBuffsInfo(StringBuilder sb, NewUnitStats unit)
+    {
+        if (unit._buffs == null || unit._buffs.Count == 0) return;
+
+        sb.AppendLine($"Баффы: {unit._buffs.Count}");
+
+        int buffsToShow = Math.Min(3, unit._buffs.Count);
+        for (int i = 0; i < buffsToShow; i++)
+        {
+            sb.AppendLine($"- {unit._buffs[i].buffName} (+{unit._buffs[i].buffPower})");
+        }
+
+        if (unit._buffs.Count > 3)
+        {
+            sb.AppendLine($"- и ещё {unit._buffs.Count - 3}...");
+        }
+    }
+
+    private void AppendUpgradesInfo(StringBuilder sb, NewUnitStats unit)
+    {
+        sb.AppendLine();
+
+        if (unit._upgrade_list == null || unit._upgrade_list.Count == 0)
+        {
+            sb.AppendLine("Нет доступных апгрейдов");
+            return;
+        }
+
+        sb.AppendLine($"Доступно апгрейдов: {unit._upgrade_list.Count}");
+    }
+    public void SetUnitBattleTooltip(NewUnitStats unit)
+    {
+        if (unit == null)
+        {
+            return;
+        }
+
+        Header = !string.IsNullOrEmpty(unit._name) ? unit._name : "Безымянный юнит";
+        Content = BuildBattleDiceContent(unit);
+    }
+
+    private string BuildBattleDiceContent(NewUnitStats unit)
+    {
+        StringBuilder sb = new StringBuilder();
+        AppendDiceInfo(sb, unit);
+
+        return sb.ToString();
+    }
+
 }

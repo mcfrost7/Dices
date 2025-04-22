@@ -83,7 +83,7 @@ public class EnemyCreator
             return 10 * difficulty;
         }
 
-        int baseHealth = 0;
+        int baseHealth = 1;
         foreach (var side in diceSides)
         {
             baseHealth += side.power;
@@ -91,16 +91,16 @@ public class EnemyCreator
         baseHealth /= diceSides.Count;
         int difficultyMultiplier = difficulty switch
         {
-            1 => Random.Range(1, 3),
-            2 => Random.Range(2, 5),
-            3 => Random.Range(3, 6),
-            4 => Random.Range(4, 7),
-            5 => Random.Range(5, 8),
-            6 => Random.Range(6, 9),
-            7 => Random.Range(7, 10),
-            8 => Random.Range(8, 11),
-            9 => Random.Range(9, 12),
-            10 => Random.Range(10, 13),
+            1 => Random.Range(1, 2),
+            2 => Random.Range(2, 3),
+            3 => Random.Range(3, 4),
+            4 => Random.Range(4, 6),
+            5 => Random.Range(5, 7),
+            6 => Random.Range(6, 8),
+            7 => Random.Range(7, 9),
+            8 => Random.Range(8, 10),
+            9 => Random.Range(9, 11),
+            10 => Random.Range(10, 12),
             _ => Random.Range(3, 6)
         };
 

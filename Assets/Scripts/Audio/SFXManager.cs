@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public class SFXManager : MonoBehaviour
 {
     public static SFXManager Instance { get; private set; }
@@ -13,6 +14,56 @@ public class SFXManager : MonoBehaviour
 
     [SerializeField] private SoundGroup[] soundGroups;
     [SerializeField] private AudioSource audioSource;
+    [SerializeField] private Slider slider;
+
+    private float lastVolume;
+    private float debounceDelay = 0.2f;
+    private bool volumeChangedPending;
+    private bool initialized;
+
+    private void Start()
+    {
+        if (slider != null)
+        {
+            lastVolume = slider.value;
+            audioSource.volume = lastVolume;
+            slider.onValueChanged.AddListener(HandleVolumeChanged);
+
+            // Откладываем установку initialized, чтобы игнорировать первое событие
+            Invoke(nameof(EnableInitialization), 0.1f);
+        }
+    }
+
+    private void EnableInitialization()
+    {
+        initialized = true;
+    }
+
+
+    private void HandleVolumeChanged(float newVolume)
+    {
+        audioSource.volume = newVolume;
+        lastVolume = newVolume;
+
+        if (!initialized) return;
+
+        volumeChangedPending = true;
+        CancelInvoke(nameof(PlayDebouncedSound));
+        Invoke(nameof(PlayDebouncedSound), debounceDelay);
+    }
+
+    private void PlayDebouncedSound()
+    {
+        if (volumeChangedPending)
+        {
+            PlaySound(ActionType.Heal);
+            volumeChangedPending = false;
+        }
+    }
+
+
+
+
 
     private Dictionary<ActionType, AudioClip[]> soundDictionary;
 

@@ -21,11 +21,21 @@ public class NewDiceConfig : ScriptableObject
             sides[i].sideIndex = i;
         }
     }
-    public void LoadImages()
+    public void LoadImages(bool isEnemy)
     {
+        string curentpath;
+        string pathSM = "Sprites/Dices/TC_Dice_sides";
+        string pathEnemy = "Sprites/Dices/Orc_Dice_sides";
+        if (isEnemy) 
+        {
+            curentpath = pathEnemy;
+        }else
+        {
+            curentpath = pathSM;
+        }
         for (int i = 0; i < sides.Count; i++)
         {
-            sides[i].sprite = GetSpriteForActionType(sides[i].actionType);
+            sides[i].sprite = GetSpriteForActionType(sides[i].actionType,curentpath);
             sides[i].ActionSide = GetActionSideForActionType(sides[i].actionType);
             if (sides[i].actionType == ActionType.None)
             {
@@ -34,9 +44,9 @@ public class NewDiceConfig : ScriptableObject
         }
     }
 
-    private Sprite GetSpriteForActionType(ActionType actionType)
+    private Sprite GetSpriteForActionType(ActionType actionType,string path)
     {
-        return Resources.Load<Sprite>($"Sprites/Dices/TC_Dice_sides/{actionType}");
+        return Resources.Load<Sprite>($"{path}/{actionType}");
     }
 
     private ActionSide GetActionSideForActionType(ActionType actionType)

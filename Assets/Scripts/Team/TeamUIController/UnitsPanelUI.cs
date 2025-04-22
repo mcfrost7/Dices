@@ -68,7 +68,7 @@ public class UnitsPanelUI : MonoBehaviour
         foreach (NewUnitStats unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
         {
             UIUnit _unitOnPanel = Instantiate(_unitOnPanelPrefab, _panel.transform);
-            _unitOnPanel.Initialize(unit._dice._diceConfig, () => OnUnitClick(unit));
+            _unitOnPanel.Initialize(unit, () => OnUnitClick(unit));
         }
         _countUnits.text = GameDataMNG.Instance.PlayerData.PlayerUnits.Count.ToString() + "/5";
 

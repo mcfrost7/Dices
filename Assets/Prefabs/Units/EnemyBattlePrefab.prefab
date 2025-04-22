@@ -615,6 +615,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8274886141265420621}
   - component: {fileID: 2300534883145566151}
+  - component: {fileID: 2147322287902829835}
   m_Layer: 0
   m_Name: EnemyBattlePrefab
   m_TagString: Untagged
@@ -668,7 +669,22 @@ MonoBehaviour:
   _actionTrigger: {fileID: 6554232862306879397}
   _linePoint: {fileID: 7124964477942809775}
   _arrow: {fileID: 1658993643985061521}
+  _trigger: {fileID: 2147322287902829835}
   _selectionIndicator: {fileID: 0}
+--- !u!114 &2147322287902829835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4712609715597989730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed1517d04283f84b9647e21ddebefbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: 
+  header: 
 --- !u!1 &6499981981738996160
 GameObject:
   m_ObjectHideFlags: 0

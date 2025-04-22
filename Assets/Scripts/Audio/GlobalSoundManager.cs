@@ -1,28 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GlobalSoundManager : MonoBehaviour
 {
-
-    [SerializeField] Slider slider;
-    private AudioSource audioSource;
+    [SerializeField] private Slider slider;
+    [SerializeField] private AudioSource audioSource;
 
     public AudioSource AudioSource { get => audioSource; set => audioSource = value; }
 
-    void Start()
+    private void Start()
     {
-        AudioSource = GetComponent<AudioSource>();
+        if (slider != null)
+        {
+            slider.onValueChanged.AddListener(SetVolume);
+            SetVolume(slider.value);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetVolume(float volume)
     {
-        if (slider.value != audioSource.volume)
-        {
-            audioSource.volume = slider.value;
-        }
-
+        audioSource.volume = volume;
     }
 }

@@ -146,6 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4229266683229628537}
   - component: {fileID: 4204253857651652540}
+  - component: {fileID: 8621633144246855794}
   m_Layer: 0
   m_Name: UnitBattlePrefab
   m_TagString: Untagged
@@ -198,7 +199,22 @@ MonoBehaviour:
   _actionTrigger: {fileID: 2331529275310623213}
   _linePoint: {fileID: 2674026451822083006}
   _arrow: {fileID: 0}
+  _trigger: {fileID: 8621633144246855794}
   _selectionIndicator: {fileID: 8921557527233849361}
+--- !u!114 &8621633144246855794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415606186908714635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ed1517d04283f84b9647e21ddebefbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  content: 
+  header: 
 --- !u!1 &597656113722399664
 GameObject:
   m_ObjectHideFlags: 0

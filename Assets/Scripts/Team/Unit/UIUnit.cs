@@ -14,11 +14,12 @@ public class UIUnit : MonoBehaviour
 
     public Button Button { get => _button; set => _button = value; }
 
-    public void Initialize(NewDiceConfig _newDiceConfig, Action onClick)
+    public void Initialize(NewUnitStats _unit, Action onClick)
     {
         _button.interactable = true;
-        _image.sprite = _newDiceConfig._unitSprite;
+        _image.sprite = _unit._dice._diceConfig._unitSprite;
         Button.onClick.AddListener(() => onClick?.Invoke());
+        _trigger.SetUnitCurrentTooltip(_unit);
         
     }
 
@@ -35,6 +36,7 @@ public class UIUnit : MonoBehaviour
         _button.interactable = state;
         _image.sprite = _unitNext._dice._diceConfig._unitSprite;
         Button.onClick.AddListener(() => UpgradeUnit(_unitCurrent, _unitNext));
+        _trigger.SetUnitUpgradeTooltip(_unitNext);
     }
 
     public void CreateUnit()

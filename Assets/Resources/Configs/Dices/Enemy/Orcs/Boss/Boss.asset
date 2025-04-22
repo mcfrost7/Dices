@@ -18,41 +18,41 @@ MonoBehaviour:
     bonus: 0
     sideIndex: 0
     duration: 1
-    sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
-    ActionSide: 0
+    sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
+    ActionSide: 1
   - actionType: 1
     power: 2
     bonus: 0
     sideIndex: 1
     duration: 1
-    sprite: {fileID: 21300000, guid: 669b71e8703a1fa449502fa4bfa59b55, type: 3}
-    ActionSide: 0
+    sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
+    ActionSide: 1
   - actionType: 4
     power: 4
     bonus: 0
     sideIndex: 2
     duration: 1
-    sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
+    sprite: {fileID: 21300000, guid: 1a68a112500f4a648b1fdb4512fca842, type: 3}
     ActionSide: 1
   - actionType: 0
     power: 0
     bonus: 0
     sideIndex: 3
     duration: 1
-    sprite: {fileID: 21300000, guid: 7f2469c02b8abb44588d4532281a9162, type: 3}
+    sprite: {fileID: 21300000, guid: 0fe9d964cac53f04387f4be74457d521, type: 3}
     ActionSide: 0
   - actionType: 4
     power: 4
     bonus: 0
     sideIndex: 4
     duration: 1
-    sprite: {fileID: 21300000, guid: 3f13523c2d0a2114dad21b21b9d6e961, type: 3}
+    sprite: {fileID: 21300000, guid: 1a68a112500f4a648b1fdb4512fca842, type: 3}
     ActionSide: 1
   - actionType: 0
     power: 0
     bonus: 0
     sideIndex: 5
     duration: 1
-    sprite: {fileID: 21300000, guid: 7f2469c02b8abb44588d4532281a9162, type: 3}
+    sprite: {fileID: 21300000, guid: 0fe9d964cac53f04387f4be74457d521, type: 3}
     ActionSide: 0
   _unitSprite: {fileID: 21300000, guid: bc9bef3976f50994ebc14b2a488cda97, type: 3}

@@ -5,28 +5,39 @@ using UnityEngine;
 [CustomEditor(typeof(NewDiceConfig))]
 public class NewDiceConfigEditor : Editor
 {
+    private bool isEnemyDice = false;
+
     public override void OnInspectorGUI()
     {
+        // Отрисовка стандартных полей
         base.OnInspectorGUI();
 
-        NewDiceConfig config = (NewDiceConfig)target;
+        // Горизонтальная линия-разделитель
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
+        // Галочка для определения вражеского кубика
+        isEnemyDice = EditorGUILayout.Toggle("Is Enemy Dice", isEnemyDice);
+
+        // Кнопки управления
+        EditorGUILayout.Space();
         if (GUILayout.Button("Add New Side"))
         {
             DiceSide newSide = new DiceSide();
-            config.AddNewSide(newSide);
-            EditorUtility.SetDirty(config);
+            ((NewDiceConfig)target).AddNewSide(newSide);
+            EditorUtility.SetDirty(target);
         }
 
         if (GUILayout.Button("Refresh All Indices"))
         {
-            config.RefreshSideIndices();
-            EditorUtility.SetDirty(config);
+            ((NewDiceConfig)target).RefreshSideIndices();
+            EditorUtility.SetDirty(target);
         }
+
         if (GUILayout.Button("Load Unit Meta Data"))
         {
-            config.LoadImages();
-            EditorUtility.SetDirty(config);
+            ((NewDiceConfig)target).LoadImages(isEnemyDice);
+            EditorUtility.SetDirty(target);
         }
     }
 }

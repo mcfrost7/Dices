@@ -12,6 +12,7 @@ public class FsmStateReroll : FsmState
         BattleActionManager.Instance.ShowStateText("Стадия:\nПереброска кубов");
         _stateTimer = 0f;
         BattleRerolls.Instance.InitRerolls();
+        BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
         BattleDiceManager.Instance.OnAllRerollsComplete += OnRerollsComplete;
         BattleRerolls.Instance.OnAllRerollsComplete += OnEndRerollsPressed;
         BattleDiceManager.Instance.AllowMultipleSelections = true;

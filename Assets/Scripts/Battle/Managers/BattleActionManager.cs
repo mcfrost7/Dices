@@ -77,12 +77,10 @@ public class BattleActionManager : MonoBehaviour
 
         _targetUnit = unit;
 
-        // Check if it's self-targeting for ally action
         DiceSide currentSide = _selectedUnit.UnitData._dice.GetCurrentSide();
         bool isSelfTargetingAllyAction = (_selectedUnit == _targetUnit &&
                                          currentSide.ActionSide == ActionSide.Ally);
 
-        // Check normal targeting rules or self-targeting exception
         if (IsValidTarget(_selectedUnit, _targetUnit) || isSelfTargetingAllyAction)
         {
             ExecuteAction(_selectedUnit, _targetUnit);

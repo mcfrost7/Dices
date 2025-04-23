@@ -9,7 +9,8 @@ public class NewUnitStats
     public string _name;
     public int _health;
     public int _current_health;
-    public int _moral;
+    public int _currentMoral;
+    public int _baseMoral;
     public int _current_defense;
     public int _current_exp;
     public int _level;
@@ -23,7 +24,8 @@ public class NewUnitStats
         _name = name;
         _health = health;
         _current_health = health;
-        _moral = moral;
+        _currentMoral = moral;
+        _baseMoral = moral;
         _current_exp = 0;
         _current_defense = 0;
         _level = level;
@@ -48,7 +50,8 @@ public class SerializableUnitStats
 {
     public string _name;
     public int _health;
-    public int _moral;
+    public int _currentMoral;
+    public int _baseMoral;
     public int _current_health;
     public int _level;
     public int _ID;
@@ -64,7 +67,8 @@ public class SerializableUnitStats
         _name = unit._name;
         _health = unit._health;
         _current_health = unit._current_health;
-        _moral = unit._moral;
+        _currentMoral = unit._currentMoral;
+        _baseMoral = unit._baseMoral;
         _level = unit._level;
         _ID = unit._ID;
         _current_exp = unit._current_exp;
@@ -93,12 +97,12 @@ public class SerializableUnitStats
         NewUnitStats unit = new NewUnitStats(
             _name,
             _health,
-            _moral,
+            _currentMoral,
             _level,
             _dice != null ? _dice.ToDice() : null,
             new List<BuffConfig>() // We'll fill this later
         );
-
+        unit._baseMoral  = _baseMoral;
         unit._ID = _ID;
         unit._current_exp = _current_exp;
         unit._current_health = _current_health;

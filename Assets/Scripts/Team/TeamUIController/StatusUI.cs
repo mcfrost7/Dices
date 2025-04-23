@@ -22,7 +22,7 @@ public class StatusUI : MonoBehaviour
             // Устанавливаем текстовые значения
             _health.text = _clickedUnit._current_health.ToString() + " / " + _clickedUnit._health.ToString();
             _experience.text = _clickedUnit._current_exp.ToString() + " / " + (_clickedUnit._level * 10).ToString();
-            _moral.text = _clickedUnit._moral.ToString();
+            _moral.text = _clickedUnit._currentMoral.ToString();
             UpdateHealthVisuals(_clickedUnit);
         }
     }

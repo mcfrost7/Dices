@@ -21,7 +21,7 @@ public static class RerollCalculator
 
     private static int GetModifiedMorale(NewUnitStats unit)
     {
-        int morale = unit._moral;
+        int morale = unit._currentMoral;
 
         foreach (var buff in unit._buffs)
         {

@@ -87,6 +87,8 @@ public class BattleController : MonoBehaviour
             BattleUnit unitObj = Instantiate(_unitprefab, _playerUnitsContainer);
             unitObj.SetupUnit(unitData);
             UnitsObj.Add(unitObj);
+            unitObj.UnitData._currentMoral = unitObj.UnitData._baseMoral;
+            unitObj.RefreshUnitUI();
         }
     }
 
@@ -130,6 +132,10 @@ public class BattleController : MonoBehaviour
     }
     public void OnBattleWin()
     {
+        foreach (var unit in UnitsObj)
+        {
+            unit.UnitData._currentMoral = unit.UnitData._baseMoral;
+        }
         SerializableRewardConfig reward = null;
         if (IsBossBattle)
         {

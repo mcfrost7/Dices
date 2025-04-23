@@ -172,7 +172,8 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             case ActionType.Heal: return "Лечение";
             case ActionType.LifeSteal: return "Кража здоровья";
             case ActionType.Moral: return "Мораль";
-            case ActionType.HP: return "Здоровье";
+            case ActionType.HealthAttack: return "Удар здоровьем";
+            case ActionType.ShieldBash: return "Удар защитой";
             default: return "Без эффекта";
         }
     }
@@ -199,7 +200,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine($"Тип эффекта: {GetBuffTypeName(buff.buffType)}");
+        sb.AppendLine($"Тип эффекта: {GetActionTypeName(buff.buffType)}");
         sb.AppendLine($"Сила: {buff.buffPower}");
 
         switch (buff.buffType)
@@ -220,21 +221,6 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         return sb.ToString();
     }
-
-    private string GetBuffTypeName(ActionType type)
-    {
-        switch (type)
-        {
-            case ActionType.Attack: return "Атака";
-            case ActionType.Defense: return "Защита";
-            case ActionType.Heal: return "Лечение";
-            case ActionType.LifeSteal: return "Кража здоровья";
-            case ActionType.Moral: return "Мораль";
-            case ActionType.HP: return "Здоровье";
-            default: return "Бонус";
-        }
-    }
-
 
     public void SetUnitUpgradeTooltip(NewUnitStats unit)
     {
@@ -279,7 +265,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         sb.AppendLine($"Уровень: {unit._level}");
         sb.AppendLine($"Здоровье: {unit._current_health}/{unit._health}");
-        sb.AppendLine($"Мораль: {unit._moral}");
+        sb.AppendLine($"Мораль: {unit._currentMoral}");
 
         if (showExp)
         {

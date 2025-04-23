@@ -58,6 +58,7 @@ public class BattleEnemyAI : MonoBehaviour
             if (target != null)
             {
                 BattleActionManager.Instance.ExecuteAction(source, target);
+                source.Arrow.gameObject.SetActive(false);  
                 yield return new WaitForSeconds(1f);
             }
         }

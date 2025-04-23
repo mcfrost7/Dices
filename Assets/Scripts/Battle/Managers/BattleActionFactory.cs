@@ -27,7 +27,10 @@ public class BattleActionFactory : MonoBehaviour
         _actions.Add(ActionType.LifeSteal, new LifestealAction());
         _actions.Add(ActionType.Heal, new HealAction());
         _actions.Add(ActionType.Defense, new DefenseAction());
+        _actions.Add(ActionType.ShieldBash, new ShieldBashAction());
         _actions.Add(ActionType.None, new DefaultAction());
+        _actions.Add(ActionType.Moral, new MoraleAction());
+        _actions.Add(ActionType.HealthAttack, new HealthAttackAction());
     }
 
     public IBattleAction GetAction(ActionType type)
@@ -145,6 +148,92 @@ public class DefenseAction : IBattleAction
         return isSourcePlayer == isTargetPlayer; // Можно лечить только союзников
     }
 }
+
+
+public class ShieldBashAction : IBattleAction
+{
+    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    {
+        int shieldPower = source.UnitData._current_defense;
+        if (shieldPower <= 0) return;
+
+        if (target.UnitData._current_defense > 0)
+        {
+            int remainingDamage = Mathf.Max(0, shieldPower - target.UnitData._current_defense);
+            target.UnitData._current_defense = Mathf.Max(0, target.UnitData._current_defense - shieldPower);
+            if (remainingDamage > 0)
+            {
+                target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - remainingDamage);
+            }
+        }
+        else
+        {
+            target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - shieldPower);
+        }
+
+        // Сбросить защиту у атакующего
+        source.UnitData._current_defense = 0;
+    }
+
+    public bool IsValidTarget(BattleUnit source, BattleUnit target)
+    {
+        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
+        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
+        return isSourcePlayer != isTargetPlayer; // Только враги
+    }
+}
+
+
+public class HealthAttackAction : IBattleAction
+{
+    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    {
+        ApplyDamage(source, target, power);
+        ApplyDamage(source, source, power);
+    }
+
+    public bool IsValidTarget(BattleUnit source, BattleUnit target)
+    {
+        return BattleController.Instance.UnitsObj.Contains(source) != BattleController.Instance.UnitsObj.Contains(target);
+    }
+
+    private void ApplyDamage(BattleUnit attacker, BattleUnit defender, int damage)
+    {
+        var unitData = defender.UnitData;
+
+        if (unitData._current_defense > 0)
+        {
+            int defenseReduction = Mathf.Min(unitData._current_defense, damage);
+            unitData._current_defense -= defenseReduction;
+            damage -= defenseReduction;
+        }
+
+        // После обработки защиты наносим урон в здоровье
+        if (damage > 0)
+        {
+            unitData._current_health = Mathf.Max(0, unitData._current_health - damage);
+        }
+    }
+}
+
+
+public class MoraleAction : IBattleAction
+{
+    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    {
+
+        target.UnitData._currentMoral = target.UnitData._currentMoral + power;
+    }
+
+    public bool IsValidTarget(BattleUnit source, BattleUnit target)
+    {
+        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
+        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
+        return isSourcePlayer == isTargetPlayer;
+    }
+}
+
+
 
 public class DefaultAction : IBattleAction
 {

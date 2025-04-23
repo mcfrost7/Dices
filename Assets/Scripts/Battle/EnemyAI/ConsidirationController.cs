@@ -20,7 +20,7 @@ public class ConsidirationController
     {
         float healthFactor = 1f - (unit._current_health / (float)unit._health); // Чем меньше ХП, тем выше приоритет
         float levelFactor = unit._level * 2f; // Чем выше уровень, тем выше приоритет
-        float moralFactor = unit._moral * 1.5f; // Высокая мораль → опасный юнит
+        float moralFactor = unit._currentMoral * 1.5f; // Высокая мораль → опасный юнит
 
         float dicePowerFactor = 0f;
         float attackFactor = 0f;

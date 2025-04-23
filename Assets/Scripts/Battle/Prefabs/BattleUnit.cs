@@ -39,19 +39,6 @@ public class BattleUnit : MonoBehaviour
         _actionTrigger.onClick.RemoveAllListeners();
         _actionTrigger.onClick.AddListener(OnActionTriggerClicked);
     }
-
-    public void AllowSelfSelection()
-    {
-        if (!IsUsed && !IsEnemy)
-        {
-            DiceSide currentSide = UnitData._dice.GetCurrentSide();
-            if (currentSide.ActionSide == ActionSide.Ally)
-            {
-                BattleActionManager.Instance.SetSelectedUnit(this);
-                BattleActionManager.Instance.SetTargetUnit(this);
-            }
-        }
-    }
     private void OnActionTriggerClicked()
     {
         if (isEnemy)
@@ -82,7 +69,7 @@ public class BattleUnit : MonoBehaviour
         IsUsed = false;
         IsEnemy = false;
         SetupCommon(newUnitStats);
-        _moralText.text = newUnitStats._moral.ToString();
+        _moralText.text = newUnitStats._currentMoral.ToString();
         _powerText.text = CalculateSidePower(newUnitStats, newUnitStats._dice.GetCurrentSide()).ToString();
         _trigger.SetUnitBattleTooltip(newUnitStats);
     }
@@ -173,7 +160,7 @@ public class BattleUnit : MonoBehaviour
 
         if (!IsEnemy)
         {
-            _moralText.text = UnitData._moral.ToString();
+            _moralText.text = UnitData._currentMoral.ToString();
             _powerText.text = CalculateSidePower(UnitData, UnitData._dice.GetCurrentSide()).ToString();
         }
         else

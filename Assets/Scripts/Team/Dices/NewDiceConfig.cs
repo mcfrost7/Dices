@@ -55,12 +55,13 @@ public class NewDiceConfig : ScriptableObject
         {
             case ActionType.Attack:
             case ActionType.LifeSteal:
+            case ActionType.HealthAttack:
+            case ActionType.ShieldBash:
                 return ActionSide.Enemy;
 
             case ActionType.Defense:
             case ActionType.Heal:
             case ActionType.Moral:
-            case ActionType.HP:
                 return ActionSide.Ally;
 
             case ActionType.None:

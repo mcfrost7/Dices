@@ -16,7 +16,6 @@ public class FsmStateIntention : FsmState
         BattleUI.Instance.StartBattleUISetup();
         if (BattleEnemyAI.Instance.CreateIntention())
         {
-            BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
             OnIntentionsConfirmed();
         }
 
@@ -48,6 +47,7 @@ public class FsmStateIntention : FsmState
     public override void Exit()
     {
         Debug.Log("Exiting Intention state");
+       
     }
 
     public void OnIntentionsConfirmed()

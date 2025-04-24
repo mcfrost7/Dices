@@ -13,33 +13,33 @@ MonoBehaviour:
   m_Name: Chaplain
   m_EditorClassIdentifier: 
   sides:
-  - actionType: 1
+  - actionType: 7
     power: 4
     bonus: 0
     sideIndex: 0
     duration: 0
-    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
+    sprite: {fileID: 21300000, guid: 4b854dc80580ebe4cb607781893b7e7c, type: 3}
     ActionSide: 1
-  - actionType: 3
-    power: 2
+  - actionType: 7
+    power: 5
     bonus: 0
     sideIndex: 1
     duration: 0
-    sprite: {fileID: 21300000, guid: cb967abe53daffd4fb89f64d4ceb7ed5, type: 3}
-    ActionSide: 2
-  - actionType: 1
+    sprite: {fileID: 21300000, guid: 4b854dc80580ebe4cb607781893b7e7c, type: 3}
+    ActionSide: 1
+  - actionType: 6
     power: 5
     bonus: 0
     sideIndex: 2
     duration: 0
-    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
+    sprite: {fileID: 21300000, guid: 4146efa1c69ed2448a2338f60714e423, type: 3}
     ActionSide: 1
-  - actionType: 2
-    power: 1
+  - actionType: 3
+    power: 2
     bonus: 0
     sideIndex: 3
     duration: 0
-    sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
+    sprite: {fileID: 21300000, guid: cb967abe53daffd4fb89f64d4ceb7ed5, type: 3}
     ActionSide: 2
   - actionType: 3
     power: 3
@@ -48,11 +48,11 @@ MonoBehaviour:
     duration: 0
     sprite: {fileID: 21300000, guid: cb967abe53daffd4fb89f64d4ceb7ed5, type: 3}
     ActionSide: 2
-  - actionType: 1
-    power: 5
+  - actionType: 5
+    power: 3
     bonus: 0
     sideIndex: 5
     duration: 0
-    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
-    ActionSide: 1
+    sprite: {fileID: 21300000, guid: 167f124e334198343b99e3fbfeb6e9e9, type: 3}
+    ActionSide: 2
   _unitSprite: {fileID: 21300000, guid: cba44d4599ccedc448b31cf4112623b2, type: 3}

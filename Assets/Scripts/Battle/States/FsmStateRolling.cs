@@ -8,6 +8,7 @@ public class FsmStateRolling : FsmState
     public FsmStateRolling(FSM fsm) : base(fsm) { }
     public override void Enter()
     {
+        BattleUI.Instance.StartBattleUISetup();
         BattleActionManager.Instance.ShowStateText("Стадия:\nБросок кубов...");
         _stateTimer = 0f;
         BattleDiceManager.Instance.OnAllRollsComplete += OnRollsComplete;
@@ -23,7 +24,7 @@ public class FsmStateRolling : FsmState
 
     private void OnRollsComplete()
     {
-        Fsm.SetState<FsmStateReroll>();
+        Fsm.SetState<FsmStateIntention>();
     }
 
     public override void Update()

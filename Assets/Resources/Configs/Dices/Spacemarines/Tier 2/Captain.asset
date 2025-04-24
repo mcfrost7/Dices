@@ -20,39 +20,39 @@ MonoBehaviour:
     duration: 0
     sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
     ActionSide: 2
-  - actionType: 2
-    power: 3
+  - actionType: 7
+    power: 2
     bonus: 0
     sideIndex: 1
     duration: 0
-    sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
-    ActionSide: 2
+    sprite: {fileID: 21300000, guid: 4b854dc80580ebe4cb607781893b7e7c, type: 3}
+    ActionSide: 1
   - actionType: 2
-    power: 2
+    power: 3
     bonus: 0
     sideIndex: 2
     duration: 0
     sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
     ActionSide: 2
   - actionType: 2
-    power: 2
+    power: 3
     bonus: 0
     sideIndex: 3
     duration: 0
     sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
     ActionSide: 2
-  - actionType: 2
-    power: 1
+  - actionType: 5
+    power: 2
     bonus: 0
     sideIndex: 4
     duration: 0
-    sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
+    sprite: {fileID: 21300000, guid: 167f124e334198343b99e3fbfeb6e9e9, type: 3}
     ActionSide: 2
-  - actionType: 2
+  - actionType: 7
     power: 1
     bonus: 0
     sideIndex: 5
     duration: 0
-    sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
-    ActionSide: 2
+    sprite: {fileID: 21300000, guid: 4b854dc80580ebe4cb607781893b7e7c, type: 3}
+    ActionSide: 1
   _unitSprite: {fileID: 21300000, guid: 07bec95de6b3ae54a8c4808fbea60552, type: 3}

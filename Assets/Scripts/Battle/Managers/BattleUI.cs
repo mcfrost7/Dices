@@ -48,22 +48,25 @@ public class BattleUI : MonoBehaviour
         Canvas.ForceUpdateCanvases();
         foreach (var enemyObj in BattleController.Instance.EnemiesObj)
         {
-            enemyObj.Arrow.gameObject.SetActive(true);
-            RectTransform enemyPoint = enemyObj.LinePoint;
-            BattleUnit targetUnit = GetTargetObject(enemyIntentions, enemyObj);
-            RectTransform targetPoint = targetUnit != null ? targetUnit.LinePoint : null;
-            if (targetPoint != null)
+            if (enemyObj.UnitData._dice.GetCurrentSide().actionType != ActionType.None)
             {
-                Vector2 screenPosEnemy = RectTransformUtility.WorldToScreenPoint(cam, enemyPoint.position);
-                Vector2 screenPosTarget = RectTransformUtility.WorldToScreenPoint(cam, targetPoint.position);
-                Vector2 direction = screenPosTarget - screenPosEnemy;
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                enemyObj.Arrow.localRotation = Quaternion.Euler(0, 0, angle);
-                Vector2 length = -screenPosEnemy + screenPosTarget;
-            }
-            else
-            {
-                enemyObj.Arrow.gameObject.SetActive(false);
+                enemyObj.Arrow.gameObject.SetActive(true);
+                RectTransform enemyPoint = enemyObj.LinePoint;
+                BattleUnit targetUnit = GetTargetObject(enemyIntentions, enemyObj);
+                RectTransform targetPoint = targetUnit != null ? targetUnit.LinePoint : null;
+                if (targetPoint != null)
+                {
+                    Vector2 screenPosEnemy = RectTransformUtility.WorldToScreenPoint(cam, enemyPoint.position);
+                    Vector2 screenPosTarget = RectTransformUtility.WorldToScreenPoint(cam, targetPoint.position);
+                    Vector2 direction = screenPosTarget - screenPosEnemy;
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                    enemyObj.Arrow.localRotation = Quaternion.Euler(0, 0, angle);
+                    Vector2 length = -screenPosEnemy + screenPosTarget;
+                }
+                else
+                {
+                    enemyObj.Arrow.gameObject.SetActive(false);
+                }
             }
 
         }

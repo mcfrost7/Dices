@@ -156,6 +156,7 @@ public class MapNodeData
     public string TileConfigId;
     public bool IsVisited;
     public bool IsAvailable;
+    public int battleDifficulty;
 
     public MapNodeData() { } // Default constructor for serialization
 

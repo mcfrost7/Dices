@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Battle 3
   m_EditorClassIdentifier: 
   tileType: 0
-  tileSprite: {fileID: 21300000, guid: 4ed0e7fa6fca03f47b9c79885d8a9b41, type: 3}
+  tileSprite: {fileID: 21300000, guid: 8db5586785448674abb51244cb409286, type: 3}
   battleSettings:
     battleDifficulty: 3
     tileEnemies: {fileID: 11400000, guid: e6b104c982a04f04889acc6225f8e8ba, type: 2}

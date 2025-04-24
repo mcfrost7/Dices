@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using System.Linq;
 using Unity.VisualScripting.FullSerializer;
+using System;
+using Random = UnityEngine.Random;
 
 public class CanvasMapGenerator : MonoBehaviour
 {
@@ -47,6 +48,7 @@ public class CanvasMapGenerator : MonoBehaviour
         public int layerIndex;
         public bool isVisited;
         public bool isAvailable;
+        public int battleDifficulty;
     }
 
     public MapGenerationSettings generationSettings;
@@ -281,13 +283,24 @@ public class CanvasMapGenerator : MonoBehaviour
 
         GameDataMNG.Instance.PlayerData.MapNodes = mapNodesData;
     }
+    // ========================================
+    // == Блок генерации боевого узла карты ==
+    // ========================================
+    private int lastCampLayerIndex = int.MinValue;
 
-    // Создаем узлы для слоя
     private List<MapNode> CreateNodesForLayer(int layerIndex, float layerY, int nodesInLayer, ref bool bossPlaced, LocationConfig locationConfig)
     {
         List<MapNode> layerNodes = new List<MapNode>();
         float totalWidth = generationSettings.mapContainer.rect.width;
         float spacing = totalWidth / (nodesInLayer + 1);
+        int totalLayers = generationSettings.numberOfLayers;
+        int invertedLayerIndex = totalLayers - 1 - layerIndex;
+        float progressFactor = (float)invertedLayerIndex / (totalLayers - 1);
+
+        bool isPreBossLayer = layerIndex == 1;
+        bool canSpawnCampThisLayer = (layerIndex <= totalLayers - 2) && (layerIndex - lastCampLayerIndex >= 3);
+        int campNodeIndex = isPreBossLayer ? Random.Range(0, nodesInLayer) : -1;
+        bool campPlacedThisLayer = false;
 
         for (int i = 0; i < nodesInLayer; i++)
         {
@@ -296,102 +309,229 @@ public class CanvasMapGenerator : MonoBehaviour
             float xPosition = spacing * (i + 1) - totalWidth / 2 + Random.Range(-generationSettings.nodeHorizontalSpread, generationSettings.nodeHorizontalSpread);
             nodeRectTransform.anchoredPosition = new Vector2(xPosition, layerY);
 
-            // Handle boss placement on the first layer
+            // Босс на слое 0
             if (!bossPlaced && layerIndex == 0)
             {
-                // Get all boss tile configs from the location
-                List<NewTileConfig> bossTileConfigs = new List<NewTileConfig>();
-                foreach (var tile in locationConfig.tiles)
+                if (TryCreateBossNode(nodeObject, nodeRectTransform, locationConfig, layerIndex, out MapNode bossNode))
                 {
-                    if (tile.tileType == TileType.BossTile)
-                    {
-                        foreach (var tileConfig in tile.tileConfig)
-                        {
-                            bossTileConfigs.Add(tileConfig);
-                        }
-                    }
-                }
-
-                if (bossTileConfigs.Count > 0)
-                {
-                    // Select a random boss tile config
-                    NewTileConfig selectedBossTileConfig = bossTileConfigs[Random.Range(0, bossTileConfigs.Count)];
-
-                    MapNode newNode = new MapNode
-                    {
-                        nodeObject = nodeObject,
-                        rectTransform = nodeRectTransform,
-                        locationConfig = locationConfig,
-                        tileType = TileType.BossTile,
-                        tileConfig = selectedBossTileConfig,
-                        layerIndex = layerIndex,
-                        isVisited = false,
-                        isAvailable = false
-                    };
-
-                    newNode.nodeObject.Initialize(selectedBossTileConfig.tileSprite, OnNodeClick, newNode);
-                    layerNodes.Add(newNode);
+                    layerNodes.Add(bossNode);
                     bossPlaced = true;
                     continue;
                 }
             }
 
-            // Create regular tile
-            TileType selectedTileType = GetRandomTileType();
+            TileType selectedTileType;
 
-            List<NewTileConfig> matchingTileConfigs = new List<NewTileConfig>();
-            foreach (var tile in locationConfig.tiles)
+            // Гарантированный лагерь на предбоссовом слое в случайной позиции
+            if (isPreBossLayer && i == campNodeIndex)
             {
-                if (tile.tileType == selectedTileType)
+                selectedTileType = TileType.CampTile;
+                campPlacedThisLayer = true;
+            }
+            else if (canSpawnCampThisLayer && !campPlacedThisLayer)
+            {
+                selectedTileType = GetRandomTileType();
+
+                // Принудительно ставим лагерь, если случайно выпал такой тайл
+                if (selectedTileType == TileType.CampTile)
                 {
-                    foreach (var tileConfig in tile.tileConfig)
-                    {
-                        matchingTileConfigs.Add(tileConfig);
-                    }
+                    campPlacedThisLayer = true;
+                    lastCampLayerIndex = layerIndex;
                 }
             }
-
-            if (matchingTileConfigs.Count == 0)
+            else
             {
-                Debug.LogWarning($"No tile configurations found for tile type {selectedTileType}. Using any available tile.");
-                foreach (var tile in locationConfig.tiles)
+                // Убираем шанс лагеря, если уже был или нельзя
+                do
                 {
-                    if (tile.tileConfig.Count > 0)
-                    {
-                        matchingTileConfigs.AddRange(tile.tileConfig);
-                    }
+                    selectedTileType = GetRandomTileType();
                 }
+                while (selectedTileType == TileType.CampTile);
+            }
 
-                if (matchingTileConfigs.Count == 0)
+            // Боевой тайл
+            if (selectedTileType == TileType.BattleTile)
+            {
+                if (TryCreateBattleNode(nodeObject, nodeRectTransform, locationConfig, layerIndex, progressFactor, out MapNode battleNode))
                 {
-                    Debug.LogError("No tile configurations found in location!");
+                    layerNodes.Add(battleNode);
                     continue;
                 }
-
-                selectedTileType = matchingTileConfigs[0].tileType;
             }
 
-            // Select a random config from matching tiles
-            NewTileConfig selectedTileConfig = matchingTileConfigs[Random.Range(0, matchingTileConfigs.Count)];
-
-            MapNode newTileNode = new MapNode
+            // Остальные тайлы
+            MapNode regularNode = CreateRegularNode(nodeObject, nodeRectTransform, locationConfig, selectedTileType, layerIndex);
+            if (regularNode != null)
             {
-                nodeObject = nodeObject,
-                rectTransform = nodeRectTransform,
-                locationConfig = locationConfig,
-                tileType = selectedTileType,
-                tileConfig = selectedTileConfig,
-                layerIndex = layerIndex,
-                isVisited = false,
-                isAvailable = false
-            };
-
-            newTileNode.nodeObject.Initialize(selectedTileConfig.tileSprite, OnNodeClick, newTileNode);
-            layerNodes.Add(newTileNode);
+                layerNodes.Add(regularNode);
+            }
         }
+
+        // Обновляем индекс последнего лагеря, если был поставлен гарантированно на предбоссовом слое
+        if (isPreBossLayer && campPlacedThisLayer)
+            lastCampLayerIndex = layerIndex;
 
         return layerNodes;
     }
+
+    private bool TryCreateBossNode(TileLogic nodeObject, RectTransform rectTransform, LocationConfig locationConfig, int layerIndex, out MapNode bossNode)
+    {
+        bossNode = null;
+        List<NewTileConfig> bossTileConfigs = locationConfig.tiles
+            .Where(t => t.tileType == TileType.BossTile)
+            .SelectMany(t => t.tileConfig)
+            .ToList();
+
+        if (bossTileConfigs.Count == 0) return false;
+
+        NewTileConfig selectedConfig = bossTileConfigs[Random.Range(0, bossTileConfigs.Count)];
+
+        bossNode = new MapNode
+        {
+            nodeObject = nodeObject,
+            rectTransform = rectTransform,
+            locationConfig = locationConfig,
+            tileType = TileType.BossTile,
+            tileConfig = selectedConfig,
+            layerIndex = layerIndex,
+            isVisited = false,
+            isAvailable = false,
+            battleDifficulty = selectedConfig.bossSettings.battleDifficulty
+        };
+
+        nodeObject.Initialize(selectedConfig.tileSprite, OnNodeClick, bossNode);
+        return true;
+    }
+
+    private bool TryCreateBattleNode(TileLogic nodeObject, RectTransform rectTransform, LocationConfig locationConfig, int layerIndex, float progressFactor, out MapNode battleNode)
+    {
+        battleNode = null;
+
+        var battleTileConfigs = locationConfig.tiles
+            .Where(t => t.tileType == TileType.BattleTile)
+            .SelectMany(t => t.tileConfig)
+            .ToList();
+
+        if (battleTileConfigs.Count == 0) return false;
+
+        var difficultyGroups = battleTileConfigs
+            .GroupBy(cfg => cfg.battleSettings.battleDifficulty)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        var difficultyWeights = GetDifficultyWeights(progressFactor, difficultyGroups.Keys.ToList());
+        int selectedDifficulty = SelectWeightedDifficulty(difficultyWeights);
+
+        if (!difficultyGroups.TryGetValue(selectedDifficulty, out List<NewTileConfig> selectedConfigs) || selectedConfigs.Count == 0)
+            return false;
+
+        NewTileConfig selectedConfig = selectedConfigs[Random.Range(0, selectedConfigs.Count)];
+
+        battleNode = new MapNode
+        {
+            nodeObject = nodeObject,
+            rectTransform = rectTransform,
+            locationConfig = locationConfig,
+            tileType = TileType.BattleTile,
+            tileConfig = selectedConfig,
+            layerIndex = layerIndex,
+            isVisited = false,
+            isAvailable = false,
+            battleDifficulty = selectedConfig.battleSettings.battleDifficulty
+        };
+
+        nodeObject.Initialize(selectedConfig.tileSprite, OnNodeClick, battleNode);
+        return true;
+    }
+
+    private Dictionary<int, float> GetDifficultyWeights(float progressFactor, List<int> availableDifficulties)
+    {
+        Dictionary<int, float> weights = new Dictionary<int, float>();
+
+        foreach (int difficulty in availableDifficulties)
+        {
+            float weight = 0;
+
+            if (progressFactor < 0.2f)
+                weight = (6 - difficulty) * (6 - difficulty);
+            else if (progressFactor < 0.4f)
+                weight = difficulty <= 3 ? 5 - Math.Abs(difficulty - 2) : 1;
+            else if (progressFactor < 0.6f)
+                weight = 5 - Math.Abs(difficulty - 3);
+            else if (progressFactor < 0.8f)
+                weight = difficulty >= 3 ? 5 - Math.Abs(difficulty - 4) : 1;
+            else
+                weight = difficulty * difficulty;
+
+            weights[difficulty] = weight;
+        }
+
+        return weights;
+    }
+
+    private int SelectWeightedDifficulty(Dictionary<int, float> weights)
+    {
+        float total = weights.Values.Sum();
+        float rand = Random.Range(0, total);
+        float running = 0;
+
+        foreach (var kvp in weights)
+        {
+            running += kvp.Value;
+            if (rand <= running)
+                return kvp.Key;
+        }
+
+        return weights.Keys.First();
+    }
+
+    private MapNode CreateRegularNode(TileLogic nodeObject, RectTransform rectTransform, LocationConfig locationConfig, TileType tileType, int layerIndex)
+    {
+        List<NewTileConfig> matchingConfigs = locationConfig.tiles
+            .Where(t => t.tileType == tileType)
+            .SelectMany(t => t.tileConfig)
+            .ToList();
+
+        if (matchingConfigs.Count == 0)
+        {
+            matchingConfigs = locationConfig.tiles
+                .SelectMany(t => t.tileConfig)
+                .ToList();
+
+            if (matchingConfigs.Count == 0)
+                return null;
+
+            tileType = matchingConfigs[0].tileType;
+        }
+
+        NewTileConfig selectedConfig = matchingConfigs[Random.Range(0, matchingConfigs.Count)];
+
+        int difficulty = tileType switch
+        {
+            TileType.BattleTile => selectedConfig.battleSettings.battleDifficulty,
+            TileType.BossTile => selectedConfig.bossSettings.battleDifficulty,
+            _ => 0
+        };
+
+        MapNode node = new MapNode
+        {
+            nodeObject = nodeObject,
+            rectTransform = rectTransform,
+            locationConfig = locationConfig,
+            tileType = tileType,
+            tileConfig = selectedConfig,
+            layerIndex = layerIndex,
+            isVisited = false,
+            isAvailable = false,
+            battleDifficulty = difficulty
+        };
+
+        nodeObject.Initialize(selectedConfig.tileSprite, OnNodeClick, node);
+        return node;
+    }
+
+    // ========================================
+    // == Блок генерации боевого узла карты ==
+    // ========================================
 
     private void HandleTileClicked(MapNode node)
     {
@@ -425,13 +565,11 @@ public class CanvasMapGenerator : MonoBehaviour
         GameDataMNG.Instance.HandleTileClick(node);
     }
 
-    // Обработчик клика по узлу
     public void OnNodeClick(MapNode node)
     {
         OnTileClicked?.Invoke(node);
     }
 
-    // Получаем случайный тип тайла на основе вероятности
     private TileType GetRandomTileType()
     {
         float totalProbability = generationSettings.tileSpawnProbabilities.Sum(t => t.probability);
@@ -466,7 +604,6 @@ public class CanvasMapGenerator : MonoBehaviour
         return TileType.BattleTile; // Default
     }
 
-    // Очищаем старые узлы карты
     private void ClearExistingNodes()
     {
         foreach (Transform child in generationSettings.mapContainer)

@@ -119,8 +119,9 @@ public class BattleController : MonoBehaviour
         var loseState = new FsmStateLose(_battleFsm);
 
         // Add states to FSM
-        _battleFsm.AddState(intentionState);
+
         _battleFsm.AddState(rollingState);
+        _battleFsm.AddState(intentionState);
         _battleFsm.AddState(rerollState);
         _battleFsm.AddState(actionState);
         _battleFsm.AddState(botActionState);
@@ -128,7 +129,7 @@ public class BattleController : MonoBehaviour
         _battleFsm.AddState(loseState);
 
         // Set initial state
-        _battleFsm.SetState<FsmStateIntention>();
+        _battleFsm.SetState<FsmStateRolling>();
     }
     public void OnBattleWin()
     {

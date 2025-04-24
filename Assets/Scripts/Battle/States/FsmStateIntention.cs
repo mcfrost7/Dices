@@ -13,7 +13,7 @@ public class FsmStateIntention : FsmState
         Debug.Log("Entering Intention state");
         _stateTimer = 0f;
         _intentionsSelected = false;
-        BattleUI.Instance.StartBattleUISetup();
+
         if (BattleEnemyAI.Instance.CreateIntention())
         {
             OnIntentionsConfirmed();
@@ -40,7 +40,7 @@ public class FsmStateIntention : FsmState
 
         if (_intentionsSelected)
         {
-            Fsm.SetState<FsmStateRolling>();
+            Fsm.SetState<FsmStateReroll>();
         }
     }
 

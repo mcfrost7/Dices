@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class FsmStateBotAction : FsmState
 {
-    private float _stateTimer = 0f;
-    private float _actionDuration = 5f; // Duration of enemy actions
+
 
     public FsmStateBotAction(FSM fsm) : base(fsm) { }
 
     public override void Enter()
     {
         BattleActionManager.Instance.ShowStateText("Стадия:\nХод врага");
-        _stateTimer = 0f;
 
         BattleEnemyAI.Instance.ExecuteActions();
     }
 
     public override void Update()
     {
-        _stateTimer += Time.deltaTime;
+
 
         // Check for win/lose conditions
         if (CheckAllPlayersDead())
@@ -37,7 +35,7 @@ public class FsmStateBotAction : FsmState
         // When bot action is complete, cycle back to Intention state
         if (BattleEnemyAI.Instance.AreActionsComplete())
         {
-            Fsm.SetState<FsmStateIntention>();
+            Fsm.SetState<FsmStateRolling>();
         }
     }
 

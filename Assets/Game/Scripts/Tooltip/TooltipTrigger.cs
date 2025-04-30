@@ -163,7 +163,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         return sb.ToString();
     }
 
-    private string GetActionTypeName(ActionType type)
+    public  string GetActionTypeName(ActionType type)
     {
         switch (type)
         {
@@ -172,8 +172,8 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             case ActionType.Heal: return "Лечение";
             case ActionType.LifeSteal: return "Кража здоровья";
             case ActionType.Moral: return "Мораль";
-            case ActionType.HealthAttack: return "Удар здоровьем";
-            case ActionType.ShieldBash: return "Удар защитой";
+            case ActionType.HealthAttack: return "Атака здоровьем";
+            case ActionType.ShieldBash: return "Атака щитом";
             default: return "Без эффекта";
         }
     }
@@ -339,5 +339,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
         return sb.ToString();
     }
+
+
 
 }

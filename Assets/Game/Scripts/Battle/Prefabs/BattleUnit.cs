@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,7 +16,10 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] private Button _actionTrigger;
     [SerializeField] private RectTransform _linePoint;
     [SerializeField] private RectTransform _arrow;
+    [SerializeField] private RectTransform _unitRectTransform;
     [SerializeField] private TooltipTrigger _trigger;
+
+
 
     // Add visual indicator for selection
     [SerializeField] private GameObject _selectionIndicator;
@@ -24,6 +28,14 @@ public class BattleUnit : MonoBehaviour
     private bool isSelected = false;
     private bool isEnemy = false;
     private bool isUsed = false;
+    private Vector3 _originalPosition;
+    private Vector3 _selectedOffset = new Vector3(30f, 0, 0);
+    private Tween _moveTween;
+    private LayoutElement _layoutElement;
+    private HorizontalOrVerticalLayoutGroup _parentLayoutGroup;
+    private ContentSizeFitter _parentFitter;
+    private bool _layoutWasEnabled;
+
     public NewUnitStats UnitData { get => unitData; set => unitData = value; }
     public RectTransform LinePoint { get => _linePoint; set => _linePoint = value; }
     public RectTransform Arrow { get => _arrow; set => _arrow = value; }
@@ -38,6 +50,10 @@ public class BattleUnit : MonoBehaviour
     {
         _actionTrigger.onClick.RemoveAllListeners();
         _actionTrigger.onClick.AddListener(OnActionTriggerClicked);
+        _layoutElement = GetComponent<LayoutElement>();
+        _parentLayoutGroup = GetComponentInParent<HorizontalOrVerticalLayoutGroup>();
+        _parentFitter = GetComponentInParent<ContentSizeFitter>();
+        _originalPosition = _unitRectTransform.anchoredPosition;
     }
     private void OnActionTriggerClicked()
     {
@@ -117,15 +133,10 @@ public class BattleUnit : MonoBehaviour
                     unit.SetSelectionState(false);
                 }
             }
-
-            IsSelected = !IsSelected;
-        }
-        else
-        {
-            IsSelected = !IsSelected;
         }
 
-        _selectionIndicator?.SetActive(IsSelected);
+        SetSelectionState(!IsSelected);
+
         BattleDiceManager.Instance.HandleUnitSelectionChanged(this);
 
         if (allowMultiple && IsSelected)
@@ -144,10 +155,41 @@ public class BattleUnit : MonoBehaviour
         if (IsSelected != selected)
         {
             IsSelected = selected;
-            if (_selectionIndicator != null)
+
+            _moveTween?.Kill();
+
+            Vector2 currentPosition = _unitRectTransform.anchoredPosition;
+            // Временно отключаем layout для анимации
+            if (selected)
             {
-                _selectionIndicator.SetActive(selected);
+                _layoutWasEnabled = _parentLayoutGroup != null && _parentLayoutGroup.enabled;
+                if (_parentLayoutGroup != null) _parentLayoutGroup.enabled = false;
+                if (_parentFitter != null) _parentFitter.enabled = false;
+                if (_layoutElement != null) _layoutElement.ignoreLayout = true;
             }
+
+            float targetX = selected ?
+                currentPosition.x + _selectedOffset.x :
+                currentPosition.x - _selectedOffset.x;
+
+            _moveTween = _unitRectTransform.DOAnchorPosX(targetX, 0.3f)
+                .SetEase(Ease.OutBack)
+                .OnComplete(() => {
+                    if (!selected)
+                    {
+                        // Восстанавливаем layout
+                        if (_layoutElement != null) _layoutElement.ignoreLayout = false;
+                        if (_parentLayoutGroup != null && _layoutWasEnabled)
+                            _parentLayoutGroup.enabled = true;
+                        if (_parentFitter != null && _layoutWasEnabled)
+                            _parentFitter.enabled = true;
+
+                        // Принудительно обновляем layout
+                        LayoutRebuilder.MarkLayoutForRebuild(transform.parent as RectTransform);
+                    }
+                });
+
+            _selectionIndicator?.SetActive(selected);
         }
     }
 
@@ -227,6 +269,10 @@ public class BattleUnit : MonoBehaviour
     {
         ActionTrigger.enabled = true;
         isUsed = false;
+        if (IsSelected)
+        {
+            SetSelectionState(false);
+        }
         if  ( _selectionIndicator != null )
             _selectionIndicator.SetActive(false);
         if (_unitImage != null)

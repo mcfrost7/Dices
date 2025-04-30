@@ -199,6 +199,7 @@ MonoBehaviour:
   _actionTrigger: {fileID: 2331529275310623213}
   _linePoint: {fileID: 2674026451822083006}
   _arrow: {fileID: 0}
+  _unitRectTransform: {fileID: 4229266683229628537}
   _trigger: {fileID: 8621633144246855794}
   _selectionIndicator: {fileID: 8921557527233849361}
 --- !u!114 &8621633144246855794

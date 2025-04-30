@@ -22,7 +22,7 @@ MonoBehaviour:
     ActionSide: 2
   - actionType: 2
     power: 1
-    bonus: 1
+    bonus: 0
     sideIndex: 1
     duration: 1
     sprite: {fileID: 21300000, guid: 68b8857a825429845ac00f27b55cd819, type: 3}
@@ -43,7 +43,7 @@ MonoBehaviour:
     ActionSide: 2
   - actionType: 5
     power: 1
-    bonus: 1
+    bonus: 0
     sideIndex: 4
     duration: 1
     sprite: {fileID: 21300000, guid: 167f124e334198343b99e3fbfeb6e9e9, type: 3}

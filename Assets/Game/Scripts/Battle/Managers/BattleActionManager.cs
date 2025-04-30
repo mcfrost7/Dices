@@ -11,7 +11,7 @@ public class BattleActionManager : MonoBehaviour
 {
     [SerializeField] private Button _endAction;
     [SerializeField] private Button _deselect;
-    [SerializeField] private TextMeshProUGUI _actionFeedbackText;
+    [SerializeField] private SelectedSide _selectedSide;
     [SerializeField] private TextMeshProUGUI _stateText;
 
     private BattleUnit _selectedUnit;
@@ -37,7 +37,7 @@ public class BattleActionManager : MonoBehaviour
         _endAction.onClick.AddListener(EndActionButton);
         _deselect.onClick.AddListener(DeselectUnit);
 
-        if (_actionFeedbackText != null && _stateText != null)
+        if (_selectedSide != null && _stateText != null)
         {
             HideActionFeedback();
             HideStateText();
@@ -60,14 +60,12 @@ public class BattleActionManager : MonoBehaviour
         // Не позволяем выбирать использованного юнита как исполнителя
         if (unit.IsUsed)
         {
-            ShowActionFeedback("Этот юнит уже действовал в этом ходу");
             return;
         }
 
         _selectedUnit = unit;
         _isWaitingForTarget = true;
-
-        ShowActionFeedback("Выберите цель для действия");
+        ShowActionFeedback(_selectedUnit);
     }
 
     public void SetTargetUnit(BattleUnit unit)
@@ -89,8 +87,7 @@ public class BattleActionManager : MonoBehaviour
         }
         else
         {
-            ShowActionFeedback("Недопустимая цель для этого действия!");
-            //DeselectUnit();
+            return;
         }
     }
 
@@ -203,20 +200,20 @@ public class BattleActionManager : MonoBehaviour
         }
     }
 
-    public void ShowActionFeedback(string message)
+    public void ShowActionFeedback(BattleUnit unit)
     {
-        if (_actionFeedbackText != null)
+        if (_selectedSide != null)
         {
-            _actionFeedbackText.gameObject.SetActive(true);
-            _actionFeedbackText.text = message;
+            _selectedSide.gameObject.SetActive(true);
+            _selectedSide.SetupInfo(unit);
         }
     }
 
     public void HideActionFeedback()
     {
-        if (_actionFeedbackText != null)
+        if (_selectedSide != null)
         {
-            _actionFeedbackText.gameObject.SetActive(false);
+            _selectedSide.gameObject.SetActive(false);
         }
     }
 

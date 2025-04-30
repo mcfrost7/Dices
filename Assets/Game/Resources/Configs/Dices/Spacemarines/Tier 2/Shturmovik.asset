@@ -15,7 +15,7 @@ MonoBehaviour:
   sides:
   - actionType: 1
     power: 4
-    bonus: 1
+    bonus: 0
     sideIndex: 0
     duration: 0
     sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}

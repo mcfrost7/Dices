@@ -7,7 +7,7 @@ public class DiceSide
 {
     public ActionType actionType;
     public int power;
-    [HideInInspector] public int bonus = 0;
+    public int bonus = 0;
     [HideInInspector] public int sideIndex;
     [HideInInspector] public int duration;
     public Sprite sprite;

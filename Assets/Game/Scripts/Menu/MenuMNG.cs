@@ -80,7 +80,9 @@ public class MenuMNG : MonoBehaviour
         _continue.onClick.AddListener(()=>HideWindow());
         _settings.onClick.AddListener(()=>SetupSettings());
         _exitMenu.onClick.AddListener(()=> SetupMainMenu());
+        _exitMenu.onClick.AddListener(()=> GameDataMNG.Instance.SaveGame());
         _exitGame.onClick.AddListener(()=> GameMNG.Instance.OnExitGame());
+        _exitGame.onClick.AddListener(()=> GameDataMNG.Instance.SaveGame());
     }
     public void SetupMainButtons()
     {

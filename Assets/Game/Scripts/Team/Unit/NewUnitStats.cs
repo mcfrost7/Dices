@@ -58,7 +58,7 @@ public class SerializableUnitStats
     public int _current_exp;
     public List<int> _upgrade_list = new List<int>();
     public SerializableDice _dice;
-    public List<int> _buffIds = new List<int>(); // Store buff IDs or names
+    public List<string> _buffName = new List<string>(); // Store buff IDs or names
 
     public SerializableUnitStats(NewUnitStats unit)
     {
@@ -87,7 +87,7 @@ public class SerializableUnitStats
         {
             foreach (var buff in unit._buffs)
             {
-                _buffIds.Add(buff.buffId);
+                _buffName.Add(buff.ConfigName);
             }
         }
     }
@@ -100,7 +100,7 @@ public class SerializableUnitStats
             _currentMoral,
             _level,
             _dice != null ? _dice.ToDice() : null,
-            new List<BuffConfig>() // We'll fill this later
+            new List<BuffConfig>() 
         );
         unit._baseMoral  = _baseMoral;
         unit._ID = _ID;
@@ -108,14 +108,13 @@ public class SerializableUnitStats
         unit._current_health = _current_health;
         unit._upgrade_list = new List<int>(_upgrade_list);
 
-        // Load buffs from IDs
-        if (_buffIds != null && _buffIds.Count > 0)
+        if (_buffName != null && _buffName.Count > 0)
         {
             unit._buffs = new List<BuffConfig>();
-            foreach (var buffId in _buffIds)
+            foreach (var buffConfig in _buffName)
             {
                 // Load buff by ID from Resources
-                BuffConfig buff = Resources.Load<BuffConfig>($"Buffs/Buff_{buffId}");
+                BuffConfig buff = Resources.Load<BuffConfig>($"Configs/Buffs/{buffConfig}");
                 if (buff != null)
                 {
                     unit._buffs.Add(buff);

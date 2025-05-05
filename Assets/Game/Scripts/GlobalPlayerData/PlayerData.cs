@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 
 [Serializable]
 public class PlayerData
@@ -11,12 +12,14 @@ public class PlayerData
     private List<NewUnitStats> _unitsStorage = new();
     private List<ItemInstance> _items = new();
     private List<ResourceData> _resourcesData = new();
+    private int _locationLevel = 1;
 
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
     public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
     public List<NewUnitStats> UnitsStorage { get => _unitsStorage; set => _unitsStorage = value; }
     public List<ItemInstance> Items { get => _items; set => _items = value; }
     public List<ResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
+    public int LocationLevel { get => _locationLevel; set => _locationLevel = value; }
 }
 [Serializable]
 public class SerializablePlayerData
@@ -26,7 +29,7 @@ public class SerializablePlayerData
     public List<SerializableUnitStats> UnitsStorage = new List<SerializableUnitStats>();
     public List<SerializableResourceData> ResourcesData = new List<SerializableResourceData>();
     public List<SerializableItemConfig> Items = new List<SerializableItemConfig>();
-
+    public int LocationLevel;
     // Конструктор для создания из PlayerData
     public SerializablePlayerData(PlayerData data)
     {
@@ -83,13 +86,14 @@ public class SerializablePlayerData
                 Items.Add(new SerializableItemConfig(item));
             }
         }
+        LocationLevel = data.LocationLevel;
     }
 
     // Метод для конвертации обратно в PlayerData
     public PlayerData ToPlayerData()
     {
         PlayerData data = new PlayerData();
-
+        data.LocationLevel = LocationLevel;
         // Копируем узлы карты
         data.MapNodes = new List<MapNodeData>(MapNodes);
 

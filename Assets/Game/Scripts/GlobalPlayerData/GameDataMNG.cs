@@ -11,7 +11,8 @@ public class GameDataMNG : MonoBehaviour
     [SerializeField] private ItemConfig item;
 
     private PlayerData playerData;
-    public NewTileConfig CurrentTile { get; private set; } 
+    public NewTileConfig CurrentTile { get; private set; }
+    public CanvasMapGenerator MapGenerator { get => mapGenerator; set => mapGenerator = value; }
 
     private void Awake()
     {
@@ -29,11 +30,12 @@ public class GameDataMNG : MonoBehaviour
     public void StartNewGame()
     {
         PlayerData = new PlayerData();
-        if (mapGenerator != null && teamMNG != null)
+        if (MapGenerator != null && teamMNG != null)
         {
             teamMNG.NewGame();
-            mapGenerator.GenerateMap();
-            mapGenerator.SaveMapToPlayerData();
+            playerData.LocationLevel = 1;
+            MapGenerator.GenerateMap(playerData.LocationLevel);
+            MapGenerator.SaveMapToPlayerData();
             ResourcesMNG.Instance.SetupResources();
             SaveGame();
         }
@@ -49,10 +51,10 @@ public class GameDataMNG : MonoBehaviour
         }
 
         PlayerData = SaveLoadMNG.Load();
-        if (mapGenerator != null && teamMNG != null)
+        if (MapGenerator != null && teamMNG != null)
         {
             teamMNG.LoadUnits(PlayerData);
-            mapGenerator.LoadMapFromPlayerData(PlayerData);
+            MapGenerator.LoadMapFromPlayerData(PlayerData);
             ResourcesMNG.Instance.SetupResources();
             ResourcesMNG.Instance.LoadResources(PlayerData);
 
@@ -62,7 +64,7 @@ public class GameDataMNG : MonoBehaviour
 
     public void SaveGame()
     {
-        if (PlayerData == null || mapGenerator == null || teamMNG == null)
+        if (PlayerData == null || MapGenerator == null || teamMNG == null)
         {
             Debug.LogWarning("Ошибка сохранения: данные отсутствуют!");
             return;

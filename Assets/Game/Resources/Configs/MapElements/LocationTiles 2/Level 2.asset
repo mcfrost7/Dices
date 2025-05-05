@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabfe68735d382c4e801e8c7b3680fe9, type: 3}
+  m_Name: Level 2
+  m_EditorClassIdentifier: 
+  minDifficulty: 3
+  maxDifficulty: 7
+  _locationName: "\u0421\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0421\u0432\u044F\u0442\u0438\u043B\u0438\u0449\u0430:\u0425\u0440\u0430\u043C
+    \u041C\u0430\u0448\u0438\u043D"
+  tiles:
+  - tileType: 0
+    tileConfig:
+    - {fileID: 11400000, guid: c2a956f973702a94fa801a965f4d2cb5, type: 2}
+    - {fileID: 11400000, guid: 64fd1a3821dbc2042ab5caacffeb6440, type: 2}
+    - {fileID: 11400000, guid: f6d245d22ba50114a9dbd9a26bfa5155, type: 2}
+    - {fileID: 11400000, guid: 9bc86b2b03cde7449baf8c06b8d30542, type: 2}
+    - {fileID: 11400000, guid: 427591ca011055747b04d0d60ea8fe01, type: 2}
+  - tileType: 1
+    tileConfig:
+    - {fileID: 11400000, guid: 0d6ba561153cf4342ad54b2d0401c272, type: 2}
+    - {fileID: 11400000, guid: c81c5c409f9581d47875bf4843ea491a, type: 2}
+    - {fileID: 11400000, guid: 238b29aa326d2a347a74e163887e45c9, type: 2}
+  - tileType: 2
+    tileConfig:
+    - {fileID: 11400000, guid: 33b36dc91e6e21b4fab44f450c7ee9d1, type: 2}
+    - {fileID: 11400000, guid: c96f2ec2a8c07fd48ab4e806bb3fc503, type: 2}
+    - {fileID: 11400000, guid: 543e91e3b79340047ba8946308a00cfa, type: 2}
+  - tileType: 3
+    tileConfig:
+    - {fileID: 11400000, guid: 80b9d661f213ccd4ebfd281021530c10, type: 2}
+  - tileType: 4
+    tileConfig:
+    - {fileID: 11400000, guid: 7a17651f74977fc479809430f30a0523, type: 2}
+  _locationLevel: 2
+  generationSettings:
+    numberOfLayers: 15
+    minNodesPerLayer: 2
+    maxNodesPerLayer: 5
+    layerHeight: 250
+    nodeHorizontalSpread: 0
+    tileSpawnProbabilities:
+    - tileType: 0
+      probability: 0.8
+    - tileType: 1
+      probability: 0.3
+    - tileType: 2
+      probability: 0.2
+    - tileType: 3
+      probability: 0.3
+    availableNodeColor: {r: 1, g: 1, b: 1, a: 1}
+    visitedNodeColor: {r: 1, g: 0, b: 0, a: 1}
+    unavailableNodeColor: {r: 1, g: 1, b: 1, a: 0.5}

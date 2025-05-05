@@ -71,10 +71,12 @@ public class GameWindowController : MonoBehaviour
 
     public void SetupWinBosseInfo(NewTileConfig tile)
     {
+        GameDataMNG.Instance.PlayerData.LocationLevel++;
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
-        Button.onClick.AddListener(() => BattleController.Instance.OnBattleLose());
-
+        Button.onClick.AddListener(() => GameDataMNG.Instance.MapGenerator.GenerateMap(GameDataMNG.Instance.PlayerData.LocationLevel));
+        Button.onClick.AddListener(() => MenuMNG.Instance.ShowLocation());
+        Button.onClick.AddListener(() => GlobalWindowController.Instance.ShowGlobalCanvas());
         if (tile == null)
         {
             _title.text = "<color=#8B0000><size=42><b>НЕТ ДОСТОЙНОЙ ЦЕЛИ</b></size></color>";

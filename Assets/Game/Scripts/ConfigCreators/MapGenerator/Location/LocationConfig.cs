@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static CanvasMapGenerator;
 
 [CreateAssetMenu(fileName = "LocationConfig", menuName = "Configs/LocationConfig")]
 public class LocationConfig : ScriptableObject
@@ -14,4 +15,9 @@ public class LocationConfig : ScriptableObject
     public string _locationName;
     public List<LocationTile> tiles = new List<LocationTile>();
     public int _locationLevel;
+    public int minDifficulty;
+    public int maxDifficulty;
+
+    public MapGenerationSettings generationSettings = new MapGenerationSettings();
 }
+

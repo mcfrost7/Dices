@@ -37,6 +37,7 @@ public class GlobalWindowController : MonoBehaviour
     public void ShowMenu() => SwitchCanvas(_menu);
     public void ShowGlobalCanvas()
     {
+        GameDataMNG.Instance.SaveGame();
         SwitchCanvas(GlobalCanvas);
         MenuMNG.Instance.SetActiveDownPanel();
     }

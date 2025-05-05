@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc2e14143e00914088bae6c0a08e71b, type: 3}
+  m_Name: Loot 3
+  m_EditorClassIdentifier: 
+  resource:
+  - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
+    _count: 1
+  expAmount: 1
+  items:
+  - {fileID: 11400000, guid: 607742ea7fec3c2459c76906d3c81fe4, type: 2}
+  - {fileID: 11400000, guid: 7387d6d0e36b8aa4f8ad3a8c4cb99606, type: 2}
+  - {fileID: 11400000, guid: 800a94f502ca2a0429a01fa8702bc361, type: 2}
+  - {fileID: 11400000, guid: 7eef77c5a52b8294e9f612ff779d9464, type: 2}
+  - {fileID: 11400000, guid: 8eaee38edbb31254e8e9fd705a76a310, type: 2}
+  - {fileID: 11400000, guid: 32214a7eec3d02a4a8ca3451bf7a1a9e, type: 2}
+  - {fileID: 11400000, guid: 83a89e45c63c31c4d87bc3ed6f5f95cf, type: 2}
+  - {fileID: 11400000, guid: 13649f120c17a79448f509fbb696eeed, type: 2}
+  - {fileID: 11400000, guid: ab176b93a6f9f474193f8499fa5b5f84, type: 2}
+  - {fileID: 11400000, guid: 6aace6edc0ba46f4290c55e016ae1ef7, type: 2}
+  itemInstance:
+    sourceConfig: {fileID: 0}
+    InventoryPosition: -1

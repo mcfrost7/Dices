@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 754232fe6667b6d46b8f172ab0fc7036, type: 3}
   m_Name: T2_Attack 5
   m_EditorClassIdentifier: 
-  itemName: "\u041C\u0435\u0447-\u043F\u0438\u043B\u0430"
+  itemName: "\u041F\u043B\u0430\u0437\u043C\u0435\u043D\u043D\u044B\u0439 \u043F\u0438\u0441\u0442\u043E\u043B\u0435\u0442"
   icon: {fileID: 21300000, guid: 71465834e3f8ed349a8ba40c3aeb7e44, type: 3}
   power: 2
   actionType: 1

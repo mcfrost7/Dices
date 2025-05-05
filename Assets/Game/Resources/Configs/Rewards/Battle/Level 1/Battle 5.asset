@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc2e14143e00914088bae6c0a08e71b, type: 3}
+  m_Name: Battle 5
+  m_EditorClassIdentifier: 
+  resource:
+  - _config: {fileID: 11400000, guid: 56b937c493651d1448d25b370cbd8c9e, type: 2}
+    _count: 2
+  expAmount: 3
+  items:
+  - {fileID: 11400000, guid: 864060453b24d554f884b7fa0605e87d, type: 2}
+  - {fileID: 11400000, guid: a995c91d767b65a45900786fca43f81d, type: 2}
+  - {fileID: 11400000, guid: 3c5935e5dedbdf747b1327c1c3f50817, type: 2}
+  - {fileID: 11400000, guid: bde3a55ac056ab94c82536ccb17499ce, type: 2}
+  - {fileID: 11400000, guid: 3b10ea5e84a3aae4ea83dcef453c5bcb, type: 2}
+  - {fileID: 11400000, guid: 10eaf547c6ee0084d8615f0099852af8, type: 2}
+  - {fileID: 11400000, guid: 592f57709bda31849b83da82f3db366c, type: 2}
+  - {fileID: 11400000, guid: 202c8b5fa4997ec4cb5885c795370838, type: 2}
+  - {fileID: 11400000, guid: b01c37f09b0b245459607bae0838057e, type: 2}
+  - {fileID: 11400000, guid: 52152382d044e0142ad7776c710ea3aa, type: 2}
+  - {fileID: 11400000, guid: fd5b70142d0dc8c488d5c62c82732aaf, type: 2}
+  - {fileID: 11400000, guid: e2fcfc1074b18744ba132272be2c6e78, type: 2}
+  - {fileID: 11400000, guid: 6df296c9a17ee0345a98d144e23f6405, type: 2}
+  - {fileID: 11400000, guid: 2bcdd1cfbb5216648983bcd1074cfd92, type: 2}
+  - {fileID: 11400000, guid: 629ca9344de46864c8acd7f209e4ae25, type: 2}
+  - {fileID: 11400000, guid: d126774a30053f043a0638e6a05ae609, type: 2}
+  - {fileID: 11400000, guid: dde9aa7b918131842afc8ece799df9f3, type: 2}
+  - {fileID: 11400000, guid: d116cb79df4ec45409debb3b31cc3b56, type: 2}
+  - {fileID: 11400000, guid: 4606c652742e68d4fb75f9a4f60313cb, type: 2}
+  - {fileID: 11400000, guid: 6814e69fca8d26a48bb1dbf91aa83e44, type: 2}
+  - {fileID: 11400000, guid: 607742ea7fec3c2459c76906d3c81fe4, type: 2}
+  - {fileID: 11400000, guid: 7387d6d0e36b8aa4f8ad3a8c4cb99606, type: 2}
+  - {fileID: 11400000, guid: 800a94f502ca2a0429a01fa8702bc361, type: 2}
+  - {fileID: 11400000, guid: 7eef77c5a52b8294e9f612ff779d9464, type: 2}
+  - {fileID: 11400000, guid: 8eaee38edbb31254e8e9fd705a76a310, type: 2}
+  - {fileID: 11400000, guid: 32214a7eec3d02a4a8ca3451bf7a1a9e, type: 2}
+  - {fileID: 11400000, guid: 83a89e45c63c31c4d87bc3ed6f5f95cf, type: 2}
+  - {fileID: 11400000, guid: 13649f120c17a79448f509fbb696eeed, type: 2}
+  - {fileID: 11400000, guid: ab176b93a6f9f474193f8499fa5b5f84, type: 2}
+  - {fileID: 11400000, guid: 6aace6edc0ba46f4290c55e016ae1ef7, type: 2}
+  itemInstance:
+    sourceConfig: {fileID: 0}
+    InventoryPosition: -1

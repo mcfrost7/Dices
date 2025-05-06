@@ -29,7 +29,7 @@ public class TileUIController : MonoBehaviour
     {
         ChangeHealButtonAvailability(tileType);
         if (tileType == TileType.BattleTile || tileType == TileType.BossTile)
-            ChangeTeamAvailability();
+            ChangeTeamButtonAvailability();
     }
 
     private void ChangeHealButtonAvailability(TileType tileType)
@@ -37,9 +37,8 @@ public class TileUIController : MonoBehaviour
         _healButton.gameObject.SetActive(tileType == TileType.CampTile);
     }
 
-    private void ChangeTeamAvailability()
+    private void ChangeTeamButtonAvailability()
     {
-        bool isCanvasActive = GlobalWindowController.Instance.IsBattleActive();
         MenuMNG.Instance.SetInnactiveDownPanel();
     }
 

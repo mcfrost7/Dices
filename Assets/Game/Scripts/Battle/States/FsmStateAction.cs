@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FsmStateAction : FsmState
 {
-    private float _stateTimer = 0f;
     private bool _actionsComplete = false;
     private BattleUnit _currentSelectedUnit = null;
     public FsmStateAction(FSM fsm) : base(fsm) { }
@@ -12,7 +11,6 @@ public class FsmStateAction : FsmState
     public override void Enter()
     {
         BattleActionManager.Instance.ShowStateText("Стадия:\nВаш ход");
-        _stateTimer = 0f;
         _actionsComplete = false;
 
         BattleActionManager.Instance.ActionComplete += OnActionsComplete;
@@ -24,8 +22,6 @@ public class FsmStateAction : FsmState
 
     public override void Update()
     {
-        _stateTimer += Time.deltaTime;
-
         // Check for win/lose conditions
         if (CheckAllPlayersDead())
         {

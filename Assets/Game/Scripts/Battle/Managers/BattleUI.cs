@@ -110,6 +110,7 @@ public class BattleUI : MonoBehaviour
         else
             GameWindowController.Instance.SetupWinBosseInfo(BattleController.Instance.CurrentBattleConfig);
         GameWindowController.Instance.CallPanel(1);
+
     }
     public void HideVictoryScreen() 
     {

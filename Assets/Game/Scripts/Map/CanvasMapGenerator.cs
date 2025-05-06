@@ -573,9 +573,15 @@ public class CanvasMapGenerator : MonoBehaviour
     private void HandleTileClicked(MapNode node)
     {
         if (!node.isAvailable) return;
-        GameDataMNG.Instance.HandleTileClick(node);
-        node.isVisited = true;
-        node.isAvailable = false;
+        currentNode = node;
+        GameDataMNG.Instance.HandleTileClick(currentNode);
+        UpdateMap();
+    }
+
+    public void UpdateMap()
+    {
+        currentNode.isVisited = true;
+        currentNode.isAvailable = false;
 
         foreach (var layerNode in layers[currentAvailableLayer])
         {
@@ -598,8 +604,8 @@ public class CanvasMapGenerator : MonoBehaviour
         {
             UpdateNodesAvailability();
         }
+        TileUIController.Instance.ChangeUIOnTileClick();
         SaveMapToPlayerData();
-
     }
 
     public void OnNodeClick(MapNode node)

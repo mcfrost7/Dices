@@ -26,15 +26,12 @@ public class EventsController : MonoBehaviour
         };
     }
 
-    public void HandleEvent(TileType tileType, NewTileConfig config)
+    public void HandleEvent(CanvasMapGenerator.MapNode mapNode)
     {
-        if (_eventHandlers.TryGetValue(tileType, out var handler))
+        if (_eventHandlers.TryGetValue(mapNode.tileType, out var handler))
         {
-            handler.HandleEvent(config);
+            handler.HandleEvent(mapNode.tileConfig);
         }
-        else
-        {
-            Debug.LogWarning($"No handler found for tile type: {tileType}");
-        }
+
     }
 }

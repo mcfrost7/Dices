@@ -28,7 +28,7 @@ public class Dice
     }
     public Dice(NewDiceConfig diceConfig, List<ItemInstance> items)
     {
-        this._diceConfig = diceConfig;
+        this._diceConfig = diceConfig.Clone();
         this._currentSide = diceConfig.sides[0];
         this._items = items;
     }

@@ -40,6 +40,7 @@ public class FSM
         IsRunning = false;
         StateCurrent?.Exit();
         StateCurrent = null;
+        _states.Clear();
     }
     public void Update()
     {

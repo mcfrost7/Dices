@@ -58,8 +58,7 @@ public class BattleController : MonoBehaviour
         InitializeBattleFSM();
         LeanTween.cancel(TooltipTrigger.delay.uniqueId);
         TooltipSystem.Hide();
-        List<Sprite> sprites = new List<Sprite>();
-        sprites = GameDataMNG.Instance.MapGenerator.SelectedLocationConfig.battleBack;
+        List<Sprite> sprites = GameDataMNG.Instance.MapGenerator.SelectedLocationConfig.battleBack;
         _backgroundImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
 
     }
@@ -73,6 +72,7 @@ public class BattleController : MonoBehaviour
 
     private void ClearBattleField()
     {
+        _playerUnitsContainer.gameObject.GetComponent<VerticalLayoutGroup>().enabled = true;
         foreach (Transform child in _playerUnitsContainer)
         {
             Destroy(child.gameObject);
@@ -113,6 +113,11 @@ public class BattleController : MonoBehaviour
 
     private void InitializeBattleFSM()
     {
+        if (_battleFsm != null)
+        {
+            _battleFsm.StopMachine();
+        }
+
         _battleFsm = new FSM();
 
         // Create all states

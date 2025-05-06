@@ -44,14 +44,14 @@ MonoBehaviour:
   - actionType: 5
     power: 2
     bonus: 0
-    sideIndex: 5
+    sideIndex: 4
     duration: 0
     sprite: {fileID: 21300000, guid: 167f124e334198343b99e3fbfeb6e9e9, type: 3}
     ActionSide: 2
   - actionType: 6
     power: 1
     bonus: 0
-    sideIndex: 4
+    sideIndex: 5
     duration: 1
     sprite: {fileID: 21300000, guid: 4146efa1c69ed2448a2338f60714e423, type: 3}
     ActionSide: 1

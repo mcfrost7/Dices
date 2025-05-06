@@ -11,7 +11,8 @@ public class Dice
 
     public Dice(NewDiceConfig diceConfig)
     {
-        this._diceConfig = diceConfig;
+        this._diceConfig = diceConfig.Clone();
+
 
         // Check if diceConfig is null or sides array is empty/null
         if (diceConfig != null && diceConfig.sides != null && diceConfig.sides.Count > 0)

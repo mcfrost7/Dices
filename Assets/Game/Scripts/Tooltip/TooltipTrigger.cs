@@ -288,7 +288,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     private string GetFormattedSideInfo(DiceSide side)
     {
-        return $"{GetActionTypeName(side.actionType)}: {side.power}";
+        return $"{GetActionTypeName(side.actionType)}: {side.power + side.bonus}";
     }
 
     private void AppendBuffsInfo(StringBuilder sb, NewUnitStats unit)

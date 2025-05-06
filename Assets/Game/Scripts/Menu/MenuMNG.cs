@@ -29,10 +29,12 @@ public class MenuMNG : MonoBehaviour
     [SerializeField] private GameObject _locationNameObject;
     [SerializeField] private CanvasGroup _locationCanvasGroup;
     [SerializeField] private TextMeshProUGUI _locationText;
+    [SerializeField] private Button _closeButtonLocation;
     [Header("LevelUp")]
     [SerializeField] private GameObject _levelNotificationObject;
     [SerializeField] private CanvasGroup _levelNotificationCanvasGroup;
     [SerializeField] private TextMeshProUGUI _levelNotificationText;
+    [SerializeField] private Button _closeButtonLevelUp;
     [Header("Task panel")]
     [SerializeField] private GameObject _task;
     [SerializeField] private Button _taskButton;
@@ -189,6 +191,7 @@ public class MenuMNG : MonoBehaviour
 
     public void SetupLocation(string name)
     {
+        _closeButtonLocation.onClick.AddListener(()=> HideLocation());
         _locationText.text = name;
     }
 
@@ -226,6 +229,7 @@ public class MenuMNG : MonoBehaviour
     {
         _levelNotificationText.text = content;
         GameWindowController.Instance.Button.onClick.AddListener(() => ShowLevelNotification());
+        _closeButtonLevelUp.onClick.AddListener(() => HideLevelNotification());
     }
 
     public void ShowLevelNotification()

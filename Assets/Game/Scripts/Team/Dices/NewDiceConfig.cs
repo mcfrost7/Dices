@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -19,6 +20,7 @@ public class NewDiceConfig : ScriptableObject
         for (int i = 0; i < sides.Count; i++)
         {
             sides[i].sideIndex = i;
+            sides[i].bonus = 0;
         }
     }
     public void LoadImages(bool isEnemy)
@@ -69,4 +71,16 @@ public class NewDiceConfig : ScriptableObject
                 return ActionSide.None;
         }
     }
+
+    public NewDiceConfig Clone()
+    {
+        var clone = Instantiate(this); // создаём копию ScriptableObject
+        clone.sides = new List<DiceSide>();
+        foreach (var side in this.sides)
+        {
+            clone.sides.Add(side.Clone());
+        }
+        return clone;
+    }
+
 }

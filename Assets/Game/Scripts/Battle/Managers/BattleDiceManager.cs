@@ -191,10 +191,9 @@ public class BattleDiceManager : MonoBehaviour
 
         Image diceImage = unit.DiceImage;
         Dice dice = unit.UnitData._dice;
-        NewDiceConfig diceConfig = dice._diceConfig;
         TextMeshProUGUI power = unit.PowerText;
 
-        if (diceConfig == null || diceConfig.sides == null || diceConfig.sides.Count == 0)
+        if (dice == null || dice._diceConfig.sides == null || dice._diceConfig.sides.Count == 0)
         {
             Debug.LogError("Invalid dice config or missing sides");
             if (onComplete != null)
@@ -208,7 +207,7 @@ public class BattleDiceManager : MonoBehaviour
         float elapsed = 0f;
         float animationSpeed = 10f;
 
-        List<DiceSide> sides = diceConfig.sides;
+        List<DiceSide> sides = dice._diceConfig.sides;
         int currentSideIndex = 0;
 
         while (elapsed < duration)

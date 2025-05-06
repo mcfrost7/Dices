@@ -106,6 +106,7 @@ public class BattleActionManager : MonoBehaviour
         target.RefreshUnitUI();
         DeselectUnit();
         CheckForDefeat(target);
+        CheckForDefeat(source);
     }
 
     private bool IsValidTarget(BattleUnit source, BattleUnit target)
@@ -127,7 +128,6 @@ public class BattleActionManager : MonoBehaviour
     {
         if (target.UnitData._current_health <= 0)
         {
-            // Удаление из списков
             if (BattleController.Instance.UnitsObj.Contains(target))
             {
                 BattleController.Instance.UnitsObj.Remove(target);

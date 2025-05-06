@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class BattleController : MonoBehaviour
     [SerializeField] private Transform _enemyUnitsContainer;
     [SerializeField] private BattleUnit _unitprefab;
     [SerializeField] private BattleUnit _enemyprefab;
-
+    [SerializeField] private Image _backgroundImage;
 
 
     private void Awake()
@@ -57,6 +58,9 @@ public class BattleController : MonoBehaviour
         InitializeBattleFSM();
         LeanTween.cancel(TooltipTrigger.delay.uniqueId);
         TooltipSystem.Hide();
+        List<Sprite> sprites = new List<Sprite>();
+        sprites = GameDataMNG.Instance.MapGenerator.SelectedLocationConfig.battleBack;
+        _backgroundImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
 
     }
 

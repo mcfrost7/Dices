@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabfe68735d382c4e801e8c7b3680fe9, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
-  minDifficulty: 3
-  maxDifficulty: 7
   _locationName: "\u0421\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0421\u0432\u044F\u0442\u0438\u043B\u0438\u0449\u0430:\u0425\u0440\u0430\u043C
     \u041C\u0430\u0448\u0438\u043D"
   tiles:
@@ -41,6 +39,10 @@ MonoBehaviour:
     tileConfig:
     - {fileID: 11400000, guid: 7a17651f74977fc479809430f30a0523, type: 2}
   _locationLevel: 2
+  minDifficulty: 3
+  maxDifficulty: 7
+  battleBack:
+  - {fileID: 21300000, guid: f76c8051a1edcc54daf3a45dbfd7274d, type: 3}
   generationSettings:
     numberOfLayers: 15
     minNodesPerLayer: 2

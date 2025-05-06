@@ -10,49 +10,49 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf9bf90ce6e447d48bdda4425285f808, type: 3}
-  m_Name: Rubaki
+  m_Name: T2_Boyz
   m_EditorClassIdentifier: 
   sides:
   - actionType: 1
-    power: 3
+    power: 4
     bonus: 0
     sideIndex: 0
-    duration: 1
+    duration: 0
     sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
     ActionSide: 1
-  - actionType: 3
-    power: 1
+  - actionType: 7
+    power: 5
     bonus: 0
     sideIndex: 1
-    duration: 1
-    sprite: {fileID: 21300000, guid: 4f4766ecb49544e47aefab4a40c48431, type: 3}
-    ActionSide: 2
+    duration: 0
+    sprite: {fileID: 21300000, guid: dee555f5b445f9346b049dc4c33566cc, type: 3}
+    ActionSide: 1
   - actionType: 1
-    power: 2
+    power: 4
     bonus: 0
     sideIndex: 2
     duration: 1
     sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
     ActionSide: 1
-  - actionType: 1
-    power: 1
+  - actionType: 2
+    power: 7
     bonus: 0
     sideIndex: 3
-    duration: 1
-    sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
-    ActionSide: 1
+    duration: 0
+    sprite: {fileID: 21300000, guid: 1c59e48777c750044a2e8954ee9f8e83, type: 3}
+    ActionSide: 2
   - actionType: 3
-    power: 2
+    power: 3
     bonus: 0
     sideIndex: 4
-    duration: 1
+    duration: 0
     sprite: {fileID: 21300000, guid: 4f4766ecb49544e47aefab4a40c48431, type: 3}
     ActionSide: 2
-  - actionType: 1
-    power: 1
+  - actionType: 4
+    power: 5
     bonus: 0
     sideIndex: 5
-    duration: 1
-    sprite: {fileID: 21300000, guid: 45e40b735d726b64cb446e90d733298c, type: 3}
+    duration: 0
+    sprite: {fileID: 21300000, guid: 1a68a112500f4a648b1fdb4512fca842, type: 3}
     ActionSide: 1
-  _unitSprite: {fileID: 21300000, guid: 4ed0e7fa6fca03f47b9c79885d8a9b41, type: 3}
+  _unitSprite: {fileID: 21300000, guid: d867054c693568f4f9c363f01b38b921, type: 3}

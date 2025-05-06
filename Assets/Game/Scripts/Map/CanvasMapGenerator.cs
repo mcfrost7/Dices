@@ -34,16 +34,17 @@ public class CanvasMapGenerator : MonoBehaviour
     private List<List<MapNode>> layers = new List<List<MapNode>>();
     private int currentAvailableLayer;
     private MapGenerationSettings generationSettings = new MapGenerationSettings();
+    private LocationConfig selectedLocationConfig;
     private UnityEvent<MapNode> OnTileClicked;
 
     public MapNode CurrentNode { get => currentNode; set => currentNode = value; }
+    public LocationConfig SelectedLocationConfig { get => selectedLocationConfig; set => selectedLocationConfig = value; }
 
     private void Start()
     {
         // Make sure the event is initialized before adding listeners
         if (OnTileClicked == null)
             OnTileClicked = new UnityEvent<MapNode>();
-
         OnTileClicked.AddListener(HandleTileClicked);
     }
 
@@ -51,16 +52,16 @@ public class CanvasMapGenerator : MonoBehaviour
     {
         ClearExistingNodes();
         layers.Clear();
-        LocationConfig selectedLocationConfig = GetRandomLocationForLevel(level);
-        SetupGeneratorSettings(selectedLocationConfig);
+        SelectedLocationConfig = GetRandomLocationForLevel(level);
+        SetupGeneratorSettings(SelectedLocationConfig);
         float currentLayerY = mapContainer.rect.height / 2;
         bool bossPlaced = false;
-        MenuMNG.Instance.SetupLocation(selectedLocationConfig._locationName);
+        MenuMNG.Instance.SetupLocation(SelectedLocationConfig._locationName);
         for (int layerIndex = 0; layerIndex < generationSettings.numberOfLayers; layerIndex++)
         {
             int nodesInLayer = layerIndex == 0 ? 1 : Random.Range(generationSettings.minNodesPerLayer, generationSettings.maxNodesPerLayer + 1);
 
-            List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced, selectedLocationConfig);
+            List<MapNode> layerNodes = CreateNodesForLayer(layerIndex, currentLayerY, nodesInLayer, ref bossPlaced, SelectedLocationConfig);
             layers.Add(layerNodes);
             currentLayerY -= generationSettings.layerHeight;
         }
@@ -408,14 +409,17 @@ public class CanvasMapGenerator : MonoBehaviour
             .SelectMany(t => t.tileConfig)
             .ToList();
 
-        if (battleTileConfigs.Count == 0) return false;
+        if (battleTileConfigs.Count == 0)
+            return false;
 
         var (minDifficulty, maxDifficulty) = GetDifficultyRangeForLayer(
             layerIndex,
             generationSettings.numberOfLayers,
             locationConfig.minDifficulty,
-            locationConfig.maxDifficulty
+            locationConfig.maxDifficulty,
+            progressFactor
         );
+
         var layerBattleConfigs = battleTileConfigs
             .Where(cfg => cfg.battleSettings.battleDifficulty >= minDifficulty &&
                           cfg.battleSettings.battleDifficulty <= maxDifficulty)
@@ -426,7 +430,8 @@ public class CanvasMapGenerator : MonoBehaviour
             Debug.LogWarning($"Не найдено боевых тайлов для слоя {layerIndex} с диапазоном сложности {minDifficulty}-{maxDifficulty}");
             return false;
         }
-        NewTileConfig selectedConfig = layerBattleConfigs[Random.Range(0, layerBattleConfigs.Count)];
+
+        NewTileConfig selectedConfig = SelectBattleConfigWithWeights(layerBattleConfigs, minDifficulty, maxDifficulty);
 
         battleNode = new MapNode
         {
@@ -445,26 +450,72 @@ public class CanvasMapGenerator : MonoBehaviour
         return true;
     }
 
-
-
-
     private (int min, int max) GetDifficultyRangeForLayer(
-        int layerIndex, int totalLayers, int locationMinDifficulty, int locationMaxDifficulty)
+        int layerIndex, int totalLayers, int locationMinDifficulty, int locationMaxDifficulty, float progressFactor)
     {
         if (totalLayers <= 1)
             return (locationMinDifficulty, locationMaxDifficulty);
 
-        // Инвертируем прогресс: слой 0 → 0, верхний слой → 1
-        float layerProgress = 1f - (float)layerIndex / (totalLayers - 1);
+        float normalizedProgress = (float)layerIndex / (totalLayers - 1);
         int difficultyRange = locationMaxDifficulty - locationMinDifficulty;
 
-        int minDifficulty = Mathf.RoundToInt(locationMinDifficulty + layerProgress * difficultyRange * 0.5f);
-        int maxDifficulty = Mathf.RoundToInt(minDifficulty + difficultyRange * 0.5f);
+        int centerDifficulty = Mathf.RoundToInt(
+            Mathf.Lerp(locationMaxDifficulty, locationMinDifficulty, normalizedProgress));
+        int halfRange = Mathf.Max(1, Mathf.RoundToInt(difficultyRange * 0.1f * progressFactor)); // ±10% в обе стороны
 
+        int minDifficulty = centerDifficulty - halfRange;
+        int maxDifficulty = centerDifficulty + halfRange;
+
+        // Клэмпим значения в допустимых пределах
         minDifficulty = Mathf.Clamp(minDifficulty, locationMinDifficulty, locationMaxDifficulty);
-        maxDifficulty = Mathf.Clamp(maxDifficulty, minDifficulty, locationMaxDifficulty);
+        maxDifficulty = Mathf.Clamp(maxDifficulty, locationMinDifficulty, locationMaxDifficulty);
+
+        // Подстраховка: min ≤ max
+        if (minDifficulty > maxDifficulty)
+            minDifficulty = maxDifficulty;
 
         return (minDifficulty, maxDifficulty);
+    }
+
+
+    private NewTileConfig SelectBattleConfigWithWeights(List<NewTileConfig> configs, int minDifficulty, int maxDifficulty)
+    {
+        if (configs.Count == 1)
+            return configs[0];
+
+        var groupedByDifficulty = configs
+            .GroupBy(c => c.battleSettings.battleDifficulty)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        Dictionary<int, float> weights = new Dictionary<int, float>();
+        float totalWeight = 0f;
+
+        foreach (var kvp in groupedByDifficulty)
+        {
+            int difficulty = kvp.Key;
+            float weight = 1f;
+
+            if (difficulty == minDifficulty || difficulty == maxDifficulty)
+                weight *= 1.2f;
+
+            weights[difficulty] = weight;
+            totalWeight += weight;
+        }
+
+        float randomValue = Random.Range(0, totalWeight);
+        float currentSum = 0f;
+
+        foreach (var kvp in weights.OrderBy(k => k.Key))
+        {
+            currentSum += kvp.Value;
+            if (randomValue <= currentSum)
+            {
+                var configsForDifficulty = groupedByDifficulty[kvp.Key];
+                return configsForDifficulty[Random.Range(0, configsForDifficulty.Count)];
+            }
+        }
+
+        return configs[Random.Range(0, configs.Count)];
     }
 
 

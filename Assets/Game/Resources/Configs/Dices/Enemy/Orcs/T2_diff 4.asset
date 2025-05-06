@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb73b65a9876be3449b402cb826be091, type: 3}
-  m_Name: BossTile
+  m_Name: T2_diff 4
   m_EditorClassIdentifier: 
   newDiceConfigs:
-  - {fileID: 11400000, guid: 09de311b73e90d946acb76e61a84b067, type: 2}
-  - {fileID: 11400000, guid: 09de311b73e90d946acb76e61a84b067, type: 2}
-  _enemiesName: "\u0428\u0443\u0442-\u0411\u043E\u0439\u0437"
+  - {fileID: 11400000, guid: b81959d9d44e6dc44ad1218b20d8ee48, type: 2}
+  - {fileID: 11400000, guid: ad1a18d06f8d27d499c7886bf0cb90ff, type: 2}
+  _enemiesName: "\u0418\u0441\u043F\u043E\u0440\u0447\u0435\u043D\u043D\u044B\u0435
+    \u0411\u043E\u0439\u0437\u044B \u0438 \u0420\u0443\u0431\u0430\u043A\u0438"

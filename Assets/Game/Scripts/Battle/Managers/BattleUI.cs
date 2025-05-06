@@ -10,6 +10,7 @@ public class BattleUI : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI _currentRolls;
+
     private void Awake()
     {
         if (Instance == null)
@@ -30,6 +31,7 @@ public class BattleUI : MonoBehaviour
     {
         BattleActionManager.Instance.HideActionFeedback();
         BattleActionManager.Instance.EndActionButton();
+
 
     }
     public void ShowIntentionDelayed(Dictionary<BattleUnit, BattleUnit> enemyIntentions)

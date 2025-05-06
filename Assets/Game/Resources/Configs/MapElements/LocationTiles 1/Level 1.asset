@@ -41,6 +41,9 @@ MonoBehaviour:
   _locationLevel: 1
   minDifficulty: 1
   maxDifficulty: 5
+  battleBack:
+  - {fileID: 21300000, guid: 09592247651d9fc49b271f3fc5617d7a, type: 3}
+  - {fileID: 21300000, guid: 8caf38d2244bca2488cbb23c91b03d39, type: 3}
   generationSettings:
     numberOfLayers: 15
     minNodesPerLayer: 1
@@ -49,7 +52,7 @@ MonoBehaviour:
     nodeHorizontalSpread: 0
     tileSpawnProbabilities:
     - tileType: 0
-      probability: 0.7
+      probability: 0.8
     - tileType: 1
       probability: 0.1
     - tileType: 2

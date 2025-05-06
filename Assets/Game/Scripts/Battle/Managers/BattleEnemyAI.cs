@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,7 +45,7 @@ public class BattleEnemyAI : MonoBehaviour
             }
         }
 
-        Debug.Log($"CreateIntention: Çàâåðøåíî ñîçäàíèå íàìåðåíèé, âñåãî: {EnemyIntentions.Count}");
+        Debug.Log($"CreateIntention: Ð—Ð°Ð²ÐµÑ€ÑˆÐµÐ½Ð¾ ÑÐ¾Ð·Ð´Ð°Ð½Ð¸Ðµ Ð½Ð°Ð¼ÐµÑ€ÐµÐ½Ð¸Ð¹, Ð²ÑÐµÐ³Ð¾: {EnemyIntentions.Count}");
         return EnemyIntentions.Count > 0;
     }
 
@@ -93,18 +93,22 @@ public class BattleEnemyAI : MonoBehaviour
     private IEnumerator ExecuteActionsCoroutine()
     {
         endAction = false;
-        foreach (var source in BattleController.Instance.EnemiesObj)
+
+        var enemiesCopy = BattleController.Instance.EnemiesObj.ToList(); 
+
+        foreach (var source in enemiesCopy)
         {
-            BattleUnit target = EnemyIntentions.TryGetValue(source, out var targetIn) ? targetIn : null;
-            if (target != null)
+            if (EnemyIntentions.TryGetValue(source, out var target) && target != null)
             {
-                BattleActionManager.Instance.ExecuteAction(source, target);
                 source.Arrow.gameObject.SetActive(false);
+                BattleActionManager.Instance.ExecuteAction(source, target);
                 yield return new WaitForSeconds(1f);
             }
         }
+
         endAction = true;
     }
+
 
     public bool AreActionsComplete() { return endAction; }
 }

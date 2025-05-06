@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb73b65a9876be3449b402cb826be091, type: 3}
-  m_Name: Enemies
+  m_Name: T1_diff 5
   m_EditorClassIdentifier: 
   newDiceConfigs:
   - {fileID: 11400000, guid: 3a1be4679dcc2424dac3ae5179972944, type: 2}

@@ -16,6 +16,20 @@ MonoBehaviour:
   - actionType: 1
     power: 3
     bonus: 0
+    sideIndex: 0
+    duration: 0
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
+    ActionSide: 1
+  - actionType: 1
+    power: 3
+    bonus: 0
+    sideIndex: 1
+    duration: 0
+    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
+    ActionSide: 1
+  - actionType: 1
+    power: 3
+    bonus: 0
     sideIndex: 2
     duration: 0
     sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
@@ -27,31 +41,17 @@ MonoBehaviour:
     duration: 0
     sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
     ActionSide: 1
-  - actionType: 1
-    power: 3
-    bonus: 0
-    sideIndex: 4
-    duration: 0
-    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
-    ActionSide: 1
-  - actionType: 1
-    power: 3
-    bonus: 0
-    sideIndex: 5
-    duration: 0
-    sprite: {fileID: 21300000, guid: 968c6349afbc66849b84af5446211213, type: 3}
-    ActionSide: 1
   - actionType: 4
     power: 3
     bonus: 0
-    sideIndex: 0
+    sideIndex: 4
     duration: 0
     sprite: {fileID: 21300000, guid: 7b386b2561ff6d74b9517d44f5f140a5, type: 3}
     ActionSide: 1
   - actionType: 4
     power: 3
     bonus: 0
-    sideIndex: 1
+    sideIndex: 5
     duration: 0
     sprite: {fileID: 21300000, guid: 7b386b2561ff6d74b9517d44f5f140a5, type: 3}
     ActionSide: 1

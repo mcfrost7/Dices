@@ -8,6 +8,9 @@ public class NewDiceConfig : ScriptableObject
 {
     public List<DiceSide> sides = new List<DiceSide>();
     public Sprite _unitSprite;
+    private string originalName;
+
+    public string OriginalName { get => originalName; set => originalName = value; }
 
     public void AddNewSide(DiceSide newSide)
     {
@@ -17,6 +20,7 @@ public class NewDiceConfig : ScriptableObject
 
     public void RefreshSideIndices()
     {
+        OriginalName = this.name;
         for (int i = 0; i < sides.Count; i++)
         {
             sides[i].sideIndex = i;
@@ -76,6 +80,7 @@ public class NewDiceConfig : ScriptableObject
     {
         var clone = Instantiate(this); // создаём копию ScriptableObject
         clone.sides = new List<DiceSide>();
+        clone.OriginalName = this.name;
         foreach (var side in this.sides)
         {
             clone.sides.Add(side.Clone());

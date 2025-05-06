@@ -43,6 +43,8 @@ public class Dice
         _currentSide = side;
     }
 }
+
+
 [Serializable]
 public class SerializableDice
 {
@@ -53,7 +55,7 @@ public class SerializableDice
     {
         if (dice == null) return;
 
-        diceConfigName = dice._diceConfig != null ? dice._diceConfig.name : "";
+        diceConfigName = dice._diceConfig.OriginalName;
 
         if (dice._items != null)
         {

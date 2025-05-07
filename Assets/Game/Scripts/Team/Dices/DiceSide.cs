@@ -28,8 +28,6 @@ public class DiceSide
     }
 
 }
-
-
 public enum ActionSide
 {
     None,

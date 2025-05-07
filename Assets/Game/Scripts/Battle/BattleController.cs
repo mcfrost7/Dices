@@ -59,7 +59,10 @@ public class BattleController : MonoBehaviour
         LeanTween.cancel(TooltipTrigger.delay.uniqueId);
         TooltipSystem.Hide();
         List<Sprite> sprites = GameDataMNG.Instance.MapGenerator.SelectedLocationConfig.battleBack;
-        _backgroundImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
+        if (sprites != null && sprites.Count > 0)
+        {
+            _backgroundImage.sprite = sprites[UnityEngine.Random.Range(0, sprites.Count)];
+        }
 
     }
 

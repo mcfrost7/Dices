@@ -12,6 +12,7 @@ public class PlayerData
     private List<NewUnitStats> _unitsStorage = new();
     private List<ItemInstance> _items = new();
     private List<ResourceData> _resourcesData = new();
+    private List<LocationConfig> _locationsConfigs = new();
     private int _locationLevel = 1;
 
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
@@ -20,6 +21,7 @@ public class PlayerData
     public List<ItemInstance> Items { get => _items; set => _items = value; }
     public List<ResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
     public int LocationLevel { get => _locationLevel; set => _locationLevel = value; }
+    public List<LocationConfig> LocationsConfigs { get => _locationsConfigs; set => _locationsConfigs = value; }
 }
 [Serializable]
 public class SerializablePlayerData
@@ -29,6 +31,8 @@ public class SerializablePlayerData
     public List<SerializableUnitStats> UnitsStorage = new List<SerializableUnitStats>();
     public List<SerializableResourceData> ResourcesData = new List<SerializableResourceData>();
     public List<SerializableItemConfig> Items = new List<SerializableItemConfig>();
+    public List<SerializableLocation> Locations = new List<SerializableLocation>();
+
     public int LocationLevel;
     // Конструктор для создания из PlayerData
     public SerializablePlayerData(PlayerData data)
@@ -87,6 +91,14 @@ public class SerializablePlayerData
             }
         }
         LocationLevel = data.LocationLevel;
+
+        if (data.LocationsConfigs != null && data.LocationsConfigs.Count > 0)
+        {
+            foreach (var locationConfig in data.LocationsConfigs)
+            {
+                Locations.Add(new SerializableLocation(locationConfig));
+            }
+        }
     }
 
     // Метод для конвертации обратно в PlayerData
@@ -145,6 +157,15 @@ public class SerializablePlayerData
         foreach (var serItem in Items)
         {
             data.Items.Add(serItem.ToItemInstance());
+        }
+        data.LocationsConfigs = new List<LocationConfig>();
+        foreach (var serLocation in Locations)
+        {
+            var loc = Resources.Load<LocationConfig>("Configs/MapElements/" + serLocation._configName);
+            if (loc != null)
+            {
+                data.LocationsConfigs.Add(loc);
+            }
         }
 
         return data;

@@ -16,9 +16,9 @@ public class MapGenerationSettings
     public float nodeHorizontalSpread = 0f;
     public List<TileSpawnProbability> tileSpawnProbabilities;
 
-    [HideInInspector] public Color availableNodeColor = Color.white;
-    [HideInInspector] public Color visitedNodeColor = new Color(0.7f, 0.7f, 0.7f);
-    [HideInInspector] public Color unavailableNodeColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+    public Color availableNodeColor = Color.white;
+    public Color visitedNodeColor = new Color(0.7f, 0.7f, 0.7f);
+    public Color unavailableNodeColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
 }
 [System.Serializable]
 public class TileSpawnProbability

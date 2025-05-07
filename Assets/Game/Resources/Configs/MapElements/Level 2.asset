@@ -60,4 +60,4 @@ MonoBehaviour:
       probability: 0.3
     availableNodeColor: {r: 1, g: 1, b: 1, a: 1}
     visitedNodeColor: {r: 1, g: 0, b: 0, a: 1}
-    unavailableNodeColor: {r: 1, g: 1, b: 1, a: 0.5}
+    unavailableNodeColor: {r: 0.34117648, g: 0.34117648, b: 0.34117648, a: 0.7882353}

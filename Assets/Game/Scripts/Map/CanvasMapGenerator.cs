@@ -8,11 +8,6 @@ using Random = UnityEngine.Random;
 
 public class CanvasMapGenerator : MonoBehaviour
 {
-    [Header("Appearance")]
-    public Color availableNodeColor = Color.white;
-    public Color visitedNodeColor = new Color(0.7f, 0.7f, 0.7f);
-    public Color unavailableNodeColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-
     [System.Serializable]
     public class MapNode
     {
@@ -53,6 +48,7 @@ public class CanvasMapGenerator : MonoBehaviour
         ClearExistingNodes();
         layers.Clear();
         SelectedLocationConfig = GetRandomLocationForLevel(level);
+        GameDataMNG.Instance.PlayerData.LocationsConfigs = locationConfigs;
         SetupGeneratorSettings(SelectedLocationConfig);
         float currentLayerY = mapContainer.rect.height / 2;
         bool bossPlaced = false;
@@ -84,9 +80,6 @@ public class CanvasMapGenerator : MonoBehaviour
     {
 
         generationSettings = selectedLocationConfig.generationSettings;
-        generationSettings.availableNodeColor = availableNodeColor;
-        generationSettings.visitedNodeColor = visitedNodeColor;
-        generationSettings.unavailableNodeColor = unavailableNodeColor;
     }
 
     // Устанавливаем начальный доступный слой
@@ -154,7 +147,8 @@ public class CanvasMapGenerator : MonoBehaviour
         layers.Clear();
 
         var nodesByLayer = playerData.MapNodes.GroupBy(n => n.LayerIndex).OrderBy(g => g.Key);
-
+        selectedLocationConfig = playerData.LocationsConfigs.FirstOrDefault(t => t.name == playerData.MapNodes[0].LocationConfigId);
+        generationSettings = selectedLocationConfig.generationSettings;
         foreach (var layerGroup in nodesByLayer)
         {
             List<MapNode> layerNodes = new List<MapNode>();
@@ -211,7 +205,7 @@ public class CanvasMapGenerator : MonoBehaviour
                     isVisited = nodeData.IsVisited,
                     isAvailable = nodeData.IsAvailable
                 };
-
+                UpdateNodeVisuals(mapNode);
                 nodeObject.Initialize(tileConfig.tileSprite, OnNodeClick, mapNode);
                 layerNodes.Add(mapNode);
             }

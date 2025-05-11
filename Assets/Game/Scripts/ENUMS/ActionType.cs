@@ -7,5 +7,6 @@ public enum ActionType
     LifeSteal,
     Moral,
     ShieldBash,
-    HealthAttack
+    HealthAttack,
+    MoralDamage
 }

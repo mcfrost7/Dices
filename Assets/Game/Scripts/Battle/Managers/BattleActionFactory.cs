@@ -30,6 +30,7 @@ public class BattleActionFactory : MonoBehaviour
         _actions.Add(ActionType.ShieldBash, new ShieldBashAction());
         _actions.Add(ActionType.None, new DefaultAction());
         _actions.Add(ActionType.Moral, new MoraleAction());
+        _actions.Add(ActionType.MoralDamage, new MoraleDamageAction());
         _actions.Add(ActionType.HealthAttack, new HealthAttackAction());
     }
 
@@ -233,7 +234,20 @@ public class MoraleAction : IBattleAction
     }
 }
 
+public class MoraleDamageAction : IBattleAction
+{
+    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    {
+        source.UnitData._currentMoral = Mathf.Max(0, source.UnitData._currentMoral + power);
+    }
 
+    public bool IsValidTarget(BattleUnit source, BattleUnit target)
+    {
+        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
+        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
+        return isSourcePlayer == isTargetPlayer;
+    }
+}
 
 public class DefaultAction : IBattleAction
 {

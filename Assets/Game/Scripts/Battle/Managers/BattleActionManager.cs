@@ -6,6 +6,7 @@ using TMPro;
 using System.Linq;
 using DG.Tweening;
 using static UnityEngine.GraphicsBuffer;
+using static Unity.VisualScripting.Member;
 
 public class BattleActionManager : MonoBehaviour
 {
@@ -132,13 +133,20 @@ public class BattleActionManager : MonoBehaviour
             {
                 BattleController.Instance.UnitsObj.Remove(target);
                 TeamMNG.Instance.RemoveUnitFromPlayer(target.UnitData._ID);
+                foreach (var unit in BattleController.Instance.UnitsObj)
+                {
+                    unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral - 1 );
+                }
             }
             else if (BattleController.Instance.EnemiesObj.Contains(target))
             {
                 target.Arrow.gameObject.SetActive(false);
                 BattleController.Instance.EnemiesObj.Remove(target);
+                foreach (var unit in BattleController.Instance.UnitsObj)
+                {
+                    unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral + 1);
+                }
             }
-
             var intentions = BattleEnemyAI.Instance.EnemyIntentions;
             var toRemove = new List<BattleUnit>();
 

@@ -36,7 +36,7 @@ public class NewUnitStats
     public NewUnitStats(int id, int health,Dice dice)
     {
         _ID = id;
-        _name = dice._diceConfig.name;
+        _name = UnitNameTranslator.GetRussianName(dice._diceConfig.OriginalName);
         _health = health;
         _current_health = health;
         _current_defense=0;

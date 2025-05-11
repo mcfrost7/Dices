@@ -108,7 +108,7 @@ public class TeamMNG : MonoBehaviour
 
         // Создаём юнита
         newUnit = new NewUnitStats(
-            $"{dice._diceConfig.name}", // имя
+            UnitNameTranslator.GetRussianName(dice._diceConfig.OriginalName), // имя
             Random.Range(4, 6) * level,  // Случайное здоровье
             Random.Range(1, 3) * level,   // Случайная мораль
             level,

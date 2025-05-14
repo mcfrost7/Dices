@@ -42,6 +42,7 @@ public class GameMNG : MonoBehaviour
         GameDataMNG.Instance.StartNewGame();
         MenuMNG.Instance.ShowLocation();
         GlobalWindowController.Instance.ShowGlobalCanvas();
+
     }
 
     public void OnContinueGame()
@@ -56,7 +57,5 @@ public class GameMNG : MonoBehaviour
     public void OnExitGame()
     {
         Application.Quit();
-        Debug.Log("Игра завершена.");
     }
-
 }

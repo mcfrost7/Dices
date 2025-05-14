@@ -48,6 +48,7 @@ public class MenuMNG : MonoBehaviour
 
     public static MenuMNG Instance { get; private set; }
     public Button ContinueMain { get => _continueMain; set => _continueMain = value; }
+    public GameObject Freeze { get => _freeze; set => _freeze = value; }
 
     private void Awake()
     {
@@ -139,13 +140,13 @@ public class MenuMNG : MonoBehaviour
     public void CallFreezePanel(int _direction)
     {
         bool _boolDirection = _direction == 1 ? true : false;
-        _freeze.SetActive(_boolDirection);
+        Freeze.SetActive(_boolDirection);
     }
 
     public void ShowInfo()
     {
         _currentActiveWindow = _InfoPanel;
-        _freeze.SetActive(true);
+        Freeze.SetActive(true);
     }
 
     private bool _isAnimating = false;

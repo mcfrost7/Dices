@@ -7,12 +7,13 @@ public class GameDataMNG : MonoBehaviour
 
     [SerializeField] private CanvasMapGenerator mapGenerator;
     [SerializeField] private TeamMNG teamMNG;
+    [SerializeField] private Tutorial tutorial;
     [SerializeField] private EventsController eventsController;
-    [SerializeField] private ItemConfig item;
 
     private PlayerData playerData;
     public NewTileConfig CurrentTile { get; private set; }
     public CanvasMapGenerator MapGenerator { get => mapGenerator; set => mapGenerator = value; }
+    public Tutorial Tutorial { get => tutorial; set => tutorial = value; }
 
     private void Awake()
     {

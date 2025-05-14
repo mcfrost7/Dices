@@ -14,6 +14,10 @@ public class PlayerData
     private List<ResourceData> _resourcesData = new();
     private List<LocationConfig> _locationsConfigs = new();
     private int _locationLevel = 1;
+    private bool _isTutorialTeam = true;
+    private bool _isTutorialMap = true;
+    private bool _isTutorialBattle = true;
+    private bool _isTutorialNeeded = true;
 
     public List<MapNodeData> MapNodes { get => _mapNodes; set => _mapNodes = value; }
     public List<NewUnitStats> PlayerUnits { get => _playerUnits; set => _playerUnits = value; }
@@ -22,6 +26,10 @@ public class PlayerData
     public List<ResourceData> ResourcesData { get => _resourcesData; set => _resourcesData = value; }
     public int LocationLevel { get => _locationLevel; set => _locationLevel = value; }
     public List<LocationConfig> LocationsConfigs { get => _locationsConfigs; set => _locationsConfigs = value; }
+    public bool IsTutorialTeam { get => _isTutorialTeam; set => _isTutorialTeam = value; }
+    public bool IsTutorialMap { get => _isTutorialMap; set => _isTutorialMap = value; }
+    public bool IsTutorialBattle { get => _isTutorialBattle; set => _isTutorialBattle = value; }
+    public bool IsTutorialNeeded { get => _isTutorialNeeded; set => _isTutorialNeeded = value; }
 }
 [Serializable]
 public class SerializablePlayerData
@@ -34,6 +42,10 @@ public class SerializablePlayerData
     public List<SerializableLocation> Locations = new List<SerializableLocation>();
 
     public int LocationLevel;
+    public bool IsTutorialTeam;
+    public bool IsTutorialMap;
+    public bool IsTutorialBattle;
+    public bool IsTutorialNeeded;
     // Конструктор для создания из PlayerData
     public SerializablePlayerData(PlayerData data)
     {
@@ -91,7 +103,10 @@ public class SerializablePlayerData
             }
         }
         LocationLevel = data.LocationLevel;
-
+        IsTutorialTeam = data.IsTutorialTeam;
+        IsTutorialBattle = data.IsTutorialBattle;
+        IsTutorialNeeded = data.IsTutorialNeeded;
+        IsTutorialMap = data.IsTutorialMap;
         if (data.LocationsConfigs != null && data.LocationsConfigs.Count > 0)
         {
             foreach (var locationConfig in data.LocationsConfigs)
@@ -106,6 +121,10 @@ public class SerializablePlayerData
     {
         PlayerData data = new PlayerData();
         data.LocationLevel = LocationLevel;
+        data.IsTutorialTeam = IsTutorialTeam;
+        data.IsTutorialBattle = IsTutorialBattle;
+        data.IsTutorialMap = IsTutorialMap;
+        data.IsTutorialNeeded = IsTutorialNeeded;
         // Копируем узлы карты
         data.MapNodes = new List<MapNodeData>(MapNodes);
 

@@ -40,9 +40,18 @@ public class GlobalWindowController : MonoBehaviour
         GameDataMNG.Instance.SaveGame();
         SwitchCanvas(GlobalCanvas);
         MenuMNG.Instance.SetActiveDownPanel();
+        GameDataMNG.Instance.Tutorial.ShowTutorial();
     }
-    public void ShowTeam() => SwitchCanvas(_team);
-    public void ShowBattle() => SwitchCanvas(_battle);
+    public void ShowTeam()
+    {
+        SwitchCanvas(_team);
+        GameDataMNG.Instance.Tutorial.ShowTutorial();
+    }
+    public void ShowBattle()
+    {
+        SwitchCanvas(_battle);
+        GameDataMNG.Instance.Tutorial.ShowTutorial();
+    }
     public void ShowRoulette() => SwitchCanvas(_roulette);
     public void ShowSettings()
     {

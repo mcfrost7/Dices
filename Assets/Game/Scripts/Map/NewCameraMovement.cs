@@ -34,13 +34,13 @@ public class NewCameraMovement : MonoBehaviour
 
     private void HandleCanvasSwitched(GameObject newCanvas)
     {
-        if (newCanvas == GlobalWindowController.Instance.GlobalCanvas)
+        if (newCanvas == GlobalWindowController.Instance.GlobalCanvas && MenuMNG.Instance.Freeze.activeSelf == false)
         {
             Input.ResetInputAxes();
             canMoveAndZoom = true;
             isDragging = false;
         }
-        else
+        else if (MenuMNG.Instance.Freeze.activeSelf == true)
         {
             canMoveAndZoom = false;
             isDragging = false;

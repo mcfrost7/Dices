@@ -8,5 +8,7 @@ public enum ActionType
     Moral,
     ShieldBash,
     HealthAttack,
-    MoralDamage
+    MoralDamage,
+    Hit,
+    Death
 }

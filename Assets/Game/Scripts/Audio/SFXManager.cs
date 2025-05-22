@@ -6,15 +6,24 @@ public class SFXManager : MonoBehaviour
     public static SFXManager Instance { get; private set; }
 
     [System.Serializable]
+
+
     public class SoundGroup
     {
         public ActionType actionType;
         public AudioClip[] clips;
     }
-
+    public class UIsounds
+    {
+        public UISoundsEnum soundType;
+        public AudioClip[] clips;
+    }
     [SerializeField] private SoundGroup[] soundGroups;
+    [SerializeField] private SoundGroup[] soundGroupsOrks;
+
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private Slider slider;
+    [SerializeField] private List<UIsounds> soundGroupUI;
 
     private float lastVolume;
     private float debounceDelay = 0.2f;
@@ -66,6 +75,8 @@ public class SFXManager : MonoBehaviour
 
 
     private Dictionary<ActionType, AudioClip[]> soundDictionary;
+    private Dictionary<ActionType, AudioClip[]> soundDictionaryOrks;
+    private Dictionary<UISoundsEnum, AudioClip[]> soundDictionarytUI;
 
     private void Awake()
     {
@@ -82,12 +93,27 @@ public class SFXManager : MonoBehaviour
     private void InitializeSoundDictionary()
     {
         soundDictionary = new Dictionary<ActionType, AudioClip[]>();
-
+        soundDictionaryOrks = new Dictionary<ActionType, AudioClip[]>();
+        soundDictionarytUI = new Dictionary<UISoundsEnum, AudioClip[]>();
         foreach (var group in soundGroups)
         {
             if (group.clips != null && group.clips.Length > 0)
             {
                 soundDictionary[group.actionType] = group.clips;
+            }
+        }
+        foreach (var group in soundGroupsOrks)
+        {
+            if (group.clips != null && group.clips.Length > 0)
+            {
+                soundDictionaryOrks[group.actionType] = group.clips;
+            }
+        }
+        foreach(var group in soundGroupUI)
+        {
+            if (group.clips != null && group.clips.Length > 0)
+            {
+                soundDictionarytUI[group.soundType] = group.clips;
             }
         }
     }
@@ -105,9 +131,32 @@ public class SFXManager : MonoBehaviour
                 audioSource.pitch = originalPitch;
             }
         }
-        else
+    }
+
+    public void PlaySoundOrk(ActionType actionType)
+    {
+        if (soundDictionaryOrks.TryGetValue(actionType, out var clips))
         {
-            Debug.LogWarning($"No sounds found for action type: {actionType}");
+            if (clips.Length > 0)
+            {
+                float originalPitch = audioSource.pitch;
+                audioSource.pitch = Random.Range(0.8f, 1.2f);
+                AudioClip clip = clips[Random.Range(0, clips.Length)];
+                audioSource.PlayOneShot(clip);
+                audioSource.pitch = originalPitch;
+            }
+        }
+    }
+
+    public void PlayUISound(UISoundsEnum type)
+    {
+        if (!soundDictionarytUI.TryGetValue(type,out var clips))
+        {
+            if (clips.Length > 0)
+            {
+                AudioClip clip = clips[Random.Range(0, clips.Length)];
+                audioSource.PlayOneShot(clip);
+            }
         }
     }
 }

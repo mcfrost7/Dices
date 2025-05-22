@@ -101,7 +101,15 @@ public class BattleActionManager : MonoBehaviour
         int duration = source.UnitData._dice.GetCurrentSide().duration;
         IBattleAction action = BattleActionFactory.Instance.GetAction(currentSide.actionType);
         action.Execute(source, target, power,duration);
-        SFXManager.Instance.PlaySound(currentSide.actionType);
+        if (source.IsEnemy == false)
+        {
+            SFXManager.Instance.PlaySound(currentSide.actionType);
+        }
+        else
+        {
+            SFXManager.Instance.PlaySoundOrk(currentSide.actionType);
+        }
+
         source.DisableUnitAfterAction();
         source.RefreshUnitUI();
         target.RefreshUnitUI();

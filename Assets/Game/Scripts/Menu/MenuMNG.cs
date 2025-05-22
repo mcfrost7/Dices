@@ -192,7 +192,7 @@ public class MenuMNG : MonoBehaviour
 
     public void SetupLocation(string name)
     {
-        _closeButtonLocation.onClick.AddListener(()=> HideLocation());
+        _closeButtonLocation.onClick.AddListener(()=> HideLocation(0f));
         _locationText.text = name;
     }
 
@@ -204,7 +204,7 @@ public class MenuMNG : MonoBehaviour
             {
                 DOVirtual.DelayedCall(2f, () =>
                 {
-                    HideLocation();
+                    HideLocation(0.8f);
                 });
             });
 
@@ -213,9 +213,9 @@ public class MenuMNG : MonoBehaviour
     }
 
 
-    public void HideLocation()
+    public void HideLocation(float timer)
     {
-        _locationCanvasGroup.DOFade(0f, 0.8f)
+        _locationCanvasGroup.DOFade(0f, timer)
             .SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {
@@ -230,7 +230,7 @@ public class MenuMNG : MonoBehaviour
     {
         _levelNotificationText.text = content;
         GameWindowController.Instance.Button.onClick.AddListener(() => ShowLevelNotification());
-        _closeButtonLevelUp.onClick.AddListener(() => HideLevelNotification());
+        _closeButtonLevelUp.onClick.AddListener(() => HideLevelNotification(0f));
     }
 
     public void ShowLevelNotification()
@@ -242,7 +242,7 @@ public class MenuMNG : MonoBehaviour
             {
                 DOVirtual.DelayedCall(8f, () =>
                 {
-                    HideLevelNotification();
+                    HideLevelNotification(2f);
                 });
             });
 
@@ -250,10 +250,10 @@ public class MenuMNG : MonoBehaviour
         _levelNotificationCanvasGroup.blocksRaycasts = true;
     }
 
-    public void HideLevelNotification()
+    public void HideLevelNotification(float timer)
     {
 
-        _levelNotificationCanvasGroup.DOFade(0f, 2f)
+        _levelNotificationCanvasGroup.DOFade(0f, timer)
             .SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {

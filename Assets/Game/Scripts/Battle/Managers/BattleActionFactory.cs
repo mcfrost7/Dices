@@ -47,90 +47,42 @@ public class AttackAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        if (target.UnitData._current_defense > 0)
-        {
-            int remainingDamage = Mathf.Max(0, power - target.UnitData._current_defense);
-            target.UnitData._current_defense = Mathf.Max(0, target.UnitData._current_defense - power);
-            if (remainingDamage > 0)
-            {
-                target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - remainingDamage);
-            }
-        }
-        else
-        {
-            target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - power);
-        }
+        target.TakeDamage(power, source);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        // Проверка валидности цели для атаки
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer != isTargetPlayer; // Можно атаковать только врагов
+        return BattleController.Instance.UnitsObj.Contains(source) != BattleController.Instance.UnitsObj.Contains(target);
     }
 }
+
 public class LifestealAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        int damageDealt;
+        int oldHealth = target.UnitData._current_health;
+        target.TakeDamage(power, source);
+        int damageDealt = oldHealth - target.UnitData._current_health;
 
-        if (target.UnitData._current_defense > 0)
-        {
-            // Пробиваем защиту
-            int remainingDamage = Mathf.Max(0, power - target.UnitData._current_defense);
-            target.UnitData._current_defense = Mathf.Max(0, target.UnitData._current_defense - power);
-            damageDealt = remainingDamage;
-
-            if (remainingDamage > 0)
-            {
-                target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - remainingDamage);
-            }
-        }
-        else
-        {
-            // Без защиты весь урон проходит
-            damageDealt = Mathf.Min(power, target.UnitData._current_health);
-            target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - power);
-        }
-
-        // Восстанавливаем здоровье пропорционально нанесенному урону
-        source.UnitData._current_health = Mathf.Min(
-            source.UnitData._current_health + damageDealt,
-            source.UnitData._health
-        );
+        source.Heal(damageDealt);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        // Проверка валидности цели для атаки
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer != isTargetPlayer; // Можно атаковать только врагов
+        return BattleController.Instance.UnitsObj.Contains(source) != BattleController.Instance.UnitsObj.Contains(target);
     }
 }
 
 public class HealAction : IBattleAction
 {
-    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    public void Execute(BattleUnit source = null, BattleUnit target = null, int power = 0, int duration = 0)
     {
-        Heal(target.UnitData,power);
-    }
-
-    public void Heal(NewUnitStats target, int power)
-    {
-        target._current_health = Mathf.Min(
-            target._current_health + power,
-            target._health);
+        target.Heal(power);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        // Проверка валидности цели для лечения
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer == isTargetPlayer; // Можно лечить только союзников
+        return BattleController.Instance.UnitsObj.Contains(source) == BattleController.Instance.UnitsObj.Contains(target);
     }
 }
 
@@ -143,13 +95,9 @@ public class DefenseAction : IBattleAction
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        // Проверка валидности цели для лечения
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer == isTargetPlayer; // Можно лечить только союзников
+        return BattleController.Instance.UnitsObj.Contains(source) == BattleController.Instance.UnitsObj.Contains(target);
     }
 }
-
 
 public class ShieldBashAction : IBattleAction
 {
@@ -158,79 +106,40 @@ public class ShieldBashAction : IBattleAction
         int shieldPower = source.UnitData._current_defense + power;
         if (shieldPower <= 0) return;
 
-        if (target.UnitData._current_defense > 0)
-        {
-            int remainingDamage = Mathf.Max(0, shieldPower - target.UnitData._current_defense);
-            target.UnitData._current_defense = Mathf.Max(0, target.UnitData._current_defense - shieldPower);
-            if (remainingDamage > 0)
-            {
-                target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - remainingDamage);
-            }
-        }
-        else
-        {
-            target.UnitData._current_health = Mathf.Max(0, target.UnitData._current_health - shieldPower);
-        }
-
-        // Сбросить защиту у атакующего
+        target.TakeDamage(shieldPower, source);
         source.UnitData._current_defense = 0;
-    }
-
-    public bool IsValidTarget(BattleUnit source, BattleUnit target)
-    {
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer != isTargetPlayer; // Только враги
-    }
-}
-
-
-public class HealthAttackAction : IBattleAction
-{
-    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
-    {
-        ApplyDamage(source, target, power);
-        ApplyDamage(source, source, power);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
         return BattleController.Instance.UnitsObj.Contains(source) != BattleController.Instance.UnitsObj.Contains(target);
     }
-
-    private void ApplyDamage(BattleUnit attacker, BattleUnit defender, int damage)
-    {
-        var unitData = defender.UnitData;
-
-        if (unitData._current_defense > 0)
-        {
-            int defenseReduction = Mathf.Min(unitData._current_defense, damage);
-            unitData._current_defense -= defenseReduction;
-            damage -= defenseReduction;
-        }
-
-        // После обработки защиты наносим урон в здоровье
-        if (damage > 0)
-        {
-            unitData._current_health = Mathf.Max(0, unitData._current_health - damage);
-        }
-    }
 }
 
+public class HealthAttackAction : IBattleAction
+{
+    public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
+    {
+        target.TakeDamage(power, source);
+        source.TakeDamage(power); 
+    }
+
+    public bool IsValidTarget(BattleUnit source, BattleUnit target)
+    {
+        return BattleController.Instance.UnitsObj.Contains(source) != BattleController.Instance.UnitsObj.Contains(target);
+    }
+}
 
 public class MoraleAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-
-        target.UnitData._currentMoral = target.UnitData._currentMoral + power;
+        target.ModifyMorale(power);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer == isTargetPlayer;
+        return BattleController.Instance.UnitsObj.Contains(source) == BattleController.Instance.UnitsObj.Contains(target);
     }
 }
 
@@ -238,14 +147,12 @@ public class MoraleDamageAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        source.UnitData._currentMoral = Mathf.Max(0, source.UnitData._currentMoral + power);
+        source.ModifyMorale(power);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        bool isSourcePlayer = BattleController.Instance.UnitsObj.Contains(source);
-        bool isTargetPlayer = BattleController.Instance.UnitsObj.Contains(target);
-        return isSourcePlayer == isTargetPlayer;
+        return BattleController.Instance.UnitsObj.Contains(source) == BattleController.Instance.UnitsObj.Contains(target);
     }
 }
 
@@ -253,11 +160,11 @@ public class DefaultAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        target.UnitData._current_health -= power;
+        target.TakeDamage(power, source);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)
     {
-        return true; // Любая цель валидна
+        return true;
     }
 }

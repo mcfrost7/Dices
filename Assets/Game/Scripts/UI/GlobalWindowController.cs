@@ -31,15 +31,23 @@ public class GlobalWindowController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+    private void Start()
+    {
         ShowMenu();
     }
 
-    public void ShowMenu() => SwitchCanvas(_menu);
+    public void ShowMenu()
+    {
+        GlobalSoundManager.Instance.PlayMusic(MusicTheme.Menu);
+        SwitchCanvas(_menu);
+    }
     public void ShowGlobalCanvas()
     {
+        GlobalSoundManager.Instance.PlayMusic(MusicTheme.Main);
         GameDataMNG.Instance.SaveGame();
         SwitchCanvas(GlobalCanvas);
-        MenuMNG.Instance.SetActiveDownPanel();
+        MenuMNG.Instance.SetDownPanelVisible(true);
         GameDataMNG.Instance.Tutorial.ShowTutorial();
     }
     public void ShowTeam()
@@ -49,10 +57,15 @@ public class GlobalWindowController : MonoBehaviour
     }
     public void ShowBattle()
     {
+        GlobalSoundManager.Instance.PlayMusic(MusicTheme.Battle);
         SwitchCanvas(_battle);
         GameDataMNG.Instance.Tutorial.ShowTutorial();
     }
-    public void ShowRoulette() => SwitchCanvas(_roulette);
+    public void ShowRoulette()
+    {
+        MenuMNG.Instance.CallFreezePanel(true);
+        SwitchCanvas(_roulette);
+    }
     public void ShowSettings()
     {
         if (CurrentActiveCanvas != _settings)
@@ -85,7 +98,7 @@ public class GlobalWindowController : MonoBehaviour
     }
 
 
-    private void HideAllCanvases()
+    public void HideAllCanvases()
     {
         _menu.SetActive(false);
         _settings.SetActive(false);

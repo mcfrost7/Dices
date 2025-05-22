@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -164,6 +165,7 @@ public class BattleController : MonoBehaviour
 
     public void OnBattleLose()
     {
+        SFXManager.Instance.SetCurrentVolume();
         GameDataMNG.Instance.DeleteGame();
         GlobalWindowController.Instance.ShowMenu();
         GameMNG.Instance.SetupLoadedGameUI();

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _locationName: "\u041F\u0440\u043E\u043A\u043B\u044F\u0442\u044B\u0435 \u0414\u043E\u043A\u0438:
     \u041E\u0442\u0441\u0435\u043A \u0441\u0435\u0440\u0432\u043E\u0432-\u0440\u0430\u0431\u043E\u0432"
+  enemyType: 0
   tiles:
   - tileType: 0
     tileConfig:
@@ -58,7 +59,7 @@ MonoBehaviour:
     - tileType: 2
       probability: 0.2
     - tileType: 3
-      probability: 0.1
+      probability: 1
     availableNodeColor: {r: 1, g: 1, b: 1, a: 1}
     visitedNodeColor: {r: 1, g: 0, b: 0, a: 1}
     unavailableNodeColor: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 0.33333334}

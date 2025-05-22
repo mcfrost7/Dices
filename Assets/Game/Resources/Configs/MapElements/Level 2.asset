@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _locationName: "\u0421\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u0421\u0432\u044F\u0442\u0438\u043B\u0438\u0449\u0430:\u0425\u0440\u0430\u043C
     \u041C\u0430\u0448\u0438\u043D"
+  enemyType: 1
   tiles:
   - tileType: 0
     tileConfig:

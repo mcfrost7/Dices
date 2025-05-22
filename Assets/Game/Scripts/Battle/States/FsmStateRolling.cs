@@ -4,19 +4,31 @@ using UnityEngine;
 
 public class FsmStateRolling : FsmState
 {
-    private float _stateTimer = 0f;
+    private bool _startBattleSoundPlayed = false;
     public FsmStateRolling(FSM fsm) : base(fsm) { }
     public override void Enter()
     {
         BattleUI.Instance.StartBattleUISetup();
         BattleActionManager.Instance.ShowStateText("Стадия:\nБросок кубов...");
-        _stateTimer = 0f;
         BattleDiceManager.Instance.OnAllRollsComplete += OnRollsComplete;
-        BattleDiceManager.Instance.RollAllDice();
+
         BattleUI.Instance.ChangeMaxRerollText(RerollCalculator.CalculateRerolls(BattleController.Instance.PlayerUnits));
         BattleDiceManager.Instance.AllowMultipleSelections = false;
 
+        BattleController.Instance.StartCoroutine(WaitForTutorialAndRoll());
     }
+
+    private IEnumerator WaitForTutorialAndRoll()
+    {
+        yield return new WaitUntil(() => !GameDataMNG.Instance.Tutorial.isActive);
+        BattleDiceManager.Instance.RollAllDice();
+        if (!_startBattleSoundPlayed)
+        {
+            SFXManager.Instance.PlayStartBattleSound(GameDataMNG.Instance.MapGenerator.SelectedLocationConfig.enemyType);
+            _startBattleSoundPlayed = true;
+        }
+    }
+
 
     public override void Exit()
     {
@@ -30,7 +42,6 @@ public class FsmStateRolling : FsmState
 
     public override void Update()
     {
-        _stateTimer += Time.deltaTime;
 
         if (CheckAllPlayersDead())
         {

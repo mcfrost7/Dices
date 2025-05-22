@@ -103,7 +103,7 @@ public class BattleActionManager : MonoBehaviour
         action.Execute(source, target, power,duration);
         if (source.IsEnemy == false)
         {
-            SFXManager.Instance.PlaySound(currentSide.actionType);
+            SFXManager.Instance.PlaySoundSM(currentSide.actionType);
         }
         else
         {
@@ -137,64 +137,44 @@ public class BattleActionManager : MonoBehaviour
     {
         if (target.UnitData._current_health <= 0)
         {
-            if (BattleController.Instance.UnitsObj.Contains(target))
-            {
-                BattleController.Instance.UnitsObj.Remove(target);
-                TeamMNG.Instance.RemoveUnitFromPlayer(target.UnitData._ID);
-                foreach (var unit in BattleController.Instance.UnitsObj)
-                {
-                    unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral - 1 );
-                }
-            }
-            else if (BattleController.Instance.EnemiesObj.Contains(target))
-            {
-                target.Arrow.gameObject.SetActive(false);
-                BattleController.Instance.EnemiesObj.Remove(target);
-                foreach (var unit in BattleController.Instance.UnitsObj)
-                {
-                    unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral + 1);
-                }
-            }
-            var intentions = BattleEnemyAI.Instance.EnemyIntentions;
-            var toRemove = new List<BattleUnit>();
-
-            foreach (var pair in intentions)
-            {
-                if (pair.Key == target || pair.Value == target)
-                {
-                    toRemove.Add(pair.Key);
-                }
-            }
-
-            foreach (var unit in toRemove)
-            {
-                intentions.Remove(unit);
-            }
-
-            StartCoroutine(DeathAnimation(target));
+            target.Die();
         }
     }
 
-
-
-    private IEnumerator DeathAnimation(BattleUnit _unit)
+    public void PlayDeathAnimation(BattleUnit unit)
     {
-        int direction = _unit.IsEnemy ? 1 : -1;
-        RectTransform rect = _unit.GetComponent<RectTransform>();
+        StartCoroutine(DeathAnimation(unit));
+    }
+
+    private IEnumerator DeathAnimation(BattleUnit unit)
+    {
+        int direction = unit.IsEnemy ? 1 : -1;
+        RectTransform rect = unit.GetComponent<RectTransform>();
         var layoutGroup = rect.parent.GetComponent<HorizontalOrVerticalLayoutGroup>();
         var fitter = rect.parent.GetComponent<ContentSizeFitter>();
-        var layoutElem = _unit.GetComponent<LayoutElement>();
+        var layoutElem = unit.GetComponent<LayoutElement>();
+
         if (layoutGroup != null) layoutGroup.enabled = false;
         if (fitter != null) fitter.enabled = false;
         if (layoutElem != null) layoutElem.ignoreLayout = true;
+
         Vector2 startPos = rect.anchoredPosition;
         rect.DOAnchorPosX(startPos.x + 560 * direction, 1f).SetEase(Ease.InOutExpo);
-
         yield return new WaitForSeconds(1f);
+        if (unit.IsEnemy)
+        {
+            SFXManager.Instance.PlaySoundOrk(ActionType.Death);
+        }
+        else
+        {
+            SFXManager.Instance.PlaySoundSM(ActionType.Death);
+        }
         if (layoutElem != null) layoutElem.ignoreLayout = false;
         if (layoutGroup != null) layoutGroup.enabled = true;
         if (fitter != null) fitter.enabled = true;
-        Destroy(_unit.gameObject);
+
+        Destroy(unit.gameObject);
+
         BattleUI.Instance.ShowIntentionDelayed(BattleEnemyAI.Instance.EnemyIntentions);
     }
 

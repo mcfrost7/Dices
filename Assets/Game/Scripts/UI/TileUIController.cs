@@ -39,7 +39,7 @@ public class TileUIController : MonoBehaviour
 
     private void ChangeTeamButtonAvailability()
     {
-        MenuMNG.Instance.SetInnactiveDownPanel();
+        MenuMNG.Instance.SetDownPanelVisible(false);
     }
 
 

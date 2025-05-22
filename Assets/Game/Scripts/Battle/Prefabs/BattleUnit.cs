@@ -304,4 +304,83 @@ public class BattleUnit : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage, BattleUnit attacker = null)
+    {
+        int originalDamage = damage;
+        if (UnitData._current_defense > 0)
+        {
+            int defenseReduction = Mathf.Min(UnitData._current_defense, damage);
+            UnitData._current_defense -= defenseReduction;
+            damage -= defenseReduction;
+        }
+        if (damage > 0)
+        {
+            UnitData._current_health = Mathf.Max(0, UnitData._current_health - damage);
+        }
+        if (UnitData._current_health != 0)
+        {
+            if (!IsEnemy)
+            {
+                SFXManager.Instance.PlaySoundSM(ActionType.Hit);
+            }
+            else
+            {
+                SFXManager.Instance.PlaySoundOrk(ActionType.Hit);
+            }
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        int oldHealth = UnitData._current_health;
+        UnitData._current_health = Mathf.Min(UnitData._current_health + amount, UnitData._health);
+    }
+
+    public void ModifyMorale(int amount)
+    {
+        UnitData._currentMoral += amount;
+    }
+
+
+    public void Die()
+    {
+        if (BattleController.Instance.UnitsObj.Contains(this))
+        {
+            BattleController.Instance.UnitsObj.Remove(this);
+            TeamMNG.Instance.RemoveUnitFromPlayer(UnitData._ID);
+
+            foreach (var unit in BattleController.Instance.UnitsObj)
+            {
+                unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral - 1);
+            }
+        }
+        else if (BattleController.Instance.EnemiesObj.Contains(this))
+        {
+            if (Arrow != null)
+                Arrow.gameObject.SetActive(false);
+
+            BattleController.Instance.EnemiesObj.Remove(this);
+
+            foreach (var unit in BattleController.Instance.UnitsObj)
+            {
+                unit.UnitData._currentMoral = Mathf.Max(0, unit.UnitData._currentMoral + 1);
+            }
+        }
+        var intentions = BattleEnemyAI.Instance.EnemyIntentions;
+        var toRemove = new List<BattleUnit>();
+
+        foreach (var pair in intentions)
+        {
+            if (pair.Key == this || pair.Value == this)
+                toRemove.Add(pair.Key);
+        }
+
+        foreach (var unit in toRemove)
+        {
+            intentions.Remove(unit);
+        }
+
+        BattleActionManager.Instance.PlayDeathAnimation(this);
+    }
+
 }

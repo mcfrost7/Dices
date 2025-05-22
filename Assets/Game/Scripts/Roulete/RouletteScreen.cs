@@ -42,6 +42,7 @@ public class RouletteScreen : MonoBehaviour
         if (_isRewarded == false)
         {
             GameWindowController.Instance.SetupRouletteInfo(config);
+            GlobalWindowController.Instance.HideAllCanvases();
             _isRewarded = true;
         }
         GameWindowController.Instance.CallPanel(1);

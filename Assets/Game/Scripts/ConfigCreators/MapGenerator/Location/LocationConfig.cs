@@ -13,6 +13,7 @@ public class LocationConfig : ScriptableObject
         public List<NewTileConfig> tileConfig = new List<NewTileConfig>();
     }
     public string _locationName;
+    public EnemyType enemyType;
     public List<LocationTile> tiles;
     public int _locationLevel;
     public int minDifficulty;

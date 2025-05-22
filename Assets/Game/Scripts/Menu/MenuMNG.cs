@@ -1,7 +1,5 @@
 using DG.Tweening;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,63 +8,63 @@ public class MenuMNG : MonoBehaviour
 {
     [Header("Menu UI")]
     [SerializeField] private GameObject _menuWindow;
-    [SerializeField] private Button _menu;
-    [SerializeField] private Button _continue;
-    [SerializeField] private Button _settings;
-    [SerializeField] private Button _exitMenu;
-    [SerializeField] private Button _exitGame;
-
+    [SerializeField] private Button _menu, _continue, _settings, _exitMenu, _exitGame;
 
     [Header("Main Menu")]
-    [SerializeField] private Button _continueMain;
-    [SerializeField] private Button _playMain;
-    [SerializeField] private Button _settingsMain;
-    [SerializeField] private Button _exitGameMain;
-    [Header("Help windows")]
-    [SerializeField] private GameObject _InfoPanel;
-    [SerializeField] private GameObject _freeze;
+    [SerializeField] private Button _continueMain, _playMain, _settingsMain, _exitGameMain,_backSettings;
+
+    [Header("Help Windows")]
+    [SerializeField] private GameObject _InfoPanel, _freeze;
+
     [Header("Location")]
     [SerializeField] private GameObject _locationNameObject;
     [SerializeField] private CanvasGroup _locationCanvasGroup;
     [SerializeField] private TextMeshProUGUI _locationText;
     [SerializeField] private Button _closeButtonLocation;
-    [Header("LevelUp")]
+
+    [Header("Level Up")]
     [SerializeField] private GameObject _levelNotificationObject;
     [SerializeField] private CanvasGroup _levelNotificationCanvasGroup;
     [SerializeField] private TextMeshProUGUI _levelNotificationText;
     [SerializeField] private Button _closeButtonLevelUp;
-    [Header("Task panel")]
+
+    [Header("Task Panel")]
     [SerializeField] private GameObject _task;
     [SerializeField] private Button _taskButton;
-    [Header("Down panel")]
-    [SerializeField] private GameObject _downPanel;
-    [SerializeField] private Button _teamButton;
-    [SerializeField] private Button _teamBackButton;
 
-    private GameObject _currentActiveWindow;
-    private bool _taskVisibility = false;
+    [Header("Down Panel")]
+    [SerializeField] private GameObject _downPanel;
+    [SerializeField] private Button _teamButton, _teamBackButton;
 
     public static MenuMNG Instance { get; private set; }
     public Button ContinueMain { get => _continueMain; set => _continueMain = value; }
     public GameObject Freeze { get => _freeze; set => _freeze = value; }
 
+    private GameObject _currentActiveWindow;
+    private bool _taskVisibility = false;
+    private bool _isAnimating = false;
+
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else if (Instance != this)
-        {
             Destroy(gameObject);
-        }
+
         SetupAllUI();
-        _locationCanvasGroup.alpha = 0;
-        _locationCanvasGroup.interactable = false;
-        _locationCanvasGroup.blocksRaycasts = false;
-        _levelNotificationCanvasGroup.alpha = 0;
-        _levelNotificationCanvasGroup.interactable = false;
-        _levelNotificationCanvasGroup.blocksRaycasts = false;
+
+        SetCanvasGroupState(_locationCanvasGroup, false, 0);
+        SetCanvasGroupState(_levelNotificationCanvasGroup, false, 0);
+    }
+
+    public void AddButtonListener(Button button, Action action, bool playSound = true)
+    {
+        button.onClick.AddListener(() =>
+        {
+            if (playSound)
+                SFXManager.Instance.PlayUISound(UISoundsEnum.Click);
+            action.Invoke();
+        });
     }
 
     private void SetupAllUI()
@@ -77,160 +75,132 @@ public class MenuMNG : MonoBehaviour
         SetupDownPanel();
     }
 
-    public void SetupMenuButtons()
+    private void SetupMenuButtons()
     {
-        _menu.onClick.AddListener(()=>ShowMenu(_menuWindow));
-        _continue.onClick.AddListener(()=>HideWindow());
-        _settings.onClick.AddListener(()=>SetupSettings());
-        _exitMenu.onClick.AddListener(()=> SetupMainMenu());
-        _exitMenu.onClick.AddListener(()=> GameDataMNG.Instance.SaveGame());
-        _exitGame.onClick.AddListener(()=> GameMNG.Instance.OnExitGame());
-        _exitGame.onClick.AddListener(()=> GameDataMNG.Instance.SaveGame());
-    }
-    public void SetupMainButtons()
-    {
-        ContinueMain.onClick.AddListener(()=>GameMNG.Instance.OnContinueGame());
-        _playMain.onClick.AddListener(() => GameMNG.Instance.OnNewGameStart());
-        _settingsMain.onClick.AddListener(() => GlobalWindowController.Instance.ShowSettings());
-        _exitGameMain.onClick.AddListener(() => GameMNG.Instance.OnExitGame());
+        AddButtonListener(_menu, () => ShowMenu(_menuWindow));
+        AddButtonListener(_continue, HideWindow);
+        AddButtonListener(_settings, SetupSettings);
+        AddButtonListener(_exitMenu, () => { SetupMainMenu(); GameDataMNG.Instance.SaveGame(); });
+        AddButtonListener(_exitGame, () => { GameMNG.Instance.OnExitGame(); GameDataMNG.Instance.SaveGame(); });
     }
 
-    public void SetupTaskPanel()
+    private void SetupMainButtons()
     {
-        _taskButton.onClick.AddListener(()=>CallTask());
-    }    
-    public void SetupDownPanel()
-    {
-        _teamButton.onClick.AddListener(()=>GlobalWindowController.Instance.ShowTeam());
-        _teamButton.onClick.AddListener(() => SetInnactiveDownPanel());
-        _teamButton.onClick.AddListener(() => UnitsPanelUI.Instance.OnMenuLoad());
-        _teamBackButton.onClick.AddListener(() => GlobalWindowController.Instance.ShowGlobalCanvas());
-        _teamBackButton.onClick.AddListener(() => SetActiveDownPanel());
+        AddButtonListener(_continueMain, GameMNG.Instance.OnContinueGame);
+        AddButtonListener(_playMain, GameMNG.Instance.OnNewGameStart);
+        AddButtonListener(_settingsMain, GlobalWindowController.Instance.ShowSettings);
+        AddButtonListener(_exitGameMain, GameMNG.Instance.OnExitGame);
+        AddButtonListener(_backSettings, GlobalWindowController.Instance.GoBack);
     }
+
+    private void SetupTaskPanel()
+    {
+        AddButtonListener(_taskButton, ToggleTask);
+    }
+
+    private void SetupDownPanel()
+    {
+        AddButtonListener(_teamButton, () =>
+        {
+            GlobalWindowController.Instance.ShowTeam();
+            SetDownPanelVisible(false);
+            UnitsPanelUI.Instance.OnMenuLoad();
+        });
+
+        AddButtonListener(_teamBackButton, () =>
+        {
+            GlobalWindowController.Instance.ShowGlobalCanvas();
+            SetDownPanelVisible(true);
+        });
+    }
+
     public void HideWindow()
     {
-        CallFreezePanel(0);
-        _currentActiveWindow.SetActive(false);
+        CallFreezePanel(false);
+        _currentActiveWindow?.SetActive(false);
     }
 
     private void SetupSettings()
     {
         HideWindow();
         GlobalWindowController.Instance.ShowSettings();
-    }    
+    }
+
     private void SetupMainMenu()
     {
-        if (GameMNG.Instance.IsGameLoaded)
-        {
-            ContinueMain.interactable = true;
-        }
+        _continueMain.interactable = GameMNG.Instance.IsGameLoaded;
         HideWindow();
         GlobalWindowController.Instance.ShowMenu();
-
     }
 
-    public void ShowMenu(GameObject _window)
+    public void ShowMenu(GameObject window)
     {
-        _currentActiveWindow = _window;
-        _window.SetActive(true);
-        CallFreezePanel(1);
-
+        _currentActiveWindow = window;
+        window.SetActive(true);
+        CallFreezePanel(true);
     }
 
-    public void CallFreezePanel(int _direction)
+    public void CallFreezePanel(bool isActive)
     {
-        bool _boolDirection = _direction == 1 ? true : false;
-        Freeze.SetActive(_boolDirection);
+        _freeze.SetActive(isActive);
     }
 
     public void ShowInfo()
     {
         _currentActiveWindow = _InfoPanel;
-        Freeze.SetActive(true);
+        _freeze.SetActive(true);
     }
 
-    private bool _isAnimating = false;
-
-    public void CallTask()
+    private void ToggleTask()
     {
         if (_isAnimating) return;
-
         _isAnimating = true;
 
-        if (_taskVisibility == false)
-        {
-            _task.transform.DOLocalMoveX(_task.transform.localPosition.x - 500, 0.8f)
-                .SetEase(Ease.InOutExpo)
-                .OnComplete(() => _isAnimating = false);
-        }
-        else
-        {
-            _task.transform.DOLocalMoveX(_task.transform.localPosition.x + 500, 0.8f)
-                .SetEase(Ease.InOutExpo)
-                .OnComplete(() => _isAnimating = false);
-        }
+        float moveX = _task.transform.localPosition.x + (_taskVisibility ? 500 : -500);
+
+        _task.transform.DOLocalMoveX(moveX, 0.8f).SetEase(Ease.InOutExpo)
+            .OnComplete(() => _isAnimating = false);
 
         _taskVisibility = !_taskVisibility;
     }
 
-    public void ChangeVisibilityOfDownPanel()
+    public void SetDownPanelVisible(bool visible)
     {
-        _downPanel.SetActive(!_downPanel.activeSelf);
+        _downPanel.SetActive(visible);
     }
 
-    public void SetActiveDownPanel()
-    {
-        _downPanel.SetActive(true);
-    }
-    public void SetInnactiveDownPanel()
-    {
-        _downPanel.SetActive(false);
-    }
-
-    public static LTDescr delay;
-
+    public void ChangeVisibilityOfDownPanel() => _downPanel.SetActive(!_downPanel.activeSelf);
 
     public void SetupLocation(string name)
     {
-        _closeButtonLocation.onClick.AddListener(()=> HideLocation(0f));
         _locationText.text = name;
+        AddButtonListener(_closeButtonLocation, () => HideLocation(0f), playSound: false);
     }
 
     public void ShowLocation()
     {
         _locationNameObject.SetActive(true);
         _locationCanvasGroup.DOFade(1f, 0.6f).SetEase(Ease.InOutSine)
-            .OnComplete(() =>
-            {
-                DOVirtual.DelayedCall(2f, () =>
-                {
-                    HideLocation(0.8f);
-                });
-            });
+            .OnComplete(() => DOVirtual.DelayedCall(2f, () => HideLocation(0.8f)));
 
-        _locationCanvasGroup.interactable = true;
-        _locationCanvasGroup.blocksRaycasts = true;
+        SetCanvasGroupState(_locationCanvasGroup, true);
     }
 
-
-    public void HideLocation(float timer)
+    public void HideLocation(float duration)
     {
-        _locationCanvasGroup.DOFade(0f, timer)
-            .SetEase(Ease.InOutSine)
+        _locationCanvasGroup.DOFade(0f, duration).SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {
                 _locationNameObject.SetActive(false);
-                _locationCanvasGroup.interactable = false;
-                _locationCanvasGroup.blocksRaycasts = false;
+                SetCanvasGroupState(_locationCanvasGroup, false);
             });
     }
-
 
     public void SetupLevelNotification(string content)
     {
         _levelNotificationText.text = content;
-        GameWindowController.Instance.Button.onClick.AddListener(() => ShowLevelNotification());
-        _closeButtonLevelUp.onClick.AddListener(() => HideLevelNotification(0f));
+        AddButtonListener(GameWindowController.Instance.Button, ShowLevelNotification);
+        AddButtonListener(_closeButtonLevelUp, () => HideLevelNotification(0f));
     }
 
     public void ShowLevelNotification()
@@ -238,28 +208,25 @@ public class MenuMNG : MonoBehaviour
         GameWindowController.Instance.Button.onClick.RemoveAllListeners();
         _levelNotificationObject.SetActive(true);
         _levelNotificationCanvasGroup.DOFade(1f, 0.6f).SetEase(Ease.InOutSine)
-            .OnComplete(() =>
-            {
-                DOVirtual.DelayedCall(8f, () =>
-                {
-                    HideLevelNotification(2f);
-                });
-            });
+            .OnComplete(() => DOVirtual.DelayedCall(8f, () => HideLevelNotification(2f)));
 
-        _levelNotificationCanvasGroup.interactable = true;
-        _levelNotificationCanvasGroup.blocksRaycasts = true;
+        SetCanvasGroupState(_levelNotificationCanvasGroup, true);
     }
 
-    public void HideLevelNotification(float timer)
+    public void HideLevelNotification(float duration)
     {
-
-        _levelNotificationCanvasGroup.DOFade(0f, timer)
-            .SetEase(Ease.InOutSine)
+        _levelNotificationCanvasGroup.DOFade(0f, duration).SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {
                 _levelNotificationObject.SetActive(false);
-                _levelNotificationCanvasGroup.interactable = false;
-                _levelNotificationCanvasGroup.blocksRaycasts = false;
+                SetCanvasGroupState(_levelNotificationCanvasGroup, false);
             });
+    }
+
+    private void SetCanvasGroupState(CanvasGroup cg, bool state, float alpha = -1f)
+    {
+        cg.interactable = state;
+        cg.blocksRaycasts = state;
+        if (alpha >= 0f) cg.alpha = alpha;
     }
 }

@@ -31,6 +31,7 @@ public class Tutorial : MonoBehaviour
     private List<string> currentTexts;
     private int currentStep = 0;
     private TutorialType currentTutorialType;
+    public bool isActive = false;
     private enum TutorialType
     {
         Map,
@@ -38,18 +39,13 @@ public class Tutorial : MonoBehaviour
         Team
     }
 
-    private void OnEnable()
+    private void Start()
     {
         _tutorWindow.SetActive(false);
         _closeButton.onClick.AddListener(CloseTutorial);
-        _nextButton.onClick.AddListener(NextStep);
+        MenuMNG.Instance.AddButtonListener(_nextButton,()=> NextStep());
     }
 
-    private void OnDisable()
-    {
-        _closeButton.onClick.RemoveListener(CloseTutorial);
-        _nextButton.onClick.RemoveListener(NextStep);
-    }
 
     public void ShowTutorial()
     {
@@ -58,9 +54,9 @@ public class Tutorial : MonoBehaviour
 
         if (!DetermineCurrentTutorialSet())
             return;
-
+        isActive = true;
         currentStep = 0;
-        MenuMNG.Instance.CallFreezePanel(1);
+        MenuMNG.Instance.CallFreezePanel(true);
         ShowCurrentStep();
         _tutorWindow.SetActive(true);
     }
@@ -128,7 +124,8 @@ public class Tutorial : MonoBehaviour
 
     private void CloseTutorial()
     {
-        MenuMNG.Instance.CallFreezePanel(0);
+        isActive = false;
+        MenuMNG.Instance.CallFreezePanel(false);
         _tutorWindow.SetActive(false);
 
         MarkTutorialAsCompleted();

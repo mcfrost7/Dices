@@ -72,12 +72,11 @@ public class CampPanel : MonoBehaviour
         if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, 1))
         {
             _button.enabled = false;
-            HealAction healAction = new HealAction();
             foreach (var unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
             {
-                healAction.Heal(unit, _amount);
+                unit._current_health = Mathf.Min(unit._current_health + _amount, unit._health);
             }
-            SFXManager.Instance.PlaySound(ActionType.Heal);
+            SFXManager.Instance.PlaySoundSM(ActionType.Heal);
             _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
                          $"<color=#2F2F2F>Здоровье пополнено. Отряд готов к продолжению операции.</color>\n" +
                          $"<color=#5A5A5A>-----------------------------</color>";

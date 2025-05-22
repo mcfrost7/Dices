@@ -110,11 +110,10 @@ public class BattleUI : MonoBehaviour
         else
             GameWindowController.Instance.SetupWinBosseInfo(BattleController.Instance.CurrentBattleConfig);
         GameWindowController.Instance.CallPanel(1);
-
     }
     public void HideVictoryScreen() 
     {
-        MenuMNG.Instance.SetActiveDownPanel();
+        MenuMNG.Instance.SetDownPanelVisible(true);
     }
 
     public void ShowDefeatScreen()
@@ -124,6 +123,6 @@ public class BattleUI : MonoBehaviour
     }
     public void HideDefeatScreen() 
     {
-        MenuMNG.Instance.SetActiveDownPanel();
+        MenuMNG.Instance.SetDownPanelVisible(true);
     }
 }

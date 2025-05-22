@@ -6,11 +6,13 @@ public class NewTileConfig : ScriptableObject
 {
     public TileType tileType;
     public Sprite tileSprite;
+
     public BattleSettings battleSettings;
     public LootSettings lootSettings;
     public CampSettings campSettings;
     public RouleteSettings rouleteSettings;
     public BossSettings bossSettings;
+
 }
 
 [System.Serializable]
@@ -19,6 +21,7 @@ public class BattleSettings
     public int battleDifficulty; 
     public TileEnemies tileEnemies;
     public SerializableRewardConfig reward;
+
 }
 
 [System.Serializable]

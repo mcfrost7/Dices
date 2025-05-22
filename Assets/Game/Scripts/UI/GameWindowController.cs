@@ -31,8 +31,15 @@ public class GameWindowController : MonoBehaviour
 
     public void CallPanel(int _direction)
     {
-        _panel.transform.DOLocalMoveY(_panel.transform.localPosition.y - 960 * _direction, 1f).SetEase(Ease.InOutExpo);
-        MenuMNG.Instance.CallFreezePanel(_direction);
+        if (_direction == 1)
+        {
+            SFXManager.Instance.PlayUISound(UISoundsEnum.FadeIn);
+        }
+        else 
+        {
+            SFXManager.Instance.PlayUISound(UISoundsEnum.FadeOut);
+        }
+        _panel.transform.DOLocalMoveY(_panel.transform.localPosition.y - 960 * _direction, 1.5f).SetEase(Ease.InOutExpo);
     }
 
 
@@ -40,7 +47,9 @@ public class GameWindowController : MonoBehaviour
     {
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() => CallPanel(-1));
+        Button.onClick.AddListener(() => MenuMNG.Instance.CallFreezePanel(false));
         Button.onClick.AddListener(() => GlobalWindowController.Instance.GoBack());
+    
         if (rewardConfig == null || rewardConfig.WinItems == null)
         {
             _title.text = "<color=#E31837><size=42><b>ПУСТЫЕ ТРОФЕИ</b></size></color>";

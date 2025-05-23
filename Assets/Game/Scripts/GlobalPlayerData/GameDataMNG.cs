@@ -81,6 +81,7 @@ public class GameDataMNG : MonoBehaviour
     {
         CurrentTile = node.tileConfig;
         eventsController.HandleEvent(node);
+        SFXManager.Instance.PlayUISound(UISoundsEnum.MapElementClick);
     }
 
 }

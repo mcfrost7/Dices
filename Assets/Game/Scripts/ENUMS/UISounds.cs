@@ -3,5 +3,7 @@
     FadeIn,
     FadeOut,
     Click,
+    MapElementClick,
+    UnitSelected,
     None
 }

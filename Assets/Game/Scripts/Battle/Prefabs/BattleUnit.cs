@@ -136,7 +136,7 @@ public class BattleUnit : MonoBehaviour
         }
 
         SetSelectionState(!IsSelected);
-
+        SFXManager.Instance.PlayUISound(UISoundsEnum.UnitSelected);
         BattleDiceManager.Instance.HandleUnitSelectionChanged(this);
 
         if (allowMultiple && IsSelected)

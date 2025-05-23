@@ -102,7 +102,7 @@ public class BattleEnemyAI : MonoBehaviour
             {
                 source.Arrow.gameObject.SetActive(false);
                 BattleActionManager.Instance.ExecuteAction(source, target);
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1.5f);
             }
         }
 

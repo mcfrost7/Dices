@@ -75,6 +75,7 @@ public class UnitsPanelUI : MonoBehaviour
     }
     public void OnUnitClick(NewUnitStats unit)
     {
+        SFXManager.Instance.PlayUISound(UISoundsEnum.UnitSelected);
         CurrentUnit = unit;
         OnUnitSelected?.Invoke(unit);
     }

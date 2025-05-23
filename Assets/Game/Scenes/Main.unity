@@ -1819,7 +1819,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 500.00006, y: 0}
+  m_AnchoredPosition: {x: 500.00012, y: 0}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &171453915
@@ -2779,6 +2779,9 @@ MonoBehaviour:
     - {fileID: 8300000, guid: da8047d19d12bf644acc15995ae1d77a, type: 3}
     - {fileID: 8300000, guid: 8b15deddfce2807478087ec6fc03b3ca, type: 3}
     - {fileID: 8300000, guid: 3fd92528e778f5b4e9ac9e395fdf40a2, type: 3}
+  - actionType: 0
+    clips:
+    - {fileID: 8300000, guid: 7d511f15ae55bc24abed3ccf4f9698a6, type: 3}
   soundGroupsOrks:
   - actionType: 1
     clips:
@@ -2805,6 +2808,10 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: 5ba8af57ab845de4bb8ddad1b7715a53, type: 3}
     - {fileID: 8300000, guid: f2da4ceba2a25ee4cbd585a932cfbe8d, type: 3}
+  - actionType: 0
+    clips:
+    - {fileID: 8300000, guid: 9ed9313f27636384e902d6a504cee315, type: 3}
+    - {fileID: 8300000, guid: 035ff2e8bd88d3c4a90eee036de21486, type: 3}
   soundGroupUI:
   - soundType: 0
     clips:
@@ -2815,6 +2822,17 @@ MonoBehaviour:
   - soundType: 2
     clips:
     - {fileID: 8300000, guid: ab79d334f7f51234ebae9ab05e545a2d, type: 3}
+  - soundType: 3
+    clips:
+    - {fileID: 8300000, guid: ab79d334f7f51234ebae9ab05e545a2d, type: 3}
+  - soundType: 4
+    clips:
+    - {fileID: 8300000, guid: 9e38cacfbf8af2445a7468efb69b7fa6, type: 3}
+    - {fileID: 8300000, guid: 45a193418e4e4234290de68972530b29, type: 3}
+    - {fileID: 8300000, guid: c211fe250160c7d4b828202a4984e408, type: 3}
+  - soundType: 3
+    clips:
+    - {fileID: 8300000, guid: 53744ece57ba1ec4f8f715c52fb07fae, type: 3}
   startBattleSounds:
   - enemyType: 0
     clips:
@@ -15046,6 +15064,9 @@ MonoBehaviour:
   - MusicTheme: 1
     clips:
     - {fileID: 8300000, guid: 91d2eedd022d99743b0e8f4b65800daa, type: 3}
+  - MusicTheme: 0
+    clips:
+    - {fileID: 8300000, guid: e23f2d800e9205d49b8fa48388f97419, type: 3}
 --- !u!82 &1693321209
 AudioSource:
   m_ObjectHideFlags: 0
@@ -19819,7 +19840,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 500.00006, y: 0}
+  m_AnchoredPosition: {x: 500.00012, y: 0}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &2093702572

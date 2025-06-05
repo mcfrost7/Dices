@@ -23,6 +23,10 @@ public class TileUIController : MonoBehaviour
     public void ChangeUIOnTileClick()
     {
         UpdateUIForTileType(GameDataMNG.Instance.CurrentTile.tileType);
+        if (CampPanel.Instance.CampVisibility == true)
+        {
+            CampPanel.Instance.SetCampVisibility( false);
+        }
     }
 
     private void UpdateUIForTileType(TileType tileType)
@@ -35,6 +39,7 @@ public class TileUIController : MonoBehaviour
     private void ChangeHealButtonAvailability(TileType tileType)
     {
         _healButton.gameObject.SetActive(tileType == TileType.CampTile);
+
     }
 
     private void ChangeTeamButtonAvailability()

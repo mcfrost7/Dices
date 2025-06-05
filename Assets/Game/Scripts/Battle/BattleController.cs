@@ -49,10 +49,7 @@ public class BattleController : MonoBehaviour
     
     public void InitializeBattle(NewTileConfig config, bool isBoss)
     {
-        if (CampPanel.Instance.CampVisibility == true )
-        {
-            CampPanel.Instance.CallTask();
-        }
+
         CurrentBattleConfig = config;
         IsBossBattle = isBoss;
         SetupBattleUnits(config);

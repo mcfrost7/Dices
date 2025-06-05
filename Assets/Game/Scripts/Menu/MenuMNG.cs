@@ -80,8 +80,8 @@ public class MenuMNG : MonoBehaviour
         AddButtonListener(_menu, () => ShowMenu(_menuWindow));
         AddButtonListener(_continue, HideWindow);
         AddButtonListener(_settings, SetupSettings);
-        AddButtonListener(_exitMenu, () => { SetupMainMenu(); GameDataMNG.Instance.SaveGame(); });
-        AddButtonListener(_exitGame, () => { GameMNG.Instance.OnExitGame(); GameDataMNG.Instance.SaveGame(); });
+        AddButtonListener(_exitMenu, () => { SetupMainMenu(); GameDataMNG.Instance.SaveGame(); CampPanel.Instance.SetCampVisibility(false);});
+        AddButtonListener(_exitGame, () => { GameMNG.Instance.OnExitGame(); GameDataMNG.Instance.SaveGame(); CampPanel.Instance.SetCampVisibility(false); });
     }
 
     private void SetupMainButtons()

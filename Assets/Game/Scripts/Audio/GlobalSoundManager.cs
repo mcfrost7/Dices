@@ -66,7 +66,7 @@ public class GlobalSoundManager : MonoBehaviour
     public void PlayMusic(MusicTheme theme)
     {
         if (currentTheme == theme && audioSource.isPlaying)
-            return; // уже играет нужная тема
+            return; 
         musicDictionary.TryGetValue(theme, out var clips);
         AudioClip clipToPlay = clips[Random.Range(0, clips.Length)];
         audioSource.clip = clipToPlay;

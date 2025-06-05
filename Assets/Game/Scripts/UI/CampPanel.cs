@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,7 @@ public class CampPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textName;
 
     private bool _campVisibility = false;
+    private NewTileConfig _config;
 
     private void Awake()
     {
@@ -26,37 +28,40 @@ public class CampPanel : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
-       _buttonCallHealPanel.onClick.AddListener(()=>CallTask());
-       _buttonCallHealPanel.gameObject.SetActive(false);
+        _button.onClick.AddListener(() => ApplyHeal());
+        MenuMNG.Instance.AddButtonListener(_buttonCallHealPanel, ToggleCampVisibility);
+        CallButtonActivity(false);
+
     }
 
     private bool _isAnimating = false;
-    public void CallTask()
+    public void ToggleCampVisibility()
     {
-        if (_isAnimating) return;
+        SetCampVisibility(!CampVisibility);
+    }
+
+    public void SetCampVisibility(bool isVisible)
+    {
+        if (_isAnimating || CampVisibility == isVisible) return;
 
         _isAnimating = true;
 
-        if (CampVisibility == false)
-        {
-            _panel.transform.DOLocalMoveX(_panel.transform.localPosition.x - 500, 0.8f)
-                .SetEase(Ease.InOutExpo)
-                .OnComplete(() => _isAnimating = false);
-        }
-        else
-        {
-            _panel.transform.DOLocalMoveX(_panel.transform.localPosition.x + 500, 0.8f)
-                .SetEase(Ease.InOutExpo)
-                .OnComplete(() => _isAnimating = false);
-        }
-        CampVisibility = !CampVisibility;
+        float targetPositionX = isVisible
+            ? _panel.transform.localPosition.x - 500
+            : _panel.transform.localPosition.x + 500;
+
+        _panel.transform.DOLocalMoveX(targetPositionX, 0.8f)
+            .SetEase(Ease.InOutExpo)
+            .OnComplete(() => _isAnimating = false);
+
+        CampVisibility = isVisible;
     }
 
     public void SetupInfo(NewTileConfig config)
     {
+        _config = config;
         _button.enabled = true;
         _textName.text = "<color=#8B0000>УКРЫТИИ</color>";
         _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
@@ -64,17 +69,16 @@ public class CampPanel : MonoBehaviour
                      $"<color=#5A5A5A>-----------------------------</color>\n" +
                      $"<color=#2F2F2F>Требуется: <color=#8B0000>1</color> передатчик сигнала.</color>";
 
-        _button.onClick.AddListener(() => ApplyHeal(config.campSettings.healAmount));
     }
 
-    public void ApplyHeal(int _amount)
+    public void ApplyHeal()
     {
         if (ResourcesMNG.Instance.TryConsumeResource(ResourcesType.SignalTransmitter, 1))
         {
             _button.enabled = false;
             foreach (var unit in GameDataMNG.Instance.PlayerData.PlayerUnits)
             {
-                unit._current_health = Mathf.Min(unit._current_health + _amount, unit._health);
+                unit._current_health = Mathf.Min(unit._current_health + _config.campSettings.healAmount, unit._health);
             }
             SFXManager.Instance.PlaySoundSM(ActionType.Heal);
             _text.text = $"<color=#5A5A5A>-----------------------------</color>\n" +
@@ -89,5 +93,11 @@ public class CampPanel : MonoBehaviour
                          $"<color=#5A5A5A>-----------------------------</color>\n" +
                          $"<color=#2F2F2F>Требуется: <color=#8B0000>1</color> передатчик сигнала.</color>";
         }
+    }
+
+    public void CallButtonActivity(bool _state)
+    {
+        _buttonCallHealPanel.gameObject.SetActive(_state);
+        _campVisibility = !_state;
     }
 }

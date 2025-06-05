@@ -37,7 +37,6 @@ public class CanvasMapGenerator : MonoBehaviour
 
     private void Start()
     {
-        // Make sure the event is initialized before adding listeners
         if (OnTileClicked == null)
             OnTileClicked = new UnityEvent<MapNode>();
         OnTileClicked.AddListener(HandleTileClicked);
@@ -82,14 +81,12 @@ public class CanvasMapGenerator : MonoBehaviour
         generationSettings = selectedLocationConfig.generationSettings;
     }
 
-    // Устанавливаем начальный доступный слой
     private void SetInitialAvailableLayer()
     {
         currentAvailableLayer = layers.Count - 1;
         UpdateNodesAvailability();
     }
 
-    // Обновляем доступность узлов
     private void UpdateNodesAvailability()
     {
         foreach (var layer in layers)
@@ -113,7 +110,6 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
-    // Обновляем визуальные изменения узлов
     private void UpdateNodeVisuals(MapNode node)
     {
         if (node.isVisited)
@@ -133,7 +129,6 @@ public class CanvasMapGenerator : MonoBehaviour
         }
     }
 
-    // Загружаем карту из сохраненных данных
     public void LoadMapFromPlayerData(PlayerData playerData)
     {
         if (playerData.MapNodes == null || playerData.MapNodes.Count == 0)
@@ -166,8 +161,6 @@ public class CanvasMapGenerator : MonoBehaviour
                 TileLogic nodeObject = Instantiate(nodePrefab, mapContainer);
                 RectTransform nodeRectTransform = nodeObject.GetComponent<RectTransform>();
                 nodeRectTransform.anchoredPosition = nodeData.Position;
-
-                // Find tile configs that match the tile type
                 List<NewTileConfig> matchingTileConfigs = new List<NewTileConfig>();
                 foreach (var tile in locationConfig.tiles)
                 {
@@ -185,12 +178,9 @@ public class CanvasMapGenerator : MonoBehaviour
                     Debug.LogWarning($"No tile configurations of type {nodeData.TileType} found in location {locationConfig.name}!");
                     continue;
                 }
-
-                // Find the specific tile config that was used
                 NewTileConfig tileConfig = matchingTileConfigs.FirstOrDefault(t => t.name == nodeData.TileConfigId);
                 if (tileConfig == null)
                 {
-                    // If the specific config is not found, use a random one of the matching type
                     tileConfig = matchingTileConfigs[Random.Range(0, matchingTileConfigs.Count)];
                 }
 
@@ -218,9 +208,11 @@ public class CanvasMapGenerator : MonoBehaviour
         CurrentNode = FindLastVisitedNode();
         if (CurrentNode != null)
         {
-            if (CurrentNode.tileConfig.tileType == TileType.CampTile)
+            if (CurrentNode.tileType == TileType.CampTile)
             {
                 CampPanel.Instance.SetupInfo(CurrentNode.tileConfig);
+                CampPanel.Instance.CallButtonActivity(true);
+                CampPanel.Instance.CampVisibility = false;
             }
         }
     }

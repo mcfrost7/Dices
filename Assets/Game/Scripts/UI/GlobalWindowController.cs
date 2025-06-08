@@ -94,7 +94,7 @@ public class GlobalWindowController : MonoBehaviour
         CurrentActiveCanvas = targetCanvas;
         HideAllCanvases();
         targetCanvas.SetActive(true);
-        OnCanvasSwitched?.Invoke(CurrentActiveCanvas);
+        OnCanvasSwitched?.Invoke(targetCanvas);
     }
 
 

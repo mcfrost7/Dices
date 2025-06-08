@@ -33,7 +33,7 @@ public class CampPanel : MonoBehaviour
         _button.onClick.AddListener(() => ApplyHeal());
         MenuMNG.Instance.AddButtonListener(_buttonCallHealPanel, ToggleCampVisibility);
         CallButtonActivity(false);
-
+        _campVisibility = false;
     }
 
     private bool _isAnimating = false;

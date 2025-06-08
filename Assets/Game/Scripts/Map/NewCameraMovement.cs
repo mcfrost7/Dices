@@ -34,6 +34,8 @@ public class NewCameraMovement : MonoBehaviour
 
     private void HandleCanvasSwitched(GameObject newCanvas)
     {
+        canMoveAndZoom = false;
+        isDragging = false;
         if (newCanvas == GlobalWindowController.Instance.GlobalCanvas && MenuMNG.Instance.Freeze.activeSelf == false)
         {
             Input.ResetInputAxes();

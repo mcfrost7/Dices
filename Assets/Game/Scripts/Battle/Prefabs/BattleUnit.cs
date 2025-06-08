@@ -304,10 +304,10 @@ public class BattleUnit : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage, BattleUnit attacker = null)
+    public void TakeDamage(int damage, BattleUnit attacker = null, bool isShieldEffect = true)
     {
         int originalDamage = damage;
-        if (UnitData._current_defense > 0)
+        if (UnitData._current_defense > 0 && isShieldEffect == true)
         {
             int defenseReduction = Mathf.Min(UnitData._current_defense, damage);
             UnitData._current_defense -= defenseReduction;
@@ -339,6 +339,10 @@ public class BattleUnit : MonoBehaviour
     public void ModifyMorale(int amount)
     {
         UnitData._currentMoral += amount;
+    }
+    public void TakeMoraleDamage(int amount)
+    {
+        UnitData._currentMoral -= amount;
     }
 
 

@@ -61,7 +61,7 @@ public class LifestealAction : IBattleAction
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
         int oldHealth = target.UnitData._current_health;
-        target.TakeDamage(power, source);
+        target.TakeDamage(power, source,false);
         int damageDealt = oldHealth - target.UnitData._current_health;
 
         source.Heal(damageDealt);
@@ -120,7 +120,7 @@ public class HealthAttackAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        target.TakeDamage(power, source);
+        target.TakeDamage(power);
         source.TakeDamage(power); 
     }
 
@@ -147,7 +147,7 @@ public class MoraleDamageAction : IBattleAction
 {
     public void Execute(BattleUnit source, BattleUnit target, int power, int duration)
     {
-        source.ModifyMorale(power);
+        target.TakeMoraleDamage(power);
     }
 
     public bool IsValidTarget(BattleUnit source, BattleUnit target)

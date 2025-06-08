@@ -203,7 +203,7 @@ public class BattleDiceManager : MonoBehaviour
             yield break;
         }
 
-        float duration = 3.0f;
+        float duration = 2.0f;
         float elapsed = 0f;
         float animationSpeed = 10f;
 

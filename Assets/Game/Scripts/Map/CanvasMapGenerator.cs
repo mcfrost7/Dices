@@ -61,6 +61,7 @@ public class CanvasMapGenerator : MonoBehaviour
             currentLayerY -= generationSettings.layerHeight;
         }
         SetInitialAvailableLayer();
+        GameDataMNG.Instance.SaveGame();
     }
 
     public LocationConfig GetRandomLocationForLevel(int level)

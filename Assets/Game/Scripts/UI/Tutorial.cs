@@ -14,6 +14,7 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _tutorialCount;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Button _nextButton;
+    [SerializeField] private Button _backButton;
 
     [Header("Map Guide")]
     [SerializeField] private List<VideoClip> videoClipsMap;
@@ -44,6 +45,7 @@ public class Tutorial : MonoBehaviour
         _tutorWindow.SetActive(false);
         _closeButton.onClick.AddListener(CloseTutorial);
         MenuMNG.Instance.AddButtonListener(_nextButton,()=> NextStep());
+        MenuMNG.Instance.AddButtonListener(_backButton,()=> BackStep());
     }
 
 
@@ -114,11 +116,17 @@ public class Tutorial : MonoBehaviour
         _tutorialText.text = currentTexts[textIndex];
         _tutorialCount.text = $"{currentStep+1}/{currentVideoClips.Count}";
         _nextButton.gameObject.SetActive(currentStep < Mathf.Min(currentVideoClips.Count, currentTexts.Count) - 1);
+        _backButton.gameObject.SetActive(currentStep > 0);
     }
 
     private void NextStep()
     {
         currentStep++;
+        ShowCurrentStep();
+    }
+    private void BackStep()
+    {
+        currentStep--;
         ShowCurrentStep();
     }
 

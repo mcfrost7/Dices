@@ -86,7 +86,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 return $"Место отдыха\n" +
                        $"Восстановление: +{camp?.healAmount ?? 0} HP\n" +
                        $"Доступно: {(camp?.isUpgradeAvailable ?? false ? "Апгрейды" : "")}" +
-                       $"{(camp?.isReinforceAvailable ?? false ? ", Подкрепление" : "")}";
+                       $"{(camp?.isReinforceAvailable ?? false ? " Подкрепление" : "")}";
 
             case TileType.LootTile:
                 return $"Награда: {GetRewardDescription(node.tileConfig.lootSettings?.reward)}";
@@ -173,7 +173,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             case ActionType.LifeSteal: return "Кража здоровья";
             case ActionType.Moral: return "Мораль";
             case ActionType.HealthAttack: return "Атака здоровьем";
-            case ActionType.ShieldBash: return "Атака щитом";
+            case ActionType.ShieldBash: return "Удар щитом";
             default: return "Без эффекта";
         }
     }
@@ -182,7 +182,7 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         switch (affect)
         {
-            case ItemSideAffect.Nearest: return "Ближайшая по-часовой => номер стороны";
+            case ItemSideAffect.Nearest: return "Сторона с тем же номером";
             case ItemSideAffect.Even: return "Чётные стороны => 2,4,6";
             case ItemSideAffect.Odd: return "Нечётные стороны => 1,3,5";
             case ItemSideAffect.All: return "Все стороны => 1,2,3,4,5,6";
@@ -200,25 +200,8 @@ public class TooltipTrigger : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine($"Тип эффекта: {GetActionTypeName(buff.buffType)}");
-        sb.AppendLine($"Сила: {buff.buffPower}");
-
-        switch (buff.buffType)
-        {
-            case ActionType.Attack:
-                sb.AppendLine("Увеличивает силу атаки всех сторон");
-                break;
-            case ActionType.Defense:
-                sb.AppendLine("Увеличивает защиту получаемую защиту от всех сторон");
-                break;
-            case ActionType.Heal:
-                sb.AppendLine("Увеличивает восстановление здоровье от всех сторон");
-                break;
-            case ActionType.LifeSteal:
-                sb.AppendLine($"Увеличивает урон и кражу здоровья всех сторон");
-                break;
-        }
-
+        sb.AppendLine($"Увеличивает силу строны: {GetActionTypeName(buff.buffType)}");
+        sb.AppendLine($"Сила: +{buff.buffPower}");
         return sb.ToString();
     }
 
